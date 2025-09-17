@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlwahaSite", "AlwahaSite\AlwahaSite.csproj", "{5E58848B-B3B0-42FB-A8B3-F061CBA35596}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlwahaManagement", "AlwahaManagement\AlwahaManagement.csproj", "{08068E05-F3B9-4B88-87EA-A867384AC355}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlwahaLibrary", "AlwahaLibrary\AlwahaLibrary.csproj", "{769B7E91-6E9A-4EB3-9EB0-CB8C4370C540}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E58848B-B3B0-42FB-A8B3-F061CBA35596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E58848B-B3B0-42FB-A8B3-F061CBA35596}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E58848B-B3B0-42FB-A8B3-F061CBA35596}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E58848B-B3B0-42FB-A8B3-F061CBA35596}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08068E05-F3B9-4B88-87EA-A867384AC355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08068E05-F3B9-4B88-87EA-A867384AC355}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08068E05-F3B9-4B88-87EA-A867384AC355}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08068E05-F3B9-4B88-87EA-A867384AC355}.Release|Any CPU.Build.0 = Release|Any CPU
+		{769B7E91-6E9A-4EB3-9EB0-CB8C4370C540}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{769B7E91-6E9A-4EB3-9EB0-CB8C4370C540}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{769B7E91-6E9A-4EB3-9EB0-CB8C4370C540}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{769B7E91-6E9A-4EB3-9EB0-CB8C4370C540}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
