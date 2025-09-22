@@ -1,3 +1,5 @@
+using AlwahaLibrary.Data;
+using AlwahaLibrary.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AlwahaManagement.Data;
@@ -7,13 +9,24 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<AlwahaDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
+var authConnectionString = builder.Configuration.GetConnectionString("AuthenticationConnection") ??
+                   throw new InvalidOperationException("Connection string 'AuthenticationConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlServer(authConnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
+
+
+builder.Services.AddScoped<MenuService>();
+
+
+
 
 var app = builder.Build();
 

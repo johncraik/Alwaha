@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -11,8 +12,9 @@ public class IndexModel : PageModel
     {
         _logger = logger;
     }
-
+    
     public void OnGet()
     {
+        
     }
 }
