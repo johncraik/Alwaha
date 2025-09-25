@@ -122,6 +122,7 @@ public class MenuService
         await _context.SaveChangesAsync();
         return true;
     }
+    
 
     public async Task<bool> TryUpdateMenuItemAsync(MenuItem menuItem, ModelStateWrapper modelState)
     {
@@ -158,5 +159,6 @@ public class MenuService
         
         _context.MenuItems.Add(menuItem);
         await _context.SaveChangesAsync();
+        return true;
     }
 }

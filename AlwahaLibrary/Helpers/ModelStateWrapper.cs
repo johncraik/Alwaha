@@ -6,7 +6,7 @@ public class ModelStateWrapper
 {
     private readonly ModelStateDictionary _modelState;
     public bool IsValid => _modelState.IsValid;
-    public string ModelStatePrefix { get; private set; } = "Input";
+    public string ModelStatePrefix { get; } = "Input";
 
     public ModelStateWrapper(ModelStateDictionary modelState)
     {
@@ -14,8 +14,8 @@ public class ModelStateWrapper
     }
     
     public ModelStateWrapper(ModelStateDictionary modelState, string modelStatePrefix) 
-        : this(modelState)
     {
+        _modelState = modelState;
         ModelStatePrefix = modelStatePrefix;
     }
 

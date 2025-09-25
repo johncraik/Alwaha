@@ -1,4 +1,5 @@
 using AlwahaLibrary.Data;
+using AlwahaLibrary.Middleware;
 using AlwahaLibrary.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,9 +24,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddRazorPages();
 
 
+builder.Services.AddScoped<UserInfo>();
 builder.Services.AddScoped<MenuService>();
 
-
+// Add Syncfusion services
+var syncfusionLicenseKey = builder.Configuration.GetSection("SYNCFUSION-KEY").Value;
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(syncfusionLicenseKey);;
 
 
 var app = builder.Build();
@@ -46,6 +50,8 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseAuthorization();
+app.UseUserInfo();
 app.UseAuthorization();
 
 app.MapStaticAssets();

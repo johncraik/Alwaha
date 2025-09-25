@@ -1,0 +1,14 @@
+@model List<AlwahaLibrary.Models.MenuItem>
+
+<div class="mt-2">
+    <ejs-grid id="menu-table" dataSource="@Model" allowpaging="true" allowsorting="true" allowfiltering="true">
+        <e-grid-pagesettings pageCount="30"></e-grid-pagesettings>
+        <e-grid-filtersettings type="Excel"></e-grid-filtersettings>
+        <e-grid-columns>
+            <e-grid-column field="Name"></e-grid-column>
+            <e-grid-column field="Description"></e-grid-column>
+            <e-grid-column field="Price"></e-grid-column>
+            <e-grid-column field="IsAvailable" headerText="Available?"></e-grid-column>
+        </e-grid-columns>
+    </ejs-grid>
+</div>

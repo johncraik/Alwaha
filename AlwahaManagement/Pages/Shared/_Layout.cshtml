@@ -3,31 +3,42 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - AlwahaManagement</title>
+    <title>@ViewData["Title"] - Alwaha Management</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/AlwahaManagement.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/ej2.min.css" />
+    <script src="~/js/ej2.min.js"></script>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">AlwahaManagement</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm mb-3 py-3">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold fs-4" asp-area="" asp-page="/Index">AlwahaManagement</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+            <div class="navbar-collapse collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-semibold px-3" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Menu
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                            <li><a class="dropdown-item" asp-page="/Menu/Index">Menu Items</a></li>
+                            <li><a class="dropdown-item" asp-page="/Menu/Sets">Menu Sets</a></li>
+                            <li><a class="dropdown-item" asp-page="/Menu/Bundles">Menu Bundles</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" asp-page="/Menu/Type">Menu Item Types</a></li>
+                            <li><a class="dropdown-item" asp-page="/Menu/Tags">Menu Item Tags (Allergies)</a></li>
+                        </ul>
                     </li>
                 </ul>
-                <partial name="_LoginPartial"/>
+                <div class="d-flex">
+                    <partial name="_LoginPartial"/>
+                </div>
             </div>
         </div>
     </nav>
@@ -35,6 +46,7 @@
 <div class="container">
     <main role="main" class="pb-3">
         @RenderBody()
+        <ejs-scripts></ejs-scripts>
     </main>
 </div>
 
@@ -46,6 +58,7 @@
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/29bf1169ee.js" crossorigin="anonymous"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 @await RenderSectionAsync("Scripts", required: false)

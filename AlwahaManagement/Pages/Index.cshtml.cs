@@ -13,6 +13,10 @@ public class IndexModel : PageModel
         _logger = logger;
     }
     
+    /*
+     * Will become admin dashboard
+     */
+    
     public void OnGet()
     {
         
