@@ -11,12 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<AlwahaDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 var authConnectionString = builder.Configuration.GetConnectionString("AuthenticationConnection") ??
                    throw new InvalidOperationException("Connection string 'AuthenticationConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(authConnectionString));
+    options.UseMySql(authConnectionString, ServerVersion.AutoDetect(authConnectionString)));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -26,6 +26,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<UserInfo>();
 builder.Services.AddScoped<MenuService>();
+builder.Services.AddScoped<ItemTypeService>();
 
 // Add Syncfusion services
 var syncfusionLicenseKey = builder.Configuration.GetSection("SYNCFUSION-KEY").Value;

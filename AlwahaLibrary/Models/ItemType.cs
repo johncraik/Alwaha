@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlwahaLibrary.Models;
 
-public class ItemType
+public class ItemType : AuditModel
 {
     [Key]
     public string ItemTypeId { get; set; } = Guid.NewGuid().ToString();

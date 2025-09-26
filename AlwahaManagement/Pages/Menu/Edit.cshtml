@@ -1,0 +1,49 @@
+@page "{id?}"
+@model AlwahaManagement.Pages.Menu.Edit
+
+@{
+    ViewData["Title"] = $"{(Model.Adding ? "Create" : "Edit")} Menu Item";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div class="mb-2">
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-2">
+            <label asp-for="Input.Name" class="form-label"></label>
+            <input asp-for="Input.Name" class="form-control"/>
+            <span asp-validation-for="Input.Name" class="text-danger"></span>
+        </div>
+        <div class="mb-2">
+            <label asp-for="Input.Description" class="form-label"></label>
+            <textarea asp-for="Input.Description" rows="4"></textarea>
+            <span asp-validation-for="Input.Description" class="text-danger"></span>
+        </div>
+        <div class="mb-2">
+            <label asp-for="Input.Price" class="form-label"></label>
+            <input asp-for="Input.Price" class="form-control"/>
+            <span asp-validation-for="Input.Price" class="text-danger"></span>
+        </div>
+        <div class="mb-2">
+            <label asp-for="Input.ItemTypeId" class="form-label"></label>
+            <select asp-for="Input.ItemTypeId" asp-items="Model.ItemTypes" class="form-select"></select>
+            <span asp-validation-for="Input.ItemTypeId" class="text-danger"></span>
+        </div>
+        <div class="mb-2 form-check form-switch">
+            @if (Model.Input.IsAvailable)
+            {
+                <input asp-for="Input.IsAvailable" class="form-check-input" type="checkbox" id="is-av" checked/>
+            }
+            else
+            {
+                <input asp-for="Input.IsAvailable" class="form-check-input" type="checkbox" id="is-av"/>
+            }
+            <label asp-for="Input.IsAvailable" class="form-check-label" for="is-av"></label>
+            <span asp-validation-for="Input.IsAvailable" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">@(Model.Adding ? "Create" : "Modify")</button>
+        <button type="button" class="btn btn-danger" onclick="location.assign('/Menu/Index')">
+            Cancel
+        </button>
+    </form>
+</div>

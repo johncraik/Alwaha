@@ -88,6 +88,14 @@ public class MenuService
     }
 
 
+    public async Task<MenuItem?> GetMenuItemAsync(string id)
+        => await _context.MenuItems
+            .Include(i => i.ItemType)
+            .Include(i => i.BundleItems)
+            .Include(i => i.SetItems)
+            .FirstOrDefaultAsync(i => i.ItemId == id);
+
+
     private async Task ValidateMenuItemAsync(MenuItem menuItem, ModelStateWrapper modelState)
     {
         var res = await _context.MenuItems.AnyAsync(i => i.Name == menuItem.Name 
@@ -97,9 +105,9 @@ public class MenuService
             modelState.AddModelError(nameof(menuItem.Name), "A menu item with that name already exists.");
         }
         
-        if(menuItem.Price < 0)
+        if(menuItem.Price <= 0)
         {
-            modelState.AddModelError(nameof(menuItem.Price), "Price cannot be negative.");
+            modelState.AddModelError(nameof(menuItem.Price), "Price cannot be 0 or negative.");
         }
 
         res = await _context.ItemTypes.AnyAsync(it => it.ItemTypeId == menuItem.ItemTypeId);

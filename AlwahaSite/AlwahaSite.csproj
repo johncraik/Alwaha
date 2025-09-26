@@ -724,4 +724,8 @@
       <ClInclude Include="node_modules\node-addon-api\napi.h" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    </ItemGroup>
+
 </Project>
