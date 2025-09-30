@@ -1,4 +1,4 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
+// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
@@ -44,6 +44,44 @@ function confirmDelete(name, url){
                     location.reload();
                 }
             })
+        }
+    })
+}
+
+function toggleAvailability(itemId, isAvailable){
+    $.ajax({
+        method: "POST",
+        url: '/Menu/ToggleAvailable?id=' + itemId + '&isAvailable=' + isAvailable,
+        success: function (r){
+            // Update header styling
+            var header = $('#header-' + itemId);
+            var title = header.find('.card-title');
+            var badge = header.find('.badge');
+            var label = $('#label-' + itemId);
+
+            if (isAvailable) {
+                // Making available
+                header.css('background', 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)');
+                title.removeClass('fst-italic');
+                badge.removeClass('fst-italic');
+                label.text('Available');
+            } else {
+                // Making unavailable
+                header.css('background', 'linear-gradient(135deg, #6c757d 0%, #868e96 100%)');
+                title.addClass('fst-italic');
+                badge.addClass('fst-italic');
+                label.text('Unavailable');
+            }
+
+            // Update the onchange handler for next toggle
+            var toggle = $('#toggle-' + itemId);
+            toggle.attr('onchange', 'toggleAvailability("' + itemId + '", ' + !isAvailable + ')');
+        },
+        error: function(xhr, status, error) {
+            alert('Error toggling availability: ' + error);
+            // Revert the checkbox state on error
+            var toggle = $('#toggle-' + itemId);
+            toggle.prop('checked', !isAvailable);
         }
     })
 }

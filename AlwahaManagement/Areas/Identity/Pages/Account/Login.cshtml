@@ -19,13 +19,13 @@
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none" role="alert"></div>
 
                     <div class="form-floating mb-4">
-                        <input asp-for="Input.Email" class="form-control form-control-lg login-input"
+                        <input asp-for="Input.UserName" class="form-control form-control-lg login-input"
                                autocomplete="username" aria-required="true"
                                placeholder="name@example.com" />
-                        <label asp-for="Input.Email" class="text-muted">
+                        <label asp-for="Input.UserName" class="text-muted">
                             <i class="fas fa-envelope me-1"></i> Email Address
                         </label>
-                        <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                        <span asp-validation-for="Input.UserName" class="text-danger small"></span>
                     </div>
 
                     <div class="form-floating mb-4">

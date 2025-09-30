@@ -4,6 +4,7 @@ using AlwahaLibrary.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AlwahaManagement.Data;
+using AlwahaManagement.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 
@@ -57,7 +59,56 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 app.MapControllers();
+app.MapControllerRoute("default", "{controller=Home}/{action=Index}");
 app.MapRazorPages()
     .WithStaticAssets();
 
+await Defaults();
 app.Run();
+
+async Task Defaults()
+{
+    using var scope = app.Services.CreateScope();
+    var sp = scope.ServiceProvider;
+    var authDb = sp.GetRequiredService<ApplicationDbContext>();
+    var alwahaDb = sp.GetRequiredService<AlwahaDbContext>();
+    
+    var userManager = sp.GetRequiredService<UserManager<IdentityUser>>();
+    var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
+
+    await authDb.Database.MigrateAsync();
+    await alwahaDb.Database.MigrateAsync();
+
+    async Task ConfirmRoleSetup(string role)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+    
+    await ConfirmRoleSetup(SystemRoles.Admin);
+    await ConfirmRoleSetup(SystemRoles.CreatePermission);
+    await ConfirmRoleSetup(SystemRoles.EditPermission);
+    await ConfirmRoleSetup(SystemRoles.DeletePermission);
+    
+    var adminUser = await userManager.FindByNameAsync("systemadmin");
+    if (adminUser == null)
+    {
+        adminUser = new IdentityUser
+        {
+            Email = "cibellealvesharb@hotmail.com",
+            UserName = "systemadmin",
+            EmailConfirmed = true,
+            TwoFactorEnabled = false
+        };
+        await userManager.CreateAsync(adminUser);
+        await userManager.AddToRoleAsync(adminUser, SystemRoles.Admin);
+        var p = "Admin@1234!";
+        await userManager.AddPasswordAsync(adminUser, p);
+    }
+    else if (!await userManager.IsInRoleAsync(adminUser, SystemRoles.Admin))
+    {
+        await userManager.AddToRoleAsync(adminUser, SystemRoles.Admin);   
+    }
+}

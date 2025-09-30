@@ -5,9 +5,9 @@
     {
         <div class="col-12 col-md-6 col-lg-4 mb-4 px-3">
             <div class="card shadow-sm h-100 menu-item-card">
-                <div class="card-header py-3 position-relative" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">
-                    <h5 class="card-title mb-1 text-white fw-bold">@item.Name</h5>
-                    <span class="badge bg-light text-dark fw-normal">@item.ItemType?.Name</span>
+                <div class="card-header py-3 position-relative" id="header-@item.ItemId" style="background: linear-gradient(135deg, @(item.IsAvailable ? "#6366f1 0%, #8b5cf6" : "#6c757d 0%, #868e96") 100%);">
+                    <h5 class="card-title mb-1 text-white fw-bold @(!item.IsAvailable ? "fst-italic" : "")">@item.Name</h5>
+                    <span class="badge bg-light text-dark fw-normal @(!item.IsAvailable ? "fst-italic" : "")">@item.ItemType?.Name</span>
                     <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 mt-2 me-2"
                             title="Delete Menu Item" onclick="confirmDelete('@item.Name', '/Menu/DeleteItem?id=@item.ItemId')">
                         <i class="fa-solid fa-trash"></i> Delete
@@ -17,14 +17,17 @@
                     <p class="card-text flex-grow-1 text-muted">@item.Description</p>
                     <div class="d-flex justify-content-between align-items-center mt-auto">
                         <span class="fs-5 fw-bold text-primary">£@item.Price</span>
-                        @if (!item.IsAvailable)
-                        {
-                            <span class="badge bg-warning text-dark">Unavailable</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-success">Available</span>
-                        }
+                        <div class="form-check form-switch">
+                            @if (item.IsAvailable)
+                            {
+                                <input class="form-check-input" type="checkbox" id="toggle-@item.ItemId" checked onchange="toggleAvailability('@item.ItemId', false)"/>
+                            }
+                            else
+                            {
+                                <input class="form-check-input" type="checkbox" id="toggle-@item.ItemId" onchange="toggleAvailability('@item.ItemId', true)"/>
+                            }
+                            <label class="form-check-label" id="label-@item.ItemId" for="toggle-@item.ItemId">@(item.IsAvailable ? "Available" : "Unavailable")</label>
+                        </div>
                     </div>
                 </div>
             </div>

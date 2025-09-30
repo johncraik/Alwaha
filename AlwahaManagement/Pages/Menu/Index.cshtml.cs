@@ -17,6 +17,6 @@ public class Index : PageModel
     
     public async Task OnGet()
     {
-        MenuItems = await _menuService.GetMenuItemsAsync();
+        MenuItems = await _menuService.GetMenuItemsAsync(showUnavailable: true);
     }
 }
