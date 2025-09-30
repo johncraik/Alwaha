@@ -29,6 +29,7 @@ public class MenuService
     {
         var query = _context.MenuItems
             .Where(i => !i.IsSet && !i.IsDeleted)
+            .Include(i => i.ItemType)
             .AsQueryable();
         if (!showUnavailable) query = query.Where(i => i.IsAvailable);
 
@@ -38,7 +39,7 @@ public class MenuService
                                      || (!string.IsNullOrEmpty(i.Description) && i.Description.Contains(search)));
         }
         
-        return await query.ToListAsync();
+        return await query.OrderBy(i => i.ItemType.Order).ThenBy(i => i.Name).ToListAsync();
     }
 
     public async Task<List<(MenuItem SetItem, List<MenuItem> Items)>> GetSetsAsync(

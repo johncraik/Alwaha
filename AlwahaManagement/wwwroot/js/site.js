@@ -25,3 +25,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
+function confirmDelete(name, url){
+    Swal.fire({
+        title: 'Are you sure you want to delete ' + name + '?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+    }).then((res) => {
+        if(res.value){
+            $.ajax({
+                method: "POST",
+                url: url,
+                success: function (r){
+                    location.reload();
+                }
+            })
+        }
+    })
+}

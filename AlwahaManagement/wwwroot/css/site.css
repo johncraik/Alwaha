@@ -246,3 +246,25 @@ body {
   25% { transform: translateX(-10px); }
   75% { transform: translateX(10px); }
 }
+
+/* Menu Item Card Styles */
+.menu-item-card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.menu-item-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.2);
+}
+
+.menu-item-card .card-header {
+    border: none;
+    border-radius: 12px 12px 0 0;
+}
+
+.menu-item-card:hover .card-header {
+    background: linear-gradient(135deg, #5558e3 0%, #7c4ce0 100%) !important;
+}
