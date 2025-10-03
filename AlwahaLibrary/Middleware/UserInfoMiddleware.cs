@@ -1,9 +1,10 @@
 using AlwahaLibrary.Services;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
 
 namespace AlwahaLibrary.Middleware;
 
@@ -39,6 +40,10 @@ public class UserInfoMiddleware
                 userInfo.UserName = context.User.Identity.Name;
                 userInfo.Email = context.User.FindFirst(io.Value.ClaimsIdentity.EmailClaimType)?.Value;
                 userInfo.UserId = context.User.FindFirst(io.Value.ClaimsIdentity.UserIdClaimType)?.Value;
+
+                // Populate roles from claims
+                var roleClaims = context.User.FindAll(io.Value.ClaimsIdentity.RoleClaimType);
+                userInfo.Roles = roleClaims.Select(c => c.Value).ToList();
 
                 if (string.IsNullOrWhiteSpace(userInfo.UserId))
                 {

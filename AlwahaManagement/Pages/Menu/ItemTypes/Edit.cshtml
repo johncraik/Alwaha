@@ -1,0 +1,29 @@
+@page "{id?}"
+@model AlwahaManagement.Pages.Menu.ItemTypes.Edit
+
+@{
+    ViewData["Title"] = Model.Adding ? "Create Item Type" : "Edit Item Type";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div class="mb-2">
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-2">
+            <label asp-for="Input.Name" class="form-label"></label>
+            <input asp-for="Input.Name" class="form-control" />
+            <span asp-validation-for="Input.Name"></span>
+        </div>
+        <div style="display: none;">
+            <div class="mb-2">
+                <label asp-for="Input.Colour" class="form-label"></label>
+                <input asp-for="Input.Colour" class="form-control" />
+                <span asp-validation-for="Input.Colour"></span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">@(Model.Adding ? "Create" : "Modify")</button>
+        <button type="button" class="btn btn-danger" onclick="location.assign('/Menu/ItemTypes/Index')">
+            Cancel
+        </button>
+    </form>
+</div>

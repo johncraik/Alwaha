@@ -4,16 +4,19 @@ using AlwahaLibrary.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AlwahaLibrary.Migrations
+namespace AlwahaLibrary.Data.Migrations
 {
     [DbContext(typeof(AlwahaDbContext))]
-    partial class AlwahaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251003192555_UpdateToTags")]
+    partial class UpdateToTags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

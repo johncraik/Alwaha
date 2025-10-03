@@ -5,15 +5,15 @@
     ViewData["Title"] = "Menu Items";
 }
 
-<h1>@ViewData["Title"]</h1>
 
 <div class="clearfix">
+    <h1 class="float-start">@ViewData["Title"]</h1>
     <button class="btn btn-primary float-end mb-1"
             onclick="location.assign('/Menu/Edit')">
         <span class="fa-solid fa-plus"></span> Create New Menu Item
     </button>
 </div>
 
-<div class="mt-3">
+<div class="mt-3" id="menu-list">
     <partial name="Shared/Menu/_MenuItemTable" model="Model.MenuItems" />
 </div>

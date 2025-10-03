@@ -1,0 +1,62 @@
+@model List<AlwahaLibrary.Models.ItemType>
+
+<ul id="sortable-list" class="list-group" aria-label="Reorder options">
+    @foreach (var type in Model)
+    {
+        <li class="list-group-item item-type-card d-flex align-items-center border-0 shadow-sm mb-2" data-id="@type.ItemTypeId">
+            <button class="btn btn-sm btn-gradient-purple text-white me-3" aria-label="Drag @type.Name">⋮⋮</button>
+            <span class="label fw-semibold">@type.Name</span>
+            <div class="btn-group ms-auto" role="group" aria-label="Row actions">
+              <button type="button" class="btn btn-sm btn-outline-primary js-no-drag js-edit" aria-label="Edit @type.Name"
+                      onclick="location.assign('/Menu/ItemTypes/Edit/@type.ItemTypeId')">
+                <span class="fa-solid fa-pencil"></span>
+              </button>
+              <button type="button" class="btn btn-sm btn-outline-danger js-no-drag js-delete" aria-label="Delete @type.Name"
+                      onclick="confirmDelete('@type.Name', '/Menu/DeleteType?id=@type.ItemTypeId', undefined)">
+                <span class="fa-solid fa-trash"></span>
+              </button>
+            </div>
+        </li>
+    }
+</ul>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const listEl = document.getElementById('sortable-list');
+      const errorBanner = document.getElementById('error-banner');
+
+      const reorderUrl = '/Menu/ReorderTypes';
+      const refreshUrl = '/Menu/GetItemTypesList';
+      
+      function getIdsInOrder() {
+        return Array.from(listEl.querySelectorAll('li')).map(li => li.dataset.id);
+      }
+
+      new Sortable(listEl, {
+        animation: 150,
+        ghostClass: 'drag-ghost',
+        chosenClass: 'drag-picked',
+        dragClass: 'dragging',
+        filter: '.js-no-drag',
+        preventOnFilter: true,
+        onEnd: async () => {
+          const ids = getIdsInOrder();
+          try {
+            const res = await fetch(reorderUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ ids })
+            });
+            if (res.ok) {
+              try {
+                location.reload();
+              } catch {}
+            }
+          } catch {
+          }
+        }
+      });
+    });
+</script>

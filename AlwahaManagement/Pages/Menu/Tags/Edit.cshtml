@@ -1,0 +1,32 @@
+@page "{id?}"
+@model AlwahaManagement.Pages.Menu.Tags.Edit
+
+@{
+    ViewData["Title"] = Model.Adding ? "Create Item Tag" : "Edit Item Tag";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div class="mb-2">
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-2">
+            <label asp-for="Input.Name" class="form-label"></label>
+            <input asp-for="Input.Name" class="form-control" />
+            <span asp-validation-for="Input.Name"></span>
+        </div>
+        <div class="mb-2">
+            <label asp-for="Input.Colour" class="form-label"></label>
+            <input asp-for="Input.Colour" class="form-control" />
+            <span asp-validation-for="Input.Colour"></span>
+        </div>
+        <div class="mb-2">
+            <label asp-for="Input.Icon" class="form-label"></label>
+            <input asp-for="Input.Icon" class="form-control" />
+            <span asp-validation-for="Input.Icon"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">@(Model.Adding ? "Create" : "Modify")</button>
+        <button type="button" class="btn btn-danger" onclick="location.assign('/Menu/Tags/Index')">
+            Cancel
+        </button>
+    </form>
+</div>

@@ -69,11 +69,13 @@ body {
   height: 2px;
   background: white;
   transition: width 0.3s ease, left 0.3s ease;
+  opacity: 0;
 }
 
 .nav-link:hover::after {
   width: 80%;
   left: 10%;
+  opacity: 1;
 }
 
 /* Dropdown enhancements */
@@ -267,4 +269,40 @@ body {
 
 .menu-item-card:hover .card-header {
     background: linear-gradient(135deg, #5558e3 0%, #7c4ce0 100%) !important;
+}
+
+/* Item Type List Styles */
+.item-type-card {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  background: white;
+  cursor: move;
+}
+
+.item-type-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.15) !important;
+}
+
+.btn-gradient-purple {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-purple:hover {
+  background: linear-gradient(135deg, #5558e3 0%, #7c4ce0 100%);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.drag-picked {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%) !important;
+  border: 2px dashed #6366f1 !important;
+}
+
+.drag-ghost {
+  opacity: .6;
+  transform: scale(.95);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3) !important;
 }

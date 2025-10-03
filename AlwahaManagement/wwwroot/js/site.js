@@ -1,7 +1,17 @@
 // Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
-// Write your JavaScript code.
+function FetchPartial(url, model){
+    fetch(url).then(data => {return data.text()}).then(body => {
+        model.innerHTML = body;
+        var scripts = model.querySelectorAll('script');
+        for (let i = 0; i < scripts.length; i++) {
+            if (scripts[i].type !== "text/x-template") {
+                eval(scripts[i].innerHTML);
+            }
+        }
+    });
+}
 
 // Add shadow to navbar on scroll
 document.addEventListener('DOMContentLoaded', function() {
@@ -27,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function confirmDelete(name, url){
+function confirmDelete(name, url, partialUrl){
     Swal.fire({
         title: 'Are you sure you want to delete ' + name + '?',
         icon: 'warning',
@@ -41,7 +51,12 @@ function confirmDelete(name, url){
                 method: "POST",
                 url: url,
                 success: function (r){
-                    location.reload();
+                    if(partialUrl === undefined){
+                        location.reload();
+                    }
+                    else{
+                        FetchPartial(partialUrl, document.getElementById('menu-list'));
+                    }
                 }
             })
         }
@@ -85,3 +100,6 @@ function toggleAvailability(itemId, isAvailable){
         }
     })
 }
+
+
+

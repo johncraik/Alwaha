@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Alwaha Management</title>
     <script type="importmap"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js" defer></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/AlwahaManagement.styles.css" asp-append-version="true"/>
@@ -33,8 +34,8 @@
                             <li><a class="dropdown-item" asp-page="/Menu/Sets">Menu Sets</a></li>
                             <li><a class="dropdown-item" asp-page="/Menu/Bundles">Menu Bundles</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" asp-page="/Menu/Type">Menu Item Types</a></li>
-                            <li><a class="dropdown-item" asp-page="/Menu/Tags">Menu Item Tags (Allergies)</a></li>
+                            <li><a class="dropdown-item" asp-page="/Menu/ItemTypes/Index">Menu Item Types</a></li>
+                            <li><a class="dropdown-item" asp-page="/Menu/Tags/Index">Menu Item Tags (Allergies)</a></li>
                         </ul>
                     </li>
                 </ul>

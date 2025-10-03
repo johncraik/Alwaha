@@ -1,10 +1,10 @@
+using AlwahaLibrary.Authentication;
 using AlwahaLibrary.Data;
 using AlwahaLibrary.Middleware;
 using AlwahaLibrary.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AlwahaManagement.Data;
-using AlwahaManagement.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +29,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<UserInfo>();
 builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<ItemTypeService>();
+builder.Services.AddScoped<ItemTagService>();
 
 // Add Syncfusion services
 var syncfusionLicenseKey = builder.Configuration.GetSection("SYNCFUSION-KEY").Value;

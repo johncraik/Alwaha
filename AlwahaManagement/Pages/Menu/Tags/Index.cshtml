@@ -1,0 +1,21 @@
+@page
+@model AlwahaManagement.Pages.Menu.Tags.Index
+
+@{
+    ViewData["Title"] = "Item Tags (Allergies)";
+}
+
+
+<div class="clearfix">
+    <h1 class="float-start">@ViewData["Title"]</h1>
+    <button class="btn btn-primary float-end mb-1"
+            onclick="location.assign('/Menu/Tags/Edit')">
+        <span class="fa-solid fa-plus"></span> Create New Item Tag
+    </button>
+</div>
+
+<p>Manage tags and allergen information for menu items.</p>
+
+<div class="mt-2" id="item-list">
+    <partial name="Shared/Menu/_ItemTagList" model="Model.ItemTags"/>
+</div>

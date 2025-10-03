@@ -1,4 +1,4 @@
-namespace AlwahaManagement.Models;
+namespace AlwahaLibrary.Authentication;
 
 public class SystemRoles
 {

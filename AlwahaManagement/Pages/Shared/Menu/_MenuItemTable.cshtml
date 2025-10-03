@@ -5,12 +5,18 @@
     {
         <div class="col-12 col-md-6 col-lg-4 mb-4 px-3">
             <div class="card shadow-sm h-100 menu-item-card">
-                <div class="card-header py-3 position-relative" id="header-@item.ItemId" style="background: linear-gradient(135deg, @(item.IsAvailable ? "#6366f1 0%, #8b5cf6" : "#6c757d 0%, #868e96") 100%);">
-                    <h5 class="card-title mb-1 text-white fw-bold @(!item.IsAvailable ? "fst-italic" : "")">@item.Name</h5>
-                    <span class="badge bg-light text-dark fw-normal @(!item.IsAvailable ? "fst-italic" : "")">@item.ItemType?.Name</span>
-                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 mt-2 me-2"
-                            title="Delete Menu Item" onclick="confirmDelete('@item.Name', '/Menu/DeleteItem?id=@item.ItemId')">
+                <div class="card-header py-3 position-relative clearfix" id="header-@item.ItemId" style="background: linear-gradient(135deg, @(item.IsAvailable ? "#6366f1 0%, #8b5cf6" : "#6c757d 0%, #868e96") 100%);">
+                    <div class="float-start">
+                        <h5 class="card-title mb-1 text-white fw-bold @(!item.IsAvailable ? "fst-italic" : "")">@item.Name</h5>
+                        <span class="badge bg-light text-dark fw-normal @(!item.IsAvailable ? "fst-italic" : "")">@item.ItemType?.Name</span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-danger float-end"
+                            title="Delete Menu Item" onclick="confirmDelete('@item.Name', '/Menu/DeleteItem?id=@item.ItemId', '/Menu/GetMenuItemsList')">
                         <i class="fa-solid fa-trash"></i> Delete
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary float-end"
+                            title="Edit Menu Item" onclick="location.assign('/Menu/Edit/@item.ItemId')">
+                        <i class="fa-solid fa-pencil"></i> Edit
                     </button>
                 </div>
                 <div class="card-body d-flex flex-column">

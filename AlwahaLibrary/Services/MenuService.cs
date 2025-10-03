@@ -120,6 +120,13 @@ public class MenuService
 
     public async Task<bool> TryCreateMenuItemAsync(MenuItem menuItem, ModelStateWrapper modelState)
     {
+        var authorised = _userInfo.CanCreate();
+        if (!authorised)
+        {
+            modelState.AddModelError(null, "You are not authorised to create menu items.");
+            return false;
+        }
+        
         await ValidateMenuItemAsync(menuItem, modelState);
         if (!modelState.IsValid) return false;
         
@@ -135,6 +142,13 @@ public class MenuService
 
     public async Task<bool> TryUpdateMenuItemAsync(MenuItem menuItem, ModelStateWrapper modelState)
     {
+        var authorised = _userInfo.CanEdit();
+        if (!authorised)
+        {
+            modelState.AddModelError(null, "You are not authorised to modify menu items.");
+            return false;
+        }
+        
         await ValidateMenuItemAsync(menuItem, modelState);
         if (!modelState.IsValid) return false;
         
@@ -150,6 +164,9 @@ public class MenuService
     public async Task<bool> TryDeleteMenuItemAsync(MenuItem menuItem)
     {
         if(_userInfo.UserId == null) return false;
+        
+        var authorised = _userInfo.CanDelete();
+        if (!authorised) return false;
         
         menuItem.FillDeleted(_userInfo.UserId);
         _context.MenuItems.Update(menuItem);
