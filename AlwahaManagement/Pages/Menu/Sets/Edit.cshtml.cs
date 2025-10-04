@@ -11,12 +11,14 @@ public class Edit : PageModel
 {
     private readonly MenuService _menuService;
     private readonly ItemTypeService _itemTypeService;
+    private readonly ItemTagService _itemTagService;
     public bool Adding { get; set; }
 
-    public Edit(MenuService menuService, ItemTypeService itemTypeService)
+    public Edit(MenuService menuService, ItemTypeService itemTypeService, ItemTagService itemTagService)
     {
         _menuService = menuService;
         _itemTypeService = itemTypeService;
+        _itemTagService = itemTagService;
     }
     
     public class SetInputModel : Menu.Edit.MenuItemInputModel
@@ -45,6 +47,7 @@ public class Edit : PageModel
     public SetInputModel Input { get; set; }
     public List<IGrouping<ItemType, MenuItem>> MenuItems { get; set; }
     public List<SelectListItem> ItemTypes { get; set; }
+    public List<ItemTag> ItemTags { get; set; }
 
     public void SetupAdding(string? id)
     {
@@ -61,6 +64,7 @@ public class Edit : PageModel
                 Value = t.ItemTypeId
             })
             .ToList();
+        ItemTags = await _itemTagService.GetItemTagsAsync();
     }
 
     public async Task<IActionResult> OnGet(string? id)
@@ -79,7 +83,8 @@ public class Edit : PageModel
 
         Input = new SetInputModel(set)
         {
-            SelectedMenuItems = await _menuService.GetMenuItemIdsInSetAsync(set.ItemId)
+            SelectedMenuItems = await _menuService.GetMenuItemIdsInSetAsync(set.ItemId),
+            SelectedTagIds = await _itemTagService.GetItemTagIdsAsync(id!)
         };
         return Page();
     }
@@ -93,11 +98,13 @@ public class Edit : PageModel
 
         var modelState = new ModelStateWrapper(ModelState);
         bool res;
+        string setId;
         if (Adding)
         {
             var set = new MenuItem();
             Input.Fill(set);
             res = await _menuService.TryCreateSetAsync(set, Input.SelectedMenuItems, modelState);
+            setId = set.ItemId;
         }
         else
         {
@@ -106,8 +113,15 @@ public class Edit : PageModel
 
             Input.Fill(set);
             res = await _menuService.TryUpdateSetAsync(set, Input.SelectedMenuItems, modelState);
+            setId = set.ItemId;
         }
 
-        return res ? RedirectToPage("./Index") : Page();
+        if (!res) return Page();
+
+        res = await _itemTagService.TryModifyItemTagsAsync(setId, Input.SelectedTagIds);
+        if(res) return RedirectToPage("./Index");
+
+        modelState.AddModelError("SelectedTagIds", "Failed to update set tags");
+        return Page();
     }
 }

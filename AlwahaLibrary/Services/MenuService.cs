@@ -228,7 +228,6 @@ public class MenuService
         await _context.ItemToSets.AddRangeAsync(links);
         await _context.SaveChangesAsync();
         
-        await _itemTagService.TryModifySetTagsAsync(menuSet.ItemId, menuItemIds);
         return true;
     }
     
@@ -261,7 +260,6 @@ public class MenuService
         await _context.ItemToSets.AddRangeAsync(linksToAdd);
         await _context.SaveChangesAsync();
         
-        await _itemTagService.TryModifySetTagsAsync(menuSet.ItemId, menuItemIds);
         return true;
     }
 }

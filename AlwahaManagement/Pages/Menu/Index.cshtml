@@ -14,6 +14,15 @@
     </button>
 </div>
 
-<div class="mt-3" id="menu-list">
+<div class="mt-3 mb-3">
+    <form method="get" class="d-flex gap-2" onsubmit="return true;">
+        <input type="text" name="search" class="form-control" placeholder="Search menu items..." value="@Model.Search" style="max-width: 400px;"/>
+        <button type="submit" class="btn btn-secondary">
+            <i class="fa-solid fa-search"></i> Search
+        </button>
+    </form>
+</div>
+
+<div id="menu-list">
     <partial name="Shared/Menu/_MenuItemTable" model="(Model.MenuItems, false)" />
 </div>

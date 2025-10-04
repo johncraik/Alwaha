@@ -7,22 +7,22 @@
 
 <h2>@ViewData["Title"]</h2>
 <div class="mb-2">
-    <form method="post">
+    <form method="post" id="frm">
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="mb-2">
             <label asp-for="Input.Name" class="form-label"></label>
             <input asp-for="Input.Name" class="form-control" />
-            <span asp-validation-for="Input.Name"></span>
+            <span asp-validation-for="Input.Name" class="text-danger"></span>
         </div>
         <div class="mb-2">
             <label asp-for="Input.Colour" class="form-label"></label><br/>
-            <ejs-colorpicker id="colour" inline="true" ejs-for="Input.Colour" cssClass="mt-2" modeSwitcher="true" showButtons="false"></ejs-colorpicker>
-            <span asp-validation-for="Input.Colour"></span>
+            <ejs-colorpicker id="colour" inline="true" ejs-for="Input.Colour" cssClass="mt-2" modeSwitcher="true" showButtons="false"></ejs-colorpicker><br/>
+            <span asp-validation-for="Input.Colour" class="text-danger"></span>
         </div>
         <div class="mb-2">
             <label asp-for="Input.Icon" class="form-label"></label>
             <input asp-for="Input.Icon" class="form-control" />
-            <span asp-validation-for="Input.Icon"></span>
+            <span asp-validation-for="Input.Icon" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary">@(Model.Adding ? "Create" : "Modify")</button>
         <button type="button" class="btn btn-danger" onclick="location.assign('/Menu/Tags/Index')">
@@ -30,3 +30,14 @@
         </button>
     </form>
 </div>
+
+<script>
+    const form = document.getElementById('frm');
+    form.addEventListener('submit', function (e) {
+        const submitter = e.submitter;
+        if (submitter && submitter.classList.contains('e-btn')) {
+            // Stop Syncfusion buttons from posting the form
+            e.preventDefault();
+        }
+    });
+</script>

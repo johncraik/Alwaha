@@ -7,7 +7,7 @@
 
 <h2>@ViewData["Title"]</h2>
 <div class="mb-2">
-    <form method="post">
+    <form method="post" id="frm">
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="mb-2">
             <label asp-for="Input.Name" class="form-label"></label>
@@ -31,7 +31,7 @@
         </div>
         <div class="mb-2">
             <label asp-for="Input.Colour" class="form-label"></label><br/>
-            <ejs-colorpicker id="colour" inline="true" ejs-for="Input.Colour" cssClass="mt-2" modeSwitcher="true" showButtons="false"></ejs-colorpicker>
+            <ejs-colorpicker id="colour" inline="true" ejs-for="Input.Colour" cssClass="mt-2" modeSwitcher="true" showButtons="false"></ejs-colorpicker><br/>
             <span asp-validation-for="Input.Colour" class="text-danger"></span>
         </div>
         <div class="mb-2 form-check form-switch">
@@ -82,9 +82,50 @@
                 }
             </div>
         </div>
+        <div class="mb-3">
+            <label class="form-label">Tags</label>
+            <div class="border rounded p-3 bg-light" style="max-height: 200px; overflow-y: auto;">
+                @if (Model.ItemTags.Any())
+                {
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2">
+                        @foreach (var tag in Model.ItemTags)
+                        {
+                            <div class="col">
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="Input.SelectedTagIds"
+                                           value="@tag.TagId"
+                                           id="tag-@tag.TagId"
+                                           @(Model.Input.SelectedTagIds.Contains(tag.TagId) ? "checked" : "")/>
+                                    <label class="form-check-label" for="tag-@tag.TagId">
+                                        @tag.Name
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No tags available</p>
+                }
+            </div>
+        </div>
         <button type="submit" class="btn btn-primary">@(Model.Adding ? "Create" : "Modify")</button>
         <button type="button" class="btn btn-danger" onclick="location.assign('/Menu/Sets/Index')">
             Cancel
         </button>
     </form>
 </div>
+
+<script>
+    const form = document.getElementById('frm');
+    form.addEventListener('submit', function (e) {
+        const submitter = e.submitter;
+        if (submitter && submitter.classList.contains('e-btn')) {
+            // Stop Syncfusion buttons from posting the form
+            e.preventDefault();
+        }
+    });
+</script>

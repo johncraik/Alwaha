@@ -23,13 +23,25 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/");
+    options.Conventions.AllowAnonymousToPage("/Account/Login");
+    options.Conventions.AllowAnonymousToPage("/Account/Logout");
+    options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
+    options.Conventions.AllowAnonymousToPage("/Account/Lockout");
+    options.Conventions.AllowAnonymousToPage("/Account/ForgotPassword");
+    options.Conventions.AllowAnonymousToPage("/Account/ForgotPasswordConfirmation");
+    options.Conventions.AllowAnonymousToPage("/Account/ResetPassword");
+    options.Conventions.AllowAnonymousToPage("/Account/ResetPasswordConfirmation");
+});
 
 
 builder.Services.AddScoped<UserInfo>();
 builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<ItemTypeService>();
 builder.Services.AddScoped<ItemTagService>();
+builder.Services.AddScoped<BundleService>();
 
 // Add Syncfusion services
 var syncfusionLicenseKey = builder.Configuration.GetSection("SYNCFUSION-KEY").Value;

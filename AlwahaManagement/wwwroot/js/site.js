@@ -101,5 +101,52 @@ function toggleAvailability(itemId, isAvailable){
     })
 }
 
+function toggleSetAvailability(setId, isAvailable){
+    $.ajax({
+        method: "POST",
+        url: '/Menu/ToggleSetAvailability?id=' + setId + '&isAvailable=' + isAvailable,
+        success: function (r){
+            // Update header styling
+            var header = $('#header-' + setId);
+            var title = header.find('.card-title');
+            var label = $('#label-' + setId);
+
+            if (isAvailable) {
+                // Making available - restore original color from data attribute
+                var originalColor = header.data('original-color');
+                // Store the current font color if not already stored, then restore it
+                if (!header.data('original-font-color')) {
+                    header.data('original-font-color', header.css('color'));
+                }
+                var originalFontColor = header.data('original-font-color');
+                header.css('background-color', originalColor);
+                header.css('color', originalFontColor);
+                title.removeClass('fst-italic');
+                label.text('Available');
+            } else {
+                // Making unavailable - set to grey
+                // Store original font color before changing
+                if (!header.data('original-font-color')) {
+                    header.data('original-font-color', header.css('color'));
+                }
+                header.css('background-color', '#6c757d');
+                header.css('color', '#ffffff');
+                title.addClass('fst-italic');
+                label.text('Unavailable');
+            }
+
+            // Update the onchange handler for next toggle
+            var toggle = $('#toggle-' + setId);
+            toggle.attr('onchange', 'toggleSetAvailability("' + setId + '", ' + !isAvailable + ')');
+        },
+        error: function(xhr, status, error) {
+            alert('Error toggling availability: ' + error);
+            // Revert the checkbox state on error
+            var toggle = $('#toggle-' + setId);
+            toggle.prop('checked', !isAvailable);
+        }
+    })
+}
+
 
 

@@ -46,7 +46,7 @@
                                 </div>
                             }
                             <div class="d-flex justify-content-between align-items-center mt-auto">
-                                <span class="fs-5 fw-bold text-primary">£@item.Price</span>
+                                <span class="fs-5 fw-bold text-primary">@item.Price.ToString("C")</span>
                                 @if (!Model.FromSet)
                                 {
                                     <div class="form-check form-switch">

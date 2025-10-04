@@ -133,15 +133,15 @@ public class ItemTagService
         return true;
     }
     
-    public async Task<bool> TryModifySetTagsAsync(string setId, List<string> itemIds)
-    {
-        var items = await _context.MenuItems.Where(i => itemIds.Contains(i.ItemId)).ToListAsync();
-        if(items.Count == 0) return false;
-        
-        var tagIds = await _context.ItemToTags
-            .Where(itt => items.Select(i => i.ItemId).Contains(itt.ItemId))
-            .Select(itt => itt.TagId)
-            .ToListAsync();
-        return await TryModifyItemTagsAsync(setId, tagIds);
-    }
+    // public async Task<bool> TryModifySetTagsAsync(string setId, List<string> itemIds)
+    // {
+    //     var items = await _context.MenuItems.Where(i => itemIds.Contains(i.ItemId)).ToListAsync();
+    //     if(items.Count == 0) return false;
+    //     
+    //     var tagIds = await _context.ItemToTags
+    //         .Where(itt => items.Select(i => i.ItemId).Contains(itt.ItemId))
+    //         .Select(itt => itt.TagId)
+    //         .ToListAsync();
+    //     return await TryModifyItemTagsAsync(setId, tagIds);
+    // }
 }

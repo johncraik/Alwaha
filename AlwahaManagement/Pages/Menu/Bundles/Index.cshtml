@@ -1,0 +1,27 @@
+@page
+@model AlwahaManagement.Pages.Menu.Bundles.Index
+
+@{
+    ViewData["Title"] = "Bundle Items";
+}
+
+<div class="clearfix">
+    <h1 class="float-start">@ViewData["Title"]</h1>
+    <button class="btn btn-primary float-end mb-1"
+            onclick="location.assign('/Menu/Bundles/Edit')">
+        <span class="fa-solid fa-plus"></span> Create New Bundle Item
+    </button>
+</div>
+
+<div class="mt-3 mb-3">
+    <form method="get" class="d-flex gap-2" onsubmit="return true;">
+        <input type="text" name="search" class="form-control" placeholder="Search bundle items..." value="@Model.Search" style="max-width: 400px;"/>
+        <button type="submit" class="btn btn-secondary">
+            <i class="fa-solid fa-search"></i> Search
+        </button>
+    </form>
+</div>
+
+<div id="bundle-list">
+    <partial name="Shared/Menu/_BundleItemTable" model="Model.BundleItems" />
+</div>

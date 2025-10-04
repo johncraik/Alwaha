@@ -14,9 +14,11 @@ public class Index : PageModel
     }
     
     public List<IGrouping<ItemType, MenuItem>> MenuItems { get; set; }
-    
-    public async Task OnGet()
+    public string Search { get; set; }
+
+    public async Task OnGet(string search = "")
     {
-        MenuItems = await _menuService.GetMenuItemsAsync(showUnavailable: true);
+        Search = search;
+        MenuItems = await _menuService.GetMenuItemsAsync(search: search, showUnavailable: true);
     }
 }

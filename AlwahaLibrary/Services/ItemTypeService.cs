@@ -17,6 +17,7 @@ public class ItemTypeService
         _userInfo = userInfo;
     }
     
+    
     public async Task<List<ItemType>> GetItemTypesAsync()
         => await _context.ItemTypes
             .Where(t => !t.IsDeleted)

@@ -3,23 +3,24 @@
     {
         Layout = parentLayout.ToString();
     }
-    else
-    {
-        Layout = "/Areas/Identity/Pages/_Layout.cshtml";
-    }
 }
 
-<h1>Manage your account</h1>
+<div class="container py-4">
+    <div class="mb-4 text-center text-md-start">
+        <h1 class="display-5 fw-bold portal-title d-inline-block">Manage Account</h1>
+        <p class="text-muted mt-2">Change your account settings and preferences</p>
+    </div>
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="row">
+    <div class="row g-4">
         <div class="col-md-3">
-            <partial name="_ManageNav" />
+            <div class="manage-nav">
+                <partial name="_ManageNav" />
+            </div>
         </div>
         <div class="col-md-9">
-            @RenderBody()
+            <div class="manage-content">
+                @RenderBody()
+            </div>
         </div>
     </div>
 </div>

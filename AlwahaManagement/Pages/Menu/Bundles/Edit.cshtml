@@ -1,0 +1,70 @@
+@page "{id?}"
+@model AlwahaManagement.Pages.Menu.Bundles.Edit
+
+@{
+    ViewData["Title"] = $"{(Model.Adding ? "Create" : "Edit")} Bundle Item";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div class="mb-2">
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-2">
+            <label asp-for="Input.ItemId" class="form-label"></label>
+            <select asp-for="Input.ItemId" asp-items="Model.MenuItems" class="form-select" id="Input_ItemId">
+                <option value="">Select a menu item...</option>
+            </select>
+            <span asp-validation-for="Input.ItemId" class="text-danger"></span>
+        </div>
+        <div class="mb-2">
+            <label asp-for="Input.Quantity" class="form-label"></label>
+            <input asp-for="Input.Quantity" class="form-control" type="number" min="1" id="Input_Quantity"/>
+            <span asp-validation-for="Input.Quantity" class="text-danger"></span>
+        </div>
+        <div class="mb-2">
+            <label asp-for="Input.Price" class="form-label"></label>
+            <small id="price-helper" class="text-muted d-block mb-1"></small>
+            <input asp-for="Input.Price" class="form-control" type="number" step="0.01" min="0.01"/>
+            <span asp-validation-for="Input.Price" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">@(Model.Adding ? "Create" : "Modify")</button>
+        <button type="button" class="btn btn-danger" onclick="location.assign('/Menu/Bundles/Index')">
+            Cancel
+        </button>
+    </form>
+</div>
+
+<script>
+    function updatePriceHelper() {
+        const select = document.getElementById('Input_ItemId');
+        const quantityInput = document.getElementById('Input_Quantity');
+        const priceHelper = document.getElementById('price-helper');
+
+        const selectedText = select.options[select.selectedIndex]?.text;
+        const quantity = parseInt(quantityInput.value);
+
+        if (!selectedText || select.value === '') {
+            priceHelper.textContent = 'Select a menu item to see calculated price';
+            return;
+        }
+
+        if (!quantity || quantity < 1) {
+            priceHelper.textContent = 'Enter a quantity to see calculated price';
+            return;
+        }
+
+        // Extract price from the format "Type - Name - £X.XX"
+        const priceMatch = selectedText.match(/£([\d.]+)$/);
+        if (priceMatch) {
+            const itemPrice = parseFloat(priceMatch[1]);
+            const totalPrice = (itemPrice * quantity).toFixed(2);
+            priceHelper.textContent = `${quantity} × £${itemPrice.toFixed(2)} = £${totalPrice} (if ordered individually)`;
+        }
+    }
+
+    document.getElementById('Input_ItemId').addEventListener('change', updatePriceHelper);
+    document.getElementById('Input_Quantity').addEventListener('input', updatePriceHelper);
+
+    // Initialize on page load
+    updatePriceHelper();
+</script>

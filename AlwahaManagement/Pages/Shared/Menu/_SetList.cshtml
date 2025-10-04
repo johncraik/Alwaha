@@ -7,16 +7,16 @@
         <h5 class="mb-3 pb-2 border-bottom border-3">@group.Key.Name</h5>
         @foreach (var set in group.OrderBy(s => s.Name))
         {
-            var fontColour = ColourHelper.FontColour(set.Colour ?? "#6366f1");
-            var bgColour = set.Colour ?? "#6366f1";
-           
+            var bgColour = set.IsAvailable ? (set.Colour ?? "#6366f1") : "#6c757d";
+            var fontColour = ColourHelper.FontColour(bgColour);
+
             <div class="card shadow-sm mb-4">
-                <div class="card-header py-3 position-relative clearfix" id="header-@set.ItemId" style="background-color: @bgColour; color: @fontColour;">
+                <div class="card-header py-3 position-relative clearfix" id="header-@set.ItemId" style="background-color: @bgColour; color: @fontColour;" data-original-color="@bgColour" data-original-font-color="@fontColour">
                     <div class="float-start">
                         <h5 class="card-title mb-0 fw-bold @(!set.IsAvailable ? "fst-italic" : "")">@set.Name</h5>
                     </div>
                     <button type="button" class="btn btn-sm btn-danger float-end"
-                            title="Delete Menu Set" onclick="confirmDelete('@set.Name', '/Menu/Sets/DeleteSet?id=@set.ItemId', 'set-list', '/Menu/Sets/GetSetsList')">
+                            title="Delete Menu Set" onclick="confirmDelete('@set.Name', '/Menu/DeleteSet?id=@set.ItemId', 'set-list', '/Menu/GetSetsList')">
                         <i class="fa-solid fa-trash"></i> Delete
                     </button>
                     <button type="button" class="btn btn-sm btn-primary float-end"
@@ -32,13 +32,13 @@
                             @foreach (var itemToTag in set.ItemsToTags)
                             {
                                 <span class="me-2 mb-2 d-inline-block">
-                                    <partial name="Shared/Menu/_ItemTagBadge" model="itemToTag.ItemTag"/>
+                                    <partial name="Menu/_ItemTagBadge" model="itemToTag.ItemTag"/>
                                 </span>
                             }
                         </div>
                     }
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="fs-5 fw-bold text-primary">£@set.Price</span>
+                        <span class="fs-5 fw-bold text-primary">@set.Price.ToString("C")</span>
                         <div class="form-check form-switch">
                             @if (set.IsAvailable)
                             {
