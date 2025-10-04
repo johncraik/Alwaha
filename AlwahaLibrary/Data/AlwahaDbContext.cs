@@ -34,7 +34,7 @@ public class AlwahaDbContext : DbContext
 
         modelBuilder.Entity<ItemToSet>()
             .HasOne(its => its.MenuSet)
-            .WithMany()
+            .WithMany(m => m.ItemsToSets)
             .HasForeignKey(its => its.SetId)
             .OnDelete(DeleteBehavior.Restrict); // Prevent cascade to avoid multiple cascade paths
 
@@ -45,13 +45,13 @@ public class AlwahaDbContext : DbContext
         // Configure relationships for ItemToTag
         modelBuilder.Entity<ItemToTag>()
             .HasOne(it => it.MenuItem)
-            .WithMany()
+            .WithMany(m => m.ItemsToTags)
             .HasForeignKey(it => it.ItemId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ItemToTag>()
             .HasOne(it => it.ItemTag)
-            .WithMany()
+            .WithMany(t => t.ItemsToTags)
             .HasForeignKey(it => it.TagId)
             .OnDelete(DeleteBehavior.Cascade);
 

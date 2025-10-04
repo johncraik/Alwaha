@@ -4,16 +4,19 @@ using AlwahaLibrary.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AlwahaLibrary.Migrations
+namespace AlwahaLibrary.Data.Migrations
 {
     [DbContext(typeof(AlwahaDbContext))]
-    partial class AlwahaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251004142247_NavProps")]
+    partial class NavProps
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,12 +121,29 @@ namespace AlwahaLibrary.Migrations
                     b.Property<string>("SetId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("MenuItemItemId")
-                        .HasColumnType("varchar(255)");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("ItemId", "SetId");
-
-                    b.HasIndex("MenuItemItemId");
 
                     b.HasIndex("SetId");
 
@@ -138,7 +158,17 @@ namespace AlwahaLibrary.Migrations
                     b.Property<string>("TagId")
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("ItemTagTagId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("MenuItemItemId")
+                        .HasColumnType("varchar(255)");
+
                     b.HasKey("ItemId", "TagId");
+
+                    b.HasIndex("ItemTagTagId");
+
+                    b.HasIndex("MenuItemItemId");
 
                     b.HasIndex("TagId");
 
@@ -227,6 +257,9 @@ namespace AlwahaLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("MenuItemItemId")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -243,6 +276,8 @@ namespace AlwahaLibrary.Migrations
                     b.HasKey("ItemId");
 
                     b.HasIndex("ItemTypeId");
+
+                    b.HasIndex("MenuItemItemId");
 
                     b.ToTable("MenuItems");
                 });
@@ -266,10 +301,6 @@ namespace AlwahaLibrary.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AlwahaLibrary.Models.MenuItem", null)
-                        .WithMany("ItemsToSets")
-                        .HasForeignKey("MenuItemItemId");
-
                     b.HasOne("AlwahaLibrary.Models.MenuItem", "MenuSet")
                         .WithMany()
                         .HasForeignKey("SetId")
@@ -284,13 +315,21 @@ namespace AlwahaLibrary.Migrations
             modelBuilder.Entity("AlwahaLibrary.Models.ItemToTag", b =>
                 {
                     b.HasOne("AlwahaLibrary.Models.MenuItem", "MenuItem")
-                        .WithMany("ItemsToTags")
+                        .WithMany()
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AlwahaLibrary.Models.ItemTag", "ItemTag")
+                    b.HasOne("AlwahaLibrary.Models.ItemTag", null)
                         .WithMany("ItemsToTags")
+                        .HasForeignKey("ItemTagTagId");
+
+                    b.HasOne("AlwahaLibrary.Models.MenuItem", null)
+                        .WithMany("ItemsToTags")
+                        .HasForeignKey("MenuItemItemId");
+
+                    b.HasOne("AlwahaLibrary.Models.ItemTag", "ItemTag")
+                        .WithMany()
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -308,6 +347,10 @@ namespace AlwahaLibrary.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("AlwahaLibrary.Models.MenuItem", null)
+                        .WithMany("SetItems")
+                        .HasForeignKey("MenuItemItemId");
+
                     b.Navigation("ItemType");
                 });
 
@@ -320,9 +363,9 @@ namespace AlwahaLibrary.Migrations
                 {
                     b.Navigation("BundleItems");
 
-                    b.Navigation("ItemsToSets");
-
                     b.Navigation("ItemsToTags");
+
+                    b.Navigation("SetItems");
                 });
 #pragma warning restore 612, 618
         }

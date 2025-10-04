@@ -15,8 +15,8 @@
             <span asp-validation-for="Input.Name"></span>
         </div>
         <div class="mb-2">
-            <label asp-for="Input.Colour" class="form-label"></label>
-            <input asp-for="Input.Colour" class="form-control" />
+            <label asp-for="Input.Colour" class="form-label"></label><br/>
+            <ejs-colorpicker id="colour" inline="true" ejs-for="Input.Colour" cssClass="mt-2" modeSwitcher="true" showButtons="false"></ejs-colorpicker>
             <span asp-validation-for="Input.Colour"></span>
         </div>
         <div class="mb-2">

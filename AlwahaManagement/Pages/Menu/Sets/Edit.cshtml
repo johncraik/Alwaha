@@ -1,0 +1,90 @@
+@page "{id?}"
+@model AlwahaManagement.Pages.Menu.Sets.Edit
+
+@{
+    ViewData["Title"] = $"{(Model.Adding ? "Create" : "Edit")} Menu Set";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div class="mb-2">
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-2">
+            <label asp-for="Input.Name" class="form-label"></label>
+            <input asp-for="Input.Name" class="form-control"/>
+            <span asp-validation-for="Input.Name" class="text-danger"></span>
+        </div>
+        <div class="mb-2">
+            <label asp-for="Input.Description" class="form-label"></label>
+            <textarea asp-for="Input.Description" rows="4" class="form-control"></textarea>
+            <span asp-validation-for="Input.Description" class="text-danger"></span>
+        </div>
+        <div class="mb-2">
+            <label asp-for="Input.Price" class="form-label"></label>
+            <input asp-for="Input.Price" class="form-control"/>
+            <span asp-validation-for="Input.Price" class="text-danger"></span>
+        </div>
+        <div class="mb-2">
+            <label asp-for="Input.ItemTypeId" class="form-label"></label>
+            <select asp-for="Input.ItemTypeId" asp-items="Model.ItemTypes" class="form-select"></select>
+            <span asp-validation-for="Input.ItemTypeId" class="text-danger"></span>
+        </div>
+        <div class="mb-2">
+            <label asp-for="Input.Colour" class="form-label"></label><br/>
+            <ejs-colorpicker id="colour" inline="true" ejs-for="Input.Colour" cssClass="mt-2" modeSwitcher="true" showButtons="false"></ejs-colorpicker>
+            <span asp-validation-for="Input.Colour" class="text-danger"></span>
+        </div>
+        <div class="mb-2 form-check form-switch">
+            @if (Model.Input.IsAvailable)
+            {
+                <input asp-for="Input.IsAvailable" class="form-check-input" type="checkbox" id="is-av" checked/>
+            }
+            else
+            {
+                <input asp-for="Input.IsAvailable" class="form-check-input" type="checkbox" id="is-av"/>
+            }
+            <label asp-for="Input.IsAvailable" class="form-check-label" for="is-av"></label>
+            <span asp-validation-for="Input.IsAvailable" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Menu Items</label>
+            <div class="border rounded p-3 bg-light" style="max-height: 400px; overflow-y: auto;">
+                @if (Model.MenuItems.Any())
+                {
+                    @foreach (var group in Model.MenuItems)
+                    {
+                        <div class="mb-3">
+                            <h6 class="fw-bold mb-2">@group.Key.Name</h6>
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2">
+                                @foreach (var item in group.OrderBy(i => i.Name))
+                                {
+                                    <div class="col">
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                   type="checkbox"
+                                                   name="Input.SelectedMenuItems"
+                                                   value="@item.ItemId"
+                                                   id="item-@item.ItemId"
+                                                   @(Model.Input.SelectedMenuItems.Contains(item.ItemId) ? "checked" : "")/>
+                                            <label class="form-check-label" for="item-@item.ItemId">
+                                                @item.Name
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No menu items available</p>
+                }
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">@(Model.Adding ? "Create" : "Modify")</button>
+        <button type="button" class="btn btn-danger" onclick="location.assign('/Menu/Sets/Index')">
+            Cancel
+        </button>
+    </form>
+</div>

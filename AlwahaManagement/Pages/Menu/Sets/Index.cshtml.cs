@@ -2,7 +2,7 @@ using AlwahaLibrary.Models;
 using AlwahaLibrary.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AlwahaManagement.Pages.Menu;
+namespace AlwahaManagement.Pages.Menu.Sets;
 
 public class Index : PageModel
 {
@@ -12,11 +12,11 @@ public class Index : PageModel
     {
         _menuService = menuService;
     }
-    
-    public List<IGrouping<ItemType, MenuItem>> MenuItems { get; set; }
-    
+
+    public List<IGrouping<ItemType, MenuItem>> MenuSets { get; set; }
+
     public async Task OnGet()
     {
-        MenuItems = await _menuService.GetMenuItemsAsync(showUnavailable: true);
+        MenuSets = await _menuService.GetMenuItemsAsync(showUnavailable: true, getSets: true);
     }
 }

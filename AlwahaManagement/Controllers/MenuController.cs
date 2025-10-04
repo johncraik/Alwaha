@@ -83,6 +83,8 @@ public class MenuController : Controller
         item.IsAvailable = isAvailable;
         return await _menuService.TryUpdateMenuItemAsync(item, modelState);
     }
+    
+    
 
     [HttpGet]
     public async Task<IActionResult> GetItemTagsList()

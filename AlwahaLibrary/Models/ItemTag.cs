@@ -18,4 +18,6 @@ public class ItemTag : AuditModel
 
     [Required]
     public string Icon { get; set; }
+    
+    public ICollection<ItemToTag> ItemsToTags { get; set; }
 }

@@ -27,5 +27,6 @@ public class MenuItem : AuditModel
     public string? Colour { get; set; }
 
     public ICollection<BundleItem> BundleItems { get; set; }
-    public ICollection<MenuItem> SetItems { get; set; }
+    public ICollection<ItemToSet> ItemsToSets { get; set; }
+    public ICollection<ItemToTag> ItemsToTags { get; set; }
 }

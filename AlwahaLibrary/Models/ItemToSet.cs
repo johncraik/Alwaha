@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AlwahaLibrary.Models;
 
 [PrimaryKey(nameof(ItemId), nameof(SetId))]
-public class ItemToSet : AuditModel
+public class ItemToSet
 {
     public string ItemId { get; set; } = Guid.NewGuid().ToString();
     [ForeignKey(nameof(ItemId))]

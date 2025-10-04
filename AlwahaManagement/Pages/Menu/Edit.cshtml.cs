@@ -6,6 +6,8 @@ using AlwahaLibrary.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Elfie.Model.Tree;
+using Newtonsoft.Json.Converters;
 
 namespace AlwahaManagement.Pages.Menu;
 
@@ -13,14 +15,17 @@ public class Edit : PageModel
 {
     private readonly MenuService _menuService;
     private readonly ItemTypeService _itemTypeService;
+    private readonly ItemTagService _itemTagService;
 
     public bool Adding { get; set; }
 
     public Edit(MenuService menuService,
-        ItemTypeService itemTypeService)
+        ItemTypeService itemTypeService,
+        ItemTagService itemTagService)
     {
         _menuService = menuService;
         _itemTypeService = itemTypeService;
+        _itemTagService = itemTagService;
     }
 
     public class MenuItemInputModel
@@ -34,7 +39,9 @@ public class Edit : PageModel
         [Required]
         public double Price { get; set; }
         public string? ImagePath { get; set; }
+        [DisplayName("Available?")]
         public bool IsAvailable { get; set; } = true;
+        public List<string> SelectedTagIds { get; set; } = [];
 
         public MenuItemInputModel()
         {
@@ -50,7 +57,7 @@ public class Edit : PageModel
             IsAvailable = item.IsAvailable;
         }
 
-        public void Fill(MenuItem item)
+        public virtual void Fill(MenuItem item, bool isSet = false)
         {
             item.ItemTypeId = ItemTypeId;
             item.Name = Name;
@@ -58,13 +65,14 @@ public class Edit : PageModel
             item.Price = Price;
             item.ImagePath = ImagePath;
             item.IsAvailable = IsAvailable;
-            item.IsSet = false;
+            item.IsSet = isSet;
         }
     }
     
     [BindProperty]
     public MenuItemInputModel Input { get; set; }
     public List<SelectListItem> ItemTypes { get; set; }
+    public List<ItemTag> ItemTags { get; set; }
 
     public async Task SetupPage()
     {
@@ -75,6 +83,7 @@ public class Edit : PageModel
                 Value = t.ItemTypeId
             })
             .ToList();
+        ItemTags = await _itemTagService.GetItemTagsAsync();
     }
 
     public void SetupAdding(string? id)
@@ -95,8 +104,11 @@ public class Edit : PageModel
 
         var item = await _menuService.GetMenuItemAsync(id!);
         if(item == null) return NotFound();
-        
-        Input = new MenuItemInputModel(item);
+
+        Input = new MenuItemInputModel(item)
+        {
+            SelectedTagIds = await _itemTagService.GetItemTagIdsAsync(id!)
+        };
         return Page();
     }
 
@@ -108,21 +120,30 @@ public class Edit : PageModel
 
         var msw = new ModelStateWrapper(ModelState);
         bool res;
+        string itemId;
         if (Adding)
         {
             var item = new MenuItem();
             Input.Fill(item);
             res = await _menuService.TryCreateMenuItemAsync(item, msw);
+            itemId = item.ItemId;
         }
         else
         {
             var item = await _menuService.GetMenuItemAsync(id!);
             if (item == null) return NotFound();
-            
+
             Input.Fill(item);
             res = await _menuService.TryUpdateMenuItemAsync(item, msw);
+            itemId = item.ItemId;
         }
+
+        if (!res) return Page();
         
-        return res ? RedirectToPage("./Index") : Page();
+        res = await _itemTagService.TryModifyItemTagsAsync(itemId, Input.SelectedTagIds);
+        if(res) return RedirectToPage("./Index");
+        
+        msw.AddModelError("SelectedTagIds", "Failed to update item tags");
+        return Page();
     }
 }

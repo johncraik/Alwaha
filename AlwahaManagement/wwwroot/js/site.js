@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function confirmDelete(name, url, partialUrl){
+function confirmDelete(name, url, modelId, partialUrl){
     Swal.fire({
         title: 'Are you sure you want to delete ' + name + '?',
         icon: 'warning',
@@ -55,7 +55,7 @@ function confirmDelete(name, url, partialUrl){
                         location.reload();
                     }
                     else{
-                        FetchPartial(partialUrl, document.getElementById('menu-list'));
+                        FetchPartial(partialUrl, document.getElementById(modelId));
                     }
                 }
             })
