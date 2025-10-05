@@ -1,4 +1,6 @@
 @page
+@using AlwahaLibrary.Services
+@inject UserInfo UserInfo
 @model AlwahaManagement.Pages.Menu.Sets.Index
 
 @{
@@ -7,10 +9,30 @@
 
 <div class="clearfix">
     <h1 class="float-start">@ViewData["Title"]</h1>
-    <button class="btn btn-primary float-end mb-1"
-            onclick="location.assign('/Menu/Sets/Edit')">
-        <span class="fa-solid fa-plus"></span> Create New Menu Set
-    </button>
+    @if (!Model.IsRestore && UserInfo.CanCreate())
+    {
+        <button class="btn btn-primary float-end mb-1"
+                onclick="location.assign('/Menu/Sets/Edit')">
+            <span class="fa-solid fa-plus"></span> Create New Menu Set
+        </button>
+    }
+    @if (UserInfo.CanRestore())
+    {
+        @if (Model.IsRestore)
+        {
+            <button class="btn btn-secondary float-end mb-1 me-2"
+                    onclick="location.assign('/Menu/Sets/Index')">
+                <span class="fa-solid fa-arrow-left"></span> Back to Menu Sets
+            </button>
+        }
+        else
+        {
+            <button class="btn btn-warning float-end mb-1 me-2"
+                    onclick="location.assign('/Menu/Sets/Index?isRestore=true')">
+                <span class="fa-solid fa-trash-restore"></span> Restore Sets
+            </button>
+        }
+    }
 </div>
 
 <div class="mt-3 mb-3">
@@ -23,5 +45,5 @@
 </div>
 
 <div id="set-list">
-    <partial name="Shared/Menu/_SetList" model="Model.MenuSets" />
+    <partial name="Shared/Menu/_SetList" model="(Model.MenuSets, Model.IsRestore)" />
 </div>

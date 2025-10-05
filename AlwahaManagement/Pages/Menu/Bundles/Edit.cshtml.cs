@@ -1,14 +1,17 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using AlwahaLibrary.Authentication;
 using AlwahaLibrary.Helpers;
 using AlwahaLibrary.Models;
 using AlwahaLibrary.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AlwahaManagement.Pages.Menu.Bundles;
 
+[Authorize(Roles = $"{SystemRoles.Admin}, {SystemRoles.CreatePermission}, {SystemRoles.EditPermission}")]
 public class Edit : PageModel
 {
     private readonly BundleService _bundleService;

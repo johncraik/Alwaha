@@ -1,0 +1,143 @@
+@page
+@model AlwahaManagement.Pages.SettingsModel
+
+@{
+    ViewData["Title"] = "Application Settings";
+}
+
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1><i class="fa-solid fa-cog me-2"></i>@ViewData["Title"]</h1>
+            <p class="text-muted mb-0">Configure system-wide application settings</p>
+        </div>
+    </div>
+</div>
+
+@if (Model.SuccessMessage != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fa-solid fa-check-circle me-2"></i>@Model.SuccessMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <form method="post">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fa-solid fa-history me-2"></i>Audit Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="AuditLifetimeMonths" class="form-label">
+                            <i class="fa-solid fa-calendar-alt me-1"></i>Audit Lifetime (Months)
+                        </label>
+                        <input asp-for="AuditLifetimeMonths" class="form-control" type="number" min="1" max="120" />
+                        <span asp-validation-for="AuditLifetimeMonths" class="text-danger"></span>
+                        <div class="form-text">
+                            How many months to retain audit trail entries before automatic cleanup
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fa-solid fa-user-check me-2"></i>User Account Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input asp-for="AutoConfirmEmail" class="form-check-input" type="checkbox" role="switch" />
+                            <label asp-for="AutoConfirmEmail" class="form-check-label">
+                                <i class="fa-solid fa-envelope-circle-check me-1"></i>Auto-Confirm Email Addresses
+                            </label>
+                        </div>
+                        <span asp-validation-for="AutoConfirmEmail" class="text-danger"></span>
+                        <div class="form-text ms-4">
+                            When enabled, new user accounts will have their email addresses automatically confirmed without requiring email verification
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fa-solid fa-key me-2"></i>Password Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="MinPasswordLength" class="form-label">
+                            <i class="fa-solid fa-ruler me-1"></i>Minimum Password Length
+                        </label>
+                        <input asp-for="MinPasswordLength" class="form-control" type="number" min="6" max="32" />
+                        <span asp-validation-for="MinPasswordLength" class="text-danger"></span>
+                        <div class="form-text">
+                            Minimum number of characters required for user passwords (6-32)
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="GeneratedPasswordLength" class="form-label">
+                            <i class="fa-solid fa-wand-magic-sparkles me-1"></i>Generated Password Length
+                        </label>
+                        <input asp-for="GeneratedPasswordLength" class="form-control" type="number" min="8" max="64" />
+                        <span asp-validation-for="GeneratedPasswordLength" class="text-danger"></span>
+                        <div class="form-text">
+                            Length of automatically generated passwords for new users (must be ≥ minimum password length)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-save me-1"></i>Save Settings
+                </button>
+                <a href="/" class="btn btn-secondary">
+                    <i class="fa-solid fa-times me-1"></i>Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-info">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-info-circle me-2"></i>Information</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="fw-bold">About Settings</h6>
+                <p class="small text-muted">
+                    These settings control system-wide behavior for the Alwaha Management application.
+                </p>
+
+                <hr>
+
+                <h6 class="fw-bold">Important Notes</h6>
+                <ul class="small text-muted">
+                    <li>Changes take effect immediately</li>
+                    <li>Some settings may require users to log out and back in</li>
+                    <li>Only administrators can modify these settings</li>
+                    <li>Settings are persisted to <code>settings.json</code></li>
+                </ul>
+
+                <hr>
+
+                <h6 class="fw-bold">Security Recommendations</h6>
+                <ul class="small text-muted">
+                    <li>Keep audit lifetime at least 3 months for compliance</li>
+                    <li>Require email confirmation in production environments</li>
+                    <li>Use minimum password length of 8+ characters</li>
+                    <li>Generate passwords should be 16+ characters</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

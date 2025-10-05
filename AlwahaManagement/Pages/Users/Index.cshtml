@@ -1,0 +1,89 @@
+@page
+@using AlwahaLibrary.Authentication
+@model AlwahaManagement.Pages.Users.Index
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div class="clearfix mb-4">
+    <h1 class="float-start">@ViewData["Title"]</h1>
+    <button class="btn btn-primary float-end"
+            onclick="location.assign('/Users/Create')">
+        <i class="fa-solid fa-plus"></i> Create New User
+    </button>
+</div>
+
+<div class="list-group user-list">
+    @foreach (var userModel in Model.Users)
+    {
+        <div class="list-group-item user-list-item">
+            <div class="d-flex w-100 justify-content-between align-items-start">
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="user-avatar">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-1 user-username">@userModel.User.UserName</h5>
+                            <p class="mb-1 text-muted user-email">
+                                <i class="fa-solid fa-envelope me-1"></i>@userModel.User.Email
+                            </p>
+                            @if (!string.IsNullOrEmpty(userModel.User.PhoneNumber))
+                            {
+                                <p class="mb-0 text-muted user-phone">
+                                    <i class="fa-solid fa-phone me-1"></i>@userModel.User.PhoneNumber
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div class="user-roles mt-2">
+                        @foreach (var role in userModel.Roles)
+                        {
+                            var badgeClass = role switch
+                            {
+                                SystemRoles.Admin => "bg-info",
+                                SystemRoles.CreatePermission => "bg-success",
+                                SystemRoles.EditPermission => "bg-warning",
+                                SystemRoles.DeletePermission => "bg-danger",
+                                _ => "bg-secondary"
+                            };
+                            <span class="badge @badgeClass me-1">@role</span>
+                        }
+                        @if (!userModel.Roles.Any())
+                        {
+                            <span class="badge bg-secondary">No Roles</span>
+                        }
+                    </div>
+                </div>
+                <div class="d-flex flex-column align-items-end">
+                    <div class="mb-3">
+                        @if (userModel.User.TwoFactorEnabled)
+                        {
+                            <span class="badge bg-success">
+                                <i class="fa-solid fa-shield-halved me-1"></i>2FA Enabled
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">
+                                <i class="fa-solid fa-shield-halved me-1"></i>2FA Disabled
+                            </span>
+                        }
+                    </div>
+                    <button class="btn btn-sm btn-primary"
+                            onclick="location.assign('/Users/Details/@userModel.User.Id')">
+                        <i class="fa-solid fa-eye"></i> View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Users.Any())
+{
+    <div class="alert alert-info mt-4">
+        <i class="fa-solid fa-info-circle me-2"></i>No users found.
+    </div>
+}

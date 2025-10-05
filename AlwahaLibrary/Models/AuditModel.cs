@@ -11,6 +11,8 @@ public class AuditModel
     public DateTime? DeletedDate { get; set; }
     public string? DeletedBy { get; set; }
     public bool IsDeleted { get; set; }
+    public DateTime? RestoredDate { get; set; }
+    public string? RestoredBy { get; set; }
     
     public void FillCreated(string userId)
     {
@@ -29,10 +31,16 @@ public class AuditModel
         DeletedDate = DateTime.Now;
         DeletedBy = userId;
         IsDeleted = true;
+        
+        RestoredDate = null;
+        RestoredBy = null;
     }
     
-    public void Restore()
+    public void FillRestored(string userId)
     {
+        RestoredDate = DateTime.Now;
+        RestoredBy = userId;
+        
         IsDeleted = false;
         DeletedDate = null;
         DeletedBy = null;

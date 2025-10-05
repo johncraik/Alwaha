@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -36,6 +36,28 @@
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" asp-page="/Menu/ItemTypes/Index">Menu Item Types</a></li>
                             <li><a class="dropdown-item" asp-page="/Menu/Tags/Index">Menu Item Tags (Allergies)</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-semibold px-3" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Analytics
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                            <li><a class="dropdown-item" asp-page="/Analytics/Index">Website Analytics</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" asp-page="/Audit/User">User Audit Trail</a></li>
+                            <li><a class="dropdown-item" asp-page="/Audit/Data">Data Audit Trail</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-semibold px-3" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            System
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                            <li><a class="dropdown-item" asp-page="/Settings"><i class="fa-solid fa-cog me-2"></i>Application Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" asp-page="/Users/Index"><i class="fa-solid fa-users me-2"></i>View Users</a></li>
+                            <li><a class="dropdown-item" asp-page="/Users/Create"><i class="fa-solid fa-user-plus me-2"></i>Create User</a></li>
                         </ul>
                     </li>
                 </ul>

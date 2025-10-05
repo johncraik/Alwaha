@@ -1,26 +1,55 @@
-@model List<AlwahaLibrary.Models.ItemType>
+@using AlwahaLibrary.Services
+@inject UserInfo UserInfo
+@model (List<AlwahaLibrary.Models.ItemType> Types, bool IsRestore)
 
-<ul id="sortable-list" class="list-group" aria-label="Reorder options">
-    @foreach (var type in Model)
+@if (!Model.Types.Any())
+{
+    <div class="alert alert-info text-center">
+        <i class="fa-solid fa-info-circle me-2"></i>No item types found.
+    </div>
+}
+else
+{
+    <ul id="sortable-list" class="list-group" aria-label="Reorder options">
+    @foreach (var type in Model.Types)
     {
         <li class="list-group-item item-type-card d-flex align-items-center border-0 shadow-sm mb-2" data-id="@type.ItemTypeId">
-            <button class="btn btn-sm btn-gradient-purple text-white me-3" aria-label="Drag @type.Name">⋮⋮</button>
+            @if (!Model.IsRestore)
+            {
+                <button class="btn btn-sm btn-gradient-purple text-white me-3" aria-label="Drag @type.Name">⋮⋮</button>
+            }
             <span class="label fw-semibold">@type.Name</span>
             <div class="btn-group ms-auto" role="group" aria-label="Row actions">
-              <button type="button" class="btn btn-sm btn-outline-primary js-no-drag js-edit" aria-label="Edit @type.Name"
-                      onclick="location.assign('/Menu/ItemTypes/Edit/@type.ItemTypeId')">
-                <span class="fa-solid fa-pencil"></span>
-              </button>
-              <button type="button" class="btn btn-sm btn-outline-danger js-no-drag js-delete" aria-label="Delete @type.Name"
-                      onclick="confirmDelete('@type.Name', '/Menu/DeleteType?id=@type.ItemTypeId', 'item-list', undefined)">
-                <span class="fa-solid fa-trash"></span>
-              </button>
+              @if (Model.IsRestore && UserInfo.CanRestore())
+              {
+                  <button type="button" class="btn btn-sm btn-outline-success js-no-drag js-restore" aria-label="Restore @type.Name"
+                          onclick="confirmRestore('@type.Name', '/Menu/RestoreType?id=@type.ItemTypeId', 'item-list', undefined)">
+                    <span class="fa-solid fa-trash-restore"></span> Restore
+                  </button>
+              }
+              else
+              {
+                  @if (UserInfo.CanEdit())
+                  {
+                      <button type="button" class="btn btn-sm btn-outline-primary js-no-drag js-edit" aria-label="Edit @type.Name"
+                              onclick="location.assign('/Menu/ItemTypes/Edit/@type.ItemTypeId')">
+                        <span class="fa-solid fa-pencil"></span>
+                      </button>
+                  }
+                  @if (UserInfo.CanDelete())
+                  {
+                      <button type="button" class="btn btn-sm btn-outline-danger js-no-drag js-delete" aria-label="Delete @type.Name"
+                              onclick="confirmDelete('@type.Name', '/Menu/DeleteType?id=@type.ItemTypeId', 'item-list', undefined)">
+                        <span class="fa-solid fa-trash"></span>
+                      </button>
+                  }
+              }
             </div>
         </li>
     }
-</ul>
+    </ul>
 
-<script>
+    <script>
     document.addEventListener('DOMContentLoaded', () => {
       const listEl = document.getElementById('sortable-list');
       const errorBanner = document.getElementById('error-banner');
@@ -59,4 +88,5 @@
         }
       });
     });
-</script>
+    </script>
+}

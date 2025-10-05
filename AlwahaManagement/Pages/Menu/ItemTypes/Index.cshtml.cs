@@ -8,17 +8,21 @@ namespace AlwahaManagement.Pages.Menu.ItemTypes;
 public class Index : PageModel
 {
     private readonly ItemTypeService _itemTypeService;
+    private readonly UserInfo _userInfo;
 
-    public Index(ItemTypeService itemTypeService)
+    public Index(ItemTypeService itemTypeService, UserInfo userInfo)
     {
         _itemTypeService = itemTypeService;
+        _userInfo = userInfo;
     }
-    
+
     public List<ItemType> ItemTypes { get; set; }
-    
-    public async Task<IActionResult> OnGet()
+    public bool IsRestore { get; set; }
+
+    public async Task<IActionResult> OnGet(bool isRestore = false)
     {
-        ItemTypes = await _itemTypeService.GetItemTypesAsync();
+        IsRestore = isRestore && _userInfo.CanRestore();
+        ItemTypes = await _itemTypeService.GetItemTypesAsync(isRestore);
         return Page();
     }
 }

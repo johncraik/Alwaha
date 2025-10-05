@@ -1,0 +1,6 @@
+{
+  "AuditLifetimeMonths": "10",
+  "AutoConfirmEmail": "True",
+  "MinPasswordLength": "8",
+  "GeneratedPasswordLength": "16"
+}

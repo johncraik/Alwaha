@@ -26,13 +26,14 @@ public class MenuService
     public async Task<List<IGrouping<ItemType, MenuItem>>> GetMenuItemsAsync(
         string search = "", 
         bool showUnavailable = false,
-        bool getSets = false)
+        bool getSets = false,
+        bool isRestore = false)
     {
         var query = _context.MenuItems
-            .Where(i => !i.IsDeleted)
             .Include(i => i.ItemType)
             .Include(i => i.ItemsToTags)
             .ThenInclude(itt => itt.ItemTag)
+            .Where(i => i.IsDeleted == isRestore)
             .AsQueryable();
         if (getSets)
         {
@@ -200,6 +201,19 @@ public class MenuService
         if (!authorised) return false;
         
         menuItem.FillDeleted(_userInfo.UserId);
+        _context.MenuItems.Update(menuItem);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> TryRestoreMenuItemAsync(MenuItem menuItem)
+    {
+        if(_userInfo.UserId == null) return false;
+        
+        var authorised = _userInfo.CanRestore();
+        if (!authorised) return false;
+        
+        menuItem.FillRestored(_userInfo.UserId);
         _context.MenuItems.Update(menuItem);
         await _context.SaveChangesAsync();
         return true;

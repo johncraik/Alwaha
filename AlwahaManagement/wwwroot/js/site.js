@@ -63,6 +63,32 @@ function confirmDelete(name, url, modelId, partialUrl){
     })
 }
 
+function confirmRestore(name, url, modelId, partialUrl){
+    Swal.fire({
+        title: 'Are you sure you want to restore ' + name + '?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#10b981',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Restore'
+    }).then((res) => {
+        if(res.value){
+            $.ajax({
+                method: "POST",
+                url: url,
+                success: function (r){
+                    if(partialUrl === undefined){
+                        location.reload();
+                    }
+                    else{
+                        FetchPartial(partialUrl, document.getElementById(modelId));
+                    }
+                }
+            })
+        }
+    })
+}
+
 function toggleAvailability(itemId, isAvailable){
     $.ajax({
         method: "POST",

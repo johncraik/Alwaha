@@ -23,4 +23,7 @@ public class UserInfo
     
     public bool CanDelete()
         => IsInRole(SystemRoles.DeletePermission) || IsInRole(SystemRoles.Admin);
+    
+    public bool CanRestore()
+        => IsInRole(SystemRoles.RestorePermission) || IsInRole(SystemRoles.Admin);
 }

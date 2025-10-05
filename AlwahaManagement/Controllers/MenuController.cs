@@ -27,38 +27,38 @@ public class MenuController : Controller
     #region Partials
 
     [HttpGet]
-    public async Task<IActionResult> GetMenuItemsList()
+    public async Task<IActionResult> GetMenuItemsList(bool isRestore = false)
     {
-        var items = await _menuService.GetMenuItemsAsync(showUnavailable: true);
-        return PartialView("Menu/_MenuItemTable", (items, false));
+        var items = await _menuService.GetMenuItemsAsync(showUnavailable: true, isRestore: isRestore);
+        return PartialView("Menu/_MenuItemTable", (items, false, isRestore));
     }
-    
+
     [HttpGet]
-    public async Task<IActionResult> GetSetsList()
+    public async Task<IActionResult> GetSetsList(bool isRestore = false)
     {
-        var sets = await _menuService.GetMenuItemsAsync(showUnavailable: true, getSets: true);
-        return PartialView("Menu/_SetList", sets);
+        var sets = await _menuService.GetMenuItemsAsync(showUnavailable: true, getSets: true, isRestore: isRestore);
+        return PartialView("Menu/_SetList", (sets, isRestore));
     }
-    
+
     [HttpGet]
-    public async Task<IActionResult> GetBundlesList()
+    public async Task<IActionResult> GetBundlesList(bool isRestore = false)
     {
-        var bundles = await _bundleService.GetBundleItemsAsync(showUnavailable: true);
-        return PartialView("Menu/_BundleItemTable", bundles);
+        var bundles = await _bundleService.GetBundleItemsAsync(showUnavailable: true, isRestore: isRestore);
+        return PartialView("Menu/_BundleItemTable", (bundles, isRestore));
     }
-    
+
     [HttpGet]
-    public async Task<IActionResult> GetItemTagsList()
+    public async Task<IActionResult> GetItemTagsList(bool isRestore = false)
     {
-        var tags = await _itemTagService.GetItemTagsAsync();
-        return PartialView("Menu/_ItemTagList", tags);
+        var tags = await _itemTagService.GetItemTagsAsync(isRestore);
+        return PartialView("Menu/_ItemTagList", (tags, isRestore));
     }
 
     #endregion
-    
-    
-    
-    
+
+
+
+
     #region Delete Requests
     
     [HttpPost]
@@ -107,9 +107,60 @@ public class MenuController : Controller
     }
     
     #endregion
-    
-    
-    
+
+
+
+    #region Restore Requests
+
+    [HttpPost]
+    public async Task<bool> RestoreItem(string id)
+    {
+        var item = await _menuService.GetMenuItemAsync(id);
+        if(item == null) return false;
+
+        return await _menuService.TryRestoreMenuItemAsync(item);
+    }
+
+    [HttpPost]
+    public async Task<bool> RestoreSet(string id)
+    {
+        var set = await _menuService.GetMenuItemAsync(id);
+        if(set == null) return false;
+
+        return await _menuService.TryRestoreMenuItemAsync(set);
+    }
+
+    [HttpPost]
+    public async Task<bool> RestoreBundle(string id)
+    {
+        var bundle = await _bundleService.GetBundleItemAsync(id);
+        if(bundle == null) return false;
+
+        return await _bundleService.TryRestoreBundleItemAsync(bundle);
+    }
+
+    [HttpPost]
+    public async Task<bool> RestoreType(string id)
+    {
+        var type = await _itemTypeService.GetItemTypeAsync(id);
+        if(type == null) return false;
+
+        return await _itemTypeService.TryRestoreItemTypeAsync(type);
+    }
+
+    [HttpPost]
+    public async Task<bool> RestoreTag(string id)
+    {
+        var tag = await _itemTagService.GetItemTagAsync(id);
+        if(tag == null) return false;
+
+        return await _itemTagService.TryRestoreItemTagAsync(tag);
+    }
+
+    #endregion
+
+
+
     [HttpPost]
     public async Task<IActionResult> ReorderTypes([FromBody] ReorderRequest request)
     {

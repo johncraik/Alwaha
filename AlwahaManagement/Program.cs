@@ -5,6 +5,11 @@ using AlwahaLibrary.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AlwahaManagement.Data;
+using AlwahaManagement.Hangfire;
+using AlwahaManagement.Models;
+using AlwahaManagement.Services;
+using Hangfire;
+using Hangfire.SqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,9 +25,46 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(authConnectionString, ServerVersion.AutoDetect(authConnectionString)));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+var hangfireConnection = builder.Configuration.GetConnectionString("HangfireConnection") ??
+                         throw new InvalidOperationException("Connection string 'HangfireConnection' not found.");
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(hangfireConnection));
+
+// Load settings from settings.json
+var settingsPath = Path.Combine(builder.Environment.ContentRootPath, "settings.json");
+var settingsJson = File.Exists(settingsPath) ? File.ReadAllText(settingsPath) : "{}";
+var settings = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(settingsJson) ?? new Dictionary<string, string>();
+var minPasswordLength = settings.TryGetValue("MinPasswordLength", out var minPwdLen) ? int.Parse(minPwdLen) : 8;
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    // Sign-in settings
+    options.SignIn.RequireConfirmedAccount = true;
+    options.SignIn.RequireConfirmedEmail = true;
+
+    // Password settings
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = minPasswordLength;
+    options.Password.RequiredUniqueChars = 1;
+
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+
+    // User settings
+    options.User.RequireUniqueEmail = true;
+})
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
 builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AuthorizeFolder("/");
@@ -42,11 +84,20 @@ builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<ItemTypeService>();
 builder.Services.AddScoped<ItemTagService>();
 builder.Services.AddScoped<BundleService>();
+builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<AuditService>();
+builder.Services.AddScoped<SettingsService>();
+
+//Hangfire
+builder.Services.AddScoped<RecurringJobs>();
+builder.Services.AddScoped<AuditCleanupJob>();
 
 // Add Syncfusion services
 var syncfusionLicenseKey = builder.Configuration.GetSection("SYNCFUSION-KEY").Value;
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(syncfusionLicenseKey);;
 
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 
@@ -68,7 +119,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 app.UseUserInfo();
+app.UseRequire2FA();
 app.UseAuthorization();
+
+app.UseHangfireDashboard(options: new DashboardOptions{Authorization = [new HangfireAuthorisationFilter(SystemRoles.Admin)]});
 
 app.MapStaticAssets();
 app.MapControllers();
@@ -85,6 +139,9 @@ async Task Defaults()
     var sp = scope.ServiceProvider;
     var authDb = sp.GetRequiredService<ApplicationDbContext>();
     var alwahaDb = sp.GetRequiredService<AlwahaDbContext>();
+    
+    var jobs = sp.GetRequiredService<RecurringJobs>();
+    jobs.RegisterJobs();
     
     var userManager = sp.GetRequiredService<UserManager<IdentityUser>>();
     var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
@@ -104,6 +161,7 @@ async Task Defaults()
     await ConfirmRoleSetup(SystemRoles.CreatePermission);
     await ConfirmRoleSetup(SystemRoles.EditPermission);
     await ConfirmRoleSetup(SystemRoles.DeletePermission);
+    await ConfirmRoleSetup(SystemRoles.RestorePermission);
     
     var adminUser = await userManager.FindByNameAsync("systemadmin");
     if (adminUser == null)

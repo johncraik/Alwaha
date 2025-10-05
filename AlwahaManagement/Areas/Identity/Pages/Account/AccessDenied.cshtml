@@ -1,10 +1,32 @@
 ﻿@page
 @model AccessDeniedModel
 @{
-    ViewData["Title"] = "Access denied";
+    ViewData["Title"] = "Access Denied";
 }
 
-<header>
-    <h1 class="text-danger">@ViewData["Title"]</h1>
-    <p class="text-danger">You do not have access to this resource.</p>
-</header>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-body text-center p-5">
+                    <div class="mb-4">
+                        <i class="fa-solid fa-ban" style="font-size: 5rem; color: #ef4444;"></i>
+                    </div>
+                    <h1 class="display-4 fw-bold text-danger mb-3">Access Denied</h1>
+                    <p class="lead text-muted mb-4">You do not have permission to access this resource.</p>
+                    <p class="text-muted mb-4">
+                        If you believe you should have access, please contact your administrator.
+                    </p>
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                        <button type="button" class="btn btn-primary btn-lg px-4" onclick="window.history.back()">
+                            <i class="fa-solid fa-arrow-left me-2"></i>Go Back
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-lg px-4" onclick="location.assign('/')">
+                            <i class="fa-solid fa-home me-2"></i>Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,15 @@
-@model List<IGrouping<AlwahaLibrary.Models.ItemType, AlwahaLibrary.Models.BundleItem>>
+@using AlwahaLibrary.Services
+@inject UserInfo UserInfo
+@model (List<IGrouping<AlwahaLibrary.Models.ItemType, AlwahaLibrary.Models.BundleItem>> Bundles, bool IsRestore)
 
-@foreach (var group in Model)
+@if (!Model.Bundles.Any())
+{
+    <div class="alert alert-info text-center">
+        <i class="fa-solid fa-info-circle me-2"></i>No bundles found.
+    </div>
+}
+
+@foreach (var group in Model.Bundles)
 {
     <div class="mb-5">
         <h5 class="mb-3 pb-2 border-bottom border-3">@group.Key.Name</h5>
@@ -13,14 +22,30 @@
                             <div class="float-start">
                                 <h5 class="card-title mb-0 text-white fw-bold @(!bundle.MenuItem.IsAvailable ? "fst-italic" : "")">@bundle.MenuItem.Name</h5>
                             </div>
-                            <button type="button" class="btn btn-sm btn-danger float-end"
-                                    title="Delete Bundle" onclick="confirmDelete('@bundle.MenuItem.Name', '/Menu/DeleteBundle?id=@bundle.BundleId', 'bundle-list', '/Menu/GetBundlesList')">
-                                <i class="fa-solid fa-trash"></i> Delete
-                            </button>
-                            <button type="button" class="btn btn-sm btn-primary float-end"
-                                    title="Edit Bundle" onclick="location.assign('/Menu/Bundles/Edit/@bundle.BundleId')">
-                                <i class="fa-solid fa-pencil"></i> Edit
-                            </button>
+                            @if (Model.IsRestore && UserInfo.CanRestore())
+                            {
+                                <button type="button" class="btn btn-sm btn-success float-end"
+                                        title="Restore Bundle" onclick="confirmRestore('@bundle.MenuItem.Name', '/Menu/RestoreBundle?id=@bundle.BundleId', 'bundle-list', '/Menu/GetBundlesList?isRestore=true')">
+                                    <i class="fa-solid fa-trash-restore"></i> Restore
+                                </button>
+                            }
+                            else
+                            {
+                                @if (UserInfo.CanDelete())
+                                {
+                                    <button type="button" class="btn btn-sm btn-danger float-end"
+                                            title="Delete Bundle" onclick="confirmDelete('@bundle.MenuItem.Name', '/Menu/DeleteBundle?id=@bundle.BundleId', 'bundle-list', '/Menu/GetBundlesList')">
+                                        <i class="fa-solid fa-trash"></i> Delete
+                                    </button>
+                                }
+                                @if (UserInfo.CanEdit())
+                                {
+                                    <button type="button" class="btn btn-sm btn-primary float-end"
+                                            title="Edit Bundle" onclick="location.assign('/Menu/Bundles/Edit/@bundle.BundleId')">
+                                        <i class="fa-solid fa-pencil"></i> Edit
+                                    </button>
+                                }
+                            }
                         </div>
                         <div class="card-body d-flex flex-column">
                             <p class="card-text flex-grow-1 text-muted">@bundle.MenuItem.Description</p>
@@ -30,7 +55,7 @@
                                     @foreach (var itemToTag in bundle.MenuItem.ItemsToTags)
                                     {
                                         <span class="me-2 mb-2 d-inline-block">
-                                            <partial name="Shared/Menu/_ItemTagBadge" model="itemToTag.ItemTag"/>
+                                            <partial name="Menu/_ItemTagBadge" model="itemToTag.ItemTag"/>
                                         </span>
                                     }
                                 </div>

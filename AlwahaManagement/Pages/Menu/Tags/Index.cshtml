@@ -1,4 +1,6 @@
 @page
+@using AlwahaLibrary.Services
+@inject UserInfo UserInfo
 @model AlwahaManagement.Pages.Menu.Tags.Index
 
 @{
@@ -8,14 +10,34 @@
 
 <div class="clearfix">
     <h1 class="float-start">@ViewData["Title"]</h1>
-    <button class="btn btn-primary float-end mb-1"
-            onclick="location.assign('/Menu/Tags/Edit')">
-        <span class="fa-solid fa-plus"></span> Create New Item Tag
-    </button>
+    @if (!Model.IsRestore && UserInfo.CanCreate())
+    {
+        <button class="btn btn-primary float-end mb-1"
+                onclick="location.assign('/Menu/Tags/Edit')">
+            <span class="fa-solid fa-plus"></span> Create New Item Tag
+        </button>
+    }
+    @if (UserInfo.CanRestore())
+    {
+        @if (Model.IsRestore)
+        {
+            <button class="btn btn-secondary float-end mb-1 me-2"
+                    onclick="location.assign('/Menu/Tags/Index')">
+                <span class="fa-solid fa-arrow-left"></span> Back to Item Tags
+            </button>
+        }
+        else
+        {
+            <button class="btn btn-warning float-end mb-1 me-2"
+                    onclick="location.assign('/Menu/Tags/Index?isRestore=true')">
+                <span class="fa-solid fa-trash-restore"></span> Restore Tags
+            </button>
+        }
+    }
 </div>
 
 <p>Manage tags and allergen information for menu items.</p>
 
 <div class="mt-2" id="tag-list">
-    <partial name="Shared/Menu/_ItemTagList" model="Model.ItemTags"/>
+    <partial name="Shared/Menu/_ItemTagList" model="(Model.ItemTags, Model.IsRestore)"/>
 </div>

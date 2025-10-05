@@ -1,8 +1,10 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using AlwahaLibrary.Authentication;
 using AlwahaLibrary.Helpers;
 using AlwahaLibrary.Models;
 using AlwahaLibrary.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +13,7 @@ using Newtonsoft.Json.Converters;
 
 namespace AlwahaManagement.Pages.Menu;
 
+[Authorize(Roles = $"{SystemRoles.Admin}, {SystemRoles.CreatePermission}, {SystemRoles.EditPermission}")]
 public class Edit : PageModel
 {
     private readonly MenuService _menuService;

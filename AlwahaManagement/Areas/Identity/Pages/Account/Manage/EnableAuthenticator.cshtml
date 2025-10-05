@@ -20,12 +20,10 @@
     <li class="list-group-item">
         <div class="ms-2 me-auto">
             <div class="fw-bold mb-2"><i class="fas fa-qrcode me-2 text-primary"></i>Scan the QR code or enter the key</div>
-            <p>Enter this key: <kbd class="bg-light text-dark p-2 rounded">@Model.SharedKey</kbd></p>
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle me-1"></i> Learn how to <a href="https://go.microsoft.com/fwlink/?Linkid=852423" class="alert-link">enable QR code generation</a>.
+            <div class="bg-white p-4 rounded-3 shadow-sm d-inline-block mb-3">
+                <img src="@Model.SharedKey" alt="2FA Shared Key" style="width: 100%; max-width: 320px;"/>
             </div>
-            <div id="qrCode" class="mb-3"></div>
-            <div id="qrCodeData" data-url="@Model.AuthenticatorUri"></div>
+            <p class="mb-2">Or enter this key manually: <kbd class="fs-6">@Model.FormattedKey</kbd></p>
         </div>
     </li>
     <li class="list-group-item">

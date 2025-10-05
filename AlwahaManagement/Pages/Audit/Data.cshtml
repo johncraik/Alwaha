@@ -1,0 +1,471 @@
+@page
+@model AlwahaManagement.Pages.Audit.Data
+
+@{
+    ViewData["Title"] = "Data Audit Tracking";
+}
+
+<div class="mb-4">
+    <h1>@ViewData["Title"]</h1>
+    <p class="text-muted">Browse all entities and view their audit trails</p>
+</div>
+
+<div class="accordion" id="dataAuditAccordion">
+
+    <!-- Menu Items -->
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#menuItemsCollapse">
+                <i class="fa-solid fa-utensils me-2"></i> Menu Items
+            </button>
+        </h2>
+        <div id="menuItemsCollapse" class="accordion-collapse collapse show" data-bs-parent="#dataAuditAccordion">
+            <div class="accordion-body">
+                <h5 class="mb-3">Active Menu Items</h5>
+                @if (Model.ActiveMenuItems.Any())
+                {
+                    @foreach (var group in Model.ActiveMenuItems)
+                    {
+                        <h6 class="text-muted mb-2">@group.Key.Name</h6>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40%;">Name</th>
+                                        <th style="width: 20%;">Price</th>
+                                        <th style="width: 20%;">Available</th>
+                                        <th style="width: 20%;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in group.OrderBy(i => i.Name))
+                                    {
+                                        <tr>
+                                            <td>@item.Name</td>
+                                            <td>@item.Price.ToString("C")</td>
+                                            <td>
+                                                @if (item.IsAvailable)
+                                                {
+                                                    <span class="badge bg-success">Yes</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">No</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a href="/Audit/Trail/MenuItems:@item.ItemId?isUser=false" class="btn btn-sm btn-primary">
+                                                    <i class="fa-solid fa-clock-rotate-left"></i> View Trail
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No active menu items</p>
+                }
+
+                <h5 class="mb-3 mt-4">Deleted Menu Items</h5>
+                @if (Model.DeletedMenuItems.Any())
+                {
+                    @foreach (var group in Model.DeletedMenuItems)
+                    {
+                        <h6 class="text-muted mb-2">@group.Key.Name</h6>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60%;">Name</th>
+                                        <th style="width: 20%;">Price</th>
+                                        <th style="width: 20%;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in group.OrderBy(i => i.Name))
+                                    {
+                                        <tr class="table-danger">
+                                            <td>@item.Name</td>
+                                            <td>@item.Price.ToString("C")</td>
+                                            <td>
+                                                <a href="/Audit/Trail/MenuItems:@item.ItemId?isUser=false" class="btn btn-sm btn-primary">
+                                                    <i class="fa-solid fa-clock-rotate-left"></i> View Trail
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No deleted menu items</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Sets -->
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#setsCollapse">
+                <i class="fa-solid fa-layer-group me-2"></i> Menu Sets
+            </button>
+        </h2>
+        <div id="setsCollapse" class="accordion-collapse collapse" data-bs-parent="#dataAuditAccordion">
+            <div class="accordion-body">
+                <h5 class="mb-3">Active Sets</h5>
+                @if (Model.ActiveSets.Any())
+                {
+                    @foreach (var group in Model.ActiveSets)
+                    {
+                        <h6 class="text-muted mb-2">@group.Key.Name</h6>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40%;">Name</th>
+                                        <th style="width: 20%;">Price</th>
+                                        <th style="width: 20%;">Available</th>
+                                        <th style="width: 20%;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var set in group.OrderBy(s => s.Name))
+                                    {
+                                        <tr>
+                                            <td>@set.Name</td>
+                                            <td>@set.Price.ToString("C")</td>
+                                            <td>
+                                                @if (set.IsAvailable)
+                                                {
+                                                    <span class="badge bg-success">Yes</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">No</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a href="/Audit/Trail/MenuItems:@set.ItemId?isUser=false" class="btn btn-sm btn-primary">
+                                                    <i class="fa-solid fa-clock-rotate-left"></i> View Trail
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No active sets</p>
+                }
+
+                <h5 class="mb-3 mt-4">Deleted Sets</h5>
+                @if (Model.DeletedSets.Any())
+                {
+                    @foreach (var group in Model.DeletedSets)
+                    {
+                        <h6 class="text-muted mb-2">@group.Key.Name</h6>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60%;">Name</th>
+                                        <th style="width: 20%;">Price</th>
+                                        <th style="width: 20%;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var set in group.OrderBy(s => s.Name))
+                                    {
+                                        <tr class="table-danger">
+                                            <td>@set.Name</td>
+                                            <td>@set.Price.ToString("C")</td>
+                                            <td>
+                                                <a href="/Audit/Trail/MenuItems:@set.ItemId?isUser=false" class="btn btn-sm btn-primary">
+                                                    <i class="fa-solid fa-clock-rotate-left"></i> View Trail
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No deleted sets</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Bundles -->
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#bundlesCollapse">
+                <i class="fa-solid fa-box me-2"></i> Bundles
+            </button>
+        </h2>
+        <div id="bundlesCollapse" class="accordion-collapse collapse" data-bs-parent="#dataAuditAccordion">
+            <div class="accordion-body">
+                <h5 class="mb-3">Active Bundles</h5>
+                @if (Model.ActiveBundles.Any())
+                {
+                    @foreach (var group in Model.ActiveBundles)
+                    {
+                        <h6 class="text-muted mb-2">@group.Key.Name</h6>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40%;">Name</th>
+                                        <th style="width: 20%;">Quantity</th>
+                                        <th style="width: 20%;">Price</th>
+                                        <th style="width: 20%;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var bundle in group.OrderBy(b => b.MenuItem.Name))
+                                    {
+                                        <tr>
+                                            <td>@bundle.MenuItem.Name</td>
+                                            <td>@bundle.Quantity</td>
+                                            <td>@bundle.Price.ToString("C")</td>
+                                            <td>
+                                                <a href="/Audit/Trail/BundleItems:@bundle.BundleId?isUser=false" class="btn btn-sm btn-primary">
+                                                    <i class="fa-solid fa-clock-rotate-left"></i> View Trail
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No active bundles</p>
+                }
+
+                <h5 class="mb-3 mt-4">Deleted Bundles</h5>
+                @if (Model.DeletedBundles.Any())
+                {
+                    @foreach (var group in Model.DeletedBundles)
+                    {
+                        <h6 class="text-muted mb-2">@group.Key.Name</h6>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40%;">Name</th>
+                                        <th style="width: 20%;">Quantity</th>
+                                        <th style="width: 20%;">Price</th>
+                                        <th style="width: 20%;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var bundle in group.OrderBy(b => b.MenuItem.Name))
+                                    {
+                                        <tr class="table-danger">
+                                            <td>@bundle.MenuItem.Name</td>
+                                            <td>@bundle.Quantity</td>
+                                            <td>@bundle.Price.ToString("C")</td>
+                                            <td>
+                                                <a href="/Audit/Trail/BundleItems:@bundle.BundleId?isUser=false" class="btn btn-sm btn-primary">
+                                                    <i class="fa-solid fa-clock-rotate-left"></i> View Trail
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No deleted bundles</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Types -->
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#itemTypesCollapse">
+                <i class="fa-solid fa-list me-2"></i> Item Types
+            </button>
+        </h2>
+        <div id="itemTypesCollapse" class="accordion-collapse collapse" data-bs-parent="#dataAuditAccordion">
+            <div class="accordion-body">
+                <h5 class="mb-3">Active Item Types</h5>
+                @if (Model.ActiveItemTypes.Any())
+                {
+                    <div class="table-responsive mb-4">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%;">Name</th>
+                                    <th style="width: 25%;">Order</th>
+                                    <th style="width: 25%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var type in Model.ActiveItemTypes.OrderBy(t => t.Order))
+                                {
+                                    <tr>
+                                        <td>@type.Name</td>
+                                        <td>@type.Order</td>
+                                        <td>
+                                            <a href="/Audit/Trail/ItemTypes:@type.ItemTypeId?isUser=false" class="btn btn-sm btn-primary">
+                                                <i class="fa-solid fa-clock-rotate-left"></i> View Trail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No active item types</p>
+                }
+
+                <h5 class="mb-3 mt-4">Deleted Item Types</h5>
+                @if (Model.DeletedItemTypes.Any())
+                {
+                    <div class="table-responsive mb-4">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 70%;">Name</th>
+                                    <th style="width: 30%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var type in Model.DeletedItemTypes.OrderBy(t => t.Name))
+                                {
+                                    <tr class="table-danger">
+                                        <td>@type.Name</td>
+                                        <td>
+                                            <a href="/Audit/Trail/ItemTypes:@type.ItemTypeId?isUser=false" class="btn btn-sm btn-primary">
+                                                <i class="fa-solid fa-clock-rotate-left"></i> View Trail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No deleted item types</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Tags -->
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#itemTagsCollapse">
+                <i class="fa-solid fa-tags me-2"></i> Item Tags
+            </button>
+        </h2>
+        <div id="itemTagsCollapse" class="accordion-collapse collapse" data-bs-parent="#dataAuditAccordion">
+            <div class="accordion-body">
+                <h5 class="mb-3">Active Item Tags</h5>
+                @if (Model.ActiveItemTags.Any())
+                {
+                    <div class="table-responsive mb-4">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%;">Name</th>
+                                    <th style="width: 25%;">Icon</th>
+                                    <th style="width: 25%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tag in Model.ActiveItemTags.OrderBy(t => t.Name))
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="badge" style="background-color: @tag.Colour;">
+                                                <i class="fa-solid fa-@tag.Icon me-1"></i>@tag.Name
+                                            </span>
+                                        </td>
+                                        <td>@tag.Icon</td>
+                                        <td>
+                                            <a href="/Audit/Trail/ItemTags:@tag.TagId?isUser=false" class="btn btn-sm btn-primary">
+                                                <i class="fa-solid fa-clock-rotate-left"></i> View Trail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No active item tags</p>
+                }
+
+                <h5 class="mb-3 mt-4">Deleted Item Tags</h5>
+                @if (Model.DeletedItemTags.Any())
+                {
+                    <div class="table-responsive mb-4">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%;">Name</th>
+                                    <th style="width: 25%;">Icon</th>
+                                    <th style="width: 25%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tag in Model.DeletedItemTags.OrderBy(t => t.Name))
+                                {
+                                    <tr class="table-danger">
+                                        <td>
+                                            <span class="badge" style="background-color: @tag.Colour;">
+                                                <i class="fa-solid fa-@tag.Icon me-1"></i>@tag.Name
+                                            </span>
+                                        </td>
+                                        <td>@tag.Icon</td>
+                                        <td>
+                                            <a href="/Audit/Trail/ItemTags:@tag.TagId?isUser=false" class="btn btn-sm btn-primary">
+                                                <i class="fa-solid fa-clock-rotate-left"></i> View Trail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No deleted item tags</p>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>

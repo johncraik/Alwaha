@@ -1,28 +1,53 @@
 @using AlwahaLibrary.Helpers
-@model List<IGrouping<AlwahaLibrary.Models.ItemType, AlwahaLibrary.Models.MenuItem>>
+@using AlwahaLibrary.Services
+@model (List<IGrouping<AlwahaLibrary.Models.ItemType, AlwahaLibrary.Models.MenuItem>> Sets, bool IsRestore)
+@inject UserInfo UserInfo
 
-@foreach (var group in Model)
+@if (!Model.Sets.Any())
+{
+    <div class="alert alert-info text-center">
+        <i class="fa-solid fa-info-circle me-2"></i>No menu sets found.
+    </div>
+}
+
+@foreach (var group in Model.Sets)
 {
     <div class="mb-5">
         <h5 class="mb-3 pb-2 border-bottom border-3">@group.Key.Name</h5>
         @foreach (var set in group.OrderBy(s => s.Name))
         {
-            var bgColour = set.IsAvailable ? (set.Colour ?? "#6366f1") : "#6c757d";
+            var bgColour = set.Colour ?? "#6366f1";
             var fontColour = ColourHelper.FontColour(bgColour);
 
             <div class="card shadow-sm mb-4">
-                <div class="card-header py-3 position-relative clearfix" id="header-@set.ItemId" style="background-color: @bgColour; color: @fontColour;" data-original-color="@bgColour" data-original-font-color="@fontColour">
+                <div class="card-header py-3 position-relative clearfix" id="header-@set.ItemId" style="background-color: @(set.IsAvailable ? bgColour : "#6c757d"); color: @(set.IsAvailable ? fontColour : "#ffffff");" data-original-color="@bgColour" data-original-font-color="@fontColour">
                     <div class="float-start">
                         <h5 class="card-title mb-0 fw-bold @(!set.IsAvailable ? "fst-italic" : "")">@set.Name</h5>
                     </div>
-                    <button type="button" class="btn btn-sm btn-danger float-end"
-                            title="Delete Menu Set" onclick="confirmDelete('@set.Name', '/Menu/DeleteSet?id=@set.ItemId', 'set-list', '/Menu/GetSetsList')">
-                        <i class="fa-solid fa-trash"></i> Delete
-                    </button>
-                    <button type="button" class="btn btn-sm btn-primary float-end"
-                            title="Edit Menu Set" onclick="location.assign('/Menu/Sets/Edit/@set.ItemId')">
-                        <i class="fa-solid fa-pencil"></i> Edit
-                    </button>
+                    @if (Model.IsRestore && UserInfo.CanRestore())
+                    {
+                        <button type="button" class="btn btn-sm btn-success float-end"
+                                title="Restore Menu Set" onclick="confirmRestore('@set.Name', '/Menu/RestoreSet?id=@set.ItemId', 'set-list', '/Menu/GetSetsList?isRestore=true')">
+                            <i class="fa-solid fa-trash-restore"></i> Restore
+                        </button>
+                    }
+                    else
+                    {
+                        @if (UserInfo.CanDelete())
+                        {
+                            <button type="button" class="btn btn-sm btn-danger float-end"
+                                    title="Delete Menu Set" onclick="confirmDelete('@set.Name', '/Menu/DeleteSet?id=@set.ItemId', 'set-list', '/Menu/GetSetsList')">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+                        }
+                        @if (UserInfo.CanEdit())
+                        {
+                            <button type="button" class="btn btn-sm btn-primary float-end"
+                                    title="Edit Menu Set" onclick="location.assign('/Menu/Sets/Edit/@set.ItemId')">
+                                <i class="fa-solid fa-pencil"></i> Edit
+                            </button>
+                        }
+                    }
                 </div>
                 <div class="card-body">
                     <p class="card-text text-muted">@set.Description</p>
@@ -39,17 +64,20 @@
                     }
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="fs-5 fw-bold text-primary">@set.Price.ToString("C")</span>
-                        <div class="form-check form-switch">
-                            @if (set.IsAvailable)
-                            {
-                                <input class="form-check-input" type="checkbox" id="toggle-@set.ItemId" checked onchange="toggleSetAvailability('@set.ItemId', false)"/>
-                            }
-                            else
-                            {
-                                <input class="form-check-input" type="checkbox" id="toggle-@set.ItemId" onchange="toggleSetAvailability('@set.ItemId', true)"/>
-                            }
-                            <label class="form-check-label" id="label-@set.ItemId" for="toggle-@set.ItemId">@(set.IsAvailable ? "Available" : "Unavailable")</label>
-                        </div>
+                        @if (!Model.IsRestore && UserInfo.CanEdit())
+                        {
+                            <div class="form-check form-switch">
+                                @if (set.IsAvailable)
+                                {
+                                    <input class="form-check-input" type="checkbox" id="toggle-@set.ItemId" checked onchange="toggleSetAvailability('@set.ItemId', false)"/>
+                                }
+                                else
+                                {
+                                    <input class="form-check-input" type="checkbox" id="toggle-@set.ItemId" onchange="toggleSetAvailability('@set.ItemId', true)"/>
+                                }
+                                <label class="form-check-label" id="label-@set.ItemId" for="toggle-@set.ItemId">@(set.IsAvailable ? "Available" : "Unavailable")</label>
+                            </div>
+                        }
                     </div>
 
                     @if (set.ItemsToSets?.Any() == true)
@@ -59,7 +87,7 @@
                         
                         <hr class="my-3"/>
                         <h5 class="mb-3">Included Items</h5>
-                        <partial name="Shared/Menu/_MenuItemTable" model="(groupedItems, true)" />
+                        <partial name="Shared/Menu/_MenuItemTable" model="(groupedItems, true, false)" />
                     }
                 </div>
             </div>

@@ -1,7 +1,16 @@
-@model List<AlwahaLibrary.Models.ItemTag>
+@using AlwahaLibrary.Services
+@inject UserInfo UserInfo
+@model (List<AlwahaLibrary.Models.ItemTag> Tags, bool IsRestore)
+
+@if (!Model.Tags.Any())
+{
+    <div class="alert alert-info text-center">
+        <i class="fa-solid fa-info-circle me-2"></i>No item tags found.
+    </div>
+}
 
 <div class="row">
-    @foreach (var tag in Model)
+    @foreach (var tag in Model.Tags)
     {
         <div class="col-12 col-md-6 col-lg-4 mb-4 px-3">
             <div class="card shadow-sm h-100 menu-item-card">
@@ -12,14 +21,30 @@
                             @tag.Name
                         </h5>
                     </div>
-                    <button type="button" class="btn btn-sm btn-danger float-end"
-                            title="Delete Tag" onclick="confirmDelete('@tag.Name', '/Menu/DeleteTag?id=@tag.TagId', 'tag-list', '/Menu/GetItemTagsList')">
-                        <i class="fa-solid fa-trash"></i> Delete
-                    </button>
-                    <button type="button" class="btn btn-sm btn-primary float-end"
-                            title="Edit Tag" onclick="location.assign('/Menu/Tags/Edit/@tag.TagId')">
-                        <i class="fa-solid fa-pencil"></i> Edit
-                    </button>
+                    @if (Model.IsRestore && UserInfo.CanRestore())
+                    {
+                        <button type="button" class="btn btn-sm btn-success float-end"
+                                title="Restore Tag" onclick="confirmRestore('@tag.Name', '/Menu/RestoreTag?id=@tag.TagId', 'tag-list', '/Menu/GetItemTagsList?isRestore=true')">
+                            <i class="fa-solid fa-trash-restore"></i> Restore
+                        </button>
+                    }
+                    else
+                    {
+                        @if (UserInfo.CanDelete())
+                        {
+                            <button type="button" class="btn btn-sm btn-danger float-end"
+                                    title="Delete Tag" onclick="confirmDelete('@tag.Name', '/Menu/DeleteTag?id=@tag.TagId', 'tag-list', '/Menu/GetItemTagsList')">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+                        }
+                        @if (UserInfo.CanEdit())
+                        {
+                            <button type="button" class="btn btn-sm btn-primary float-end"
+                                    title="Edit Tag" onclick="location.assign('/Menu/Tags/Edit/@tag.TagId')">
+                                <i class="fa-solid fa-pencil"></i> Edit
+                            </button>
+                        }
+                    }
                 </div>
             </div>
         </div>

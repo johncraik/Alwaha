@@ -10,13 +10,89 @@ public class AlwahaDbContext : DbContext
     {
     }
 
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var auditEntries = new List<AuditEntry>();
+        var entries = ChangeTracker.Entries<AuditModel>();
+
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
+                continue;
+
+            var auditEntry = new AuditEntry
+            {
+                TableName = entry.Metadata.GetTableName() ?? entry.Entity.GetType().Name
+            };
+
+            // Get the primary key ID property (find first property ending with "Id" that has [Key] attribute or matches entity name)
+            var entityType = entry.Entity.GetType();
+            var idProperty = entityType.GetProperties()
+                .FirstOrDefault(p => p.Name == $"{entityType.Name}Id" ||
+                                     (p.Name.EndsWith("Id") && p.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.KeyAttribute), false).Any()));
+
+            auditEntry.EntityId = idProperty?.GetValue(entry.Entity)?.ToString() ?? "Unknown";
+
+            if (entry.State == EntityState.Added)
+            {
+                auditEntry.AuditAction = AuditAction.CREATE;
+                auditEntry.UserId = entry.Entity.CreatedBy;
+                auditEntry.Date = entry.Entity.CreatedDate;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                // Determine if it's Edit, Delete, or Restore by checking which fields changed
+                var restoredDateProp = entry.Property(nameof(AuditModel.RestoredDate));
+                var deletedDateProp = entry.Property(nameof(AuditModel.DeletedDate));
+                var updatedDateProp = entry.Property(nameof(AuditModel.UpdatedDate));
+
+                if (restoredDateProp.IsModified && entry.Entity.RestoredDate.HasValue)
+                {
+                    auditEntry.AuditAction = AuditAction.RESTORE;
+                    auditEntry.UserId = entry.Entity.RestoredBy ?? "Unknown";
+                    auditEntry.Date = entry.Entity.RestoredDate.Value;
+                }
+                else if (deletedDateProp.IsModified && entry.Entity.DeletedDate.HasValue)
+                {
+                    auditEntry.AuditAction = AuditAction.DELETE;
+                    auditEntry.UserId = entry.Entity.DeletedBy ?? "Unknown";
+                    auditEntry.Date = entry.Entity.DeletedDate.Value;
+                }
+                else if (updatedDateProp.IsModified && entry.Entity.UpdatedDate.HasValue)
+                {
+                    auditEntry.AuditAction = AuditAction.EDIT;
+                    auditEntry.UserId = entry.Entity.UpdatedBy ?? "Unknown";
+                    auditEntry.Date = entry.Entity.UpdatedDate.Value;
+                }
+                else
+                {
+                    // Fallback - something else changed
+                    continue;
+                }
+            }
+
+            auditEntries.Add(auditEntry);
+        }
+
+        var result = await base.SaveChangesAsync(cancellationToken);
+
+        if (auditEntries.Any())
+        {
+            await AuditEntries.AddRangeAsync(auditEntries, cancellationToken);
+            await base.SaveChangesAsync(cancellationToken);
+        }
+
+        return result;
+    }
+
     public DbSet<MenuItem> MenuItems { get; set; }
     public DbSet<ItemToSet> ItemToSets { get; set; }
     public DbSet<ItemType> ItemTypes { get; set; }
     public DbSet<BundleItem> BundleItems { get; set; }
     public DbSet<ItemTag> ItemTags { get; set; }
     public DbSet<ItemToTag> ItemToTags { get; set; }
-
+    public DbSet<AuditEntry> AuditEntries { get; set; }
+ 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

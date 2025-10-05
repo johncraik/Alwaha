@@ -17,9 +17,9 @@ public class ItemTagService
         _userInfo = userInfo;
     }
 
-    public async Task<List<ItemTag>> GetItemTagsAsync()
+    public async Task<List<ItemTag>> GetItemTagsAsync(bool isRestore = false)
         => await _context.ItemTags
-            .Where(t => !t.IsDeleted)
+            .Where(t => t.IsDeleted == isRestore)
             .OrderBy(t => t.Name)
             .ToListAsync();
 
@@ -95,13 +95,21 @@ public class ItemTagService
         var authorised = _userInfo.CanDelete();
         if (!authorised) return false;
 
-        var itemsToTags = await _context.ItemToTags
-            .Where(it => it.TagId == itemTag.TagId)
-            .ToListAsync();
-
         itemTag.FillDeleted(_userInfo.UserId);
         _context.ItemTags.Update(itemTag);
-        _context.ItemToTags.RemoveRange(itemsToTags);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> TryRestoreItemTagAsync(ItemTag itemTag)
+    {
+        if(_userInfo.UserId == null) return false;
+
+        var authorised = _userInfo.CanRestore();
+        if (!authorised) return false;
+
+        itemTag.FillRestored(_userInfo.UserId);
+        _context.ItemTags.Update(itemTag);
         await _context.SaveChangesAsync();
         return true;
     }

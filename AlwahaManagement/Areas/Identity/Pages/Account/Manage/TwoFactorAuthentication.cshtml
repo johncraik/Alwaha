@@ -7,6 +7,18 @@
 }
 
 <h4 class="fw-bold mb-3"><i class="fas fa-shield-alt me-2 text-primary"></i>@ViewData["Title"]</h4>
+@if(!Model.Is2faEnabled){
+    <div class="alert alert-warning" role="alert">
+        <p class="mb-2">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong> Two-factor Authentication is required to use this website.</strong>
+        </p>
+        <p class="mb-0">
+            Two-factor authentication adds an additional layer of protection to your account. When you enable two-factor authentication, you'll be prompted for a secure, random token during login. .
+        </p>
+    </div>
+}
+
 <partial name="_StatusMessage" for="StatusMessage" />
 @{
     var consentFeature = HttpContext.Features.Get<ITrackingConsentFeature>();

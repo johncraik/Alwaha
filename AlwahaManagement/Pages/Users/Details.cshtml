@@ -1,0 +1,256 @@
+@page "{id}"
+@using AlwahaLibrary.Authentication
+@model AlwahaManagement.Pages.Users.Details
+
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<div class="mb-4">
+    <h1>@ViewData["Title"]</h1>
+    <p class="text-muted">Manage user account and permissions</p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <i class="fa-solid fa-info-circle me-2"></i>@Model.Message
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(Model.Password))
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="fa-solid fa-key me-2"></i>
+        <strong>New Password:</strong> <code class="fs-6">@Model.Password</code>
+        <br><small>Make sure to save this password - it will not be shown again!</small>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row">
+    <!-- User Information -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header account-header text-white">
+                <h4 class="mb-0">
+                    <i class="fa-solid fa-user me-2"></i>User Information
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="user-detail-item">
+                    <label class="user-detail-label">Username</label>
+                    <div class="user-detail-value">@Model.UserModel.User.UserName</div>
+                </div>
+
+                <div class="user-detail-item">
+                    <label class="user-detail-label">Email</label>
+                    <div class="user-detail-value">
+                        @Model.UserModel.User.Email
+                        @if (Model.UserModel.User.EmailConfirmed)
+                        {
+                            <span class="badge bg-success ms-2">
+                                <i class="fa-solid fa-check-circle"></i> Verified
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark ms-2">
+                                <i class="fa-solid fa-exclamation-circle"></i> Not Verified
+                            </span>
+                        }
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.UserModel.User.PhoneNumber))
+                {
+                    <div class="user-detail-item">
+                        <label class="user-detail-label">Phone Number</label>
+                        <div class="user-detail-value">
+                            @Model.UserModel.User.PhoneNumber
+                            @if (Model.UserModel.User.PhoneNumberConfirmed)
+                            {
+                                <span class="badge bg-success ms-2">
+                                    <i class="fa-solid fa-check-circle"></i> Verified
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <div class="user-detail-item">
+                    <label class="user-detail-label">Two-Factor Authentication</label>
+                    <div class="user-detail-value">
+                        @if (Model.UserModel.User.TwoFactorEnabled)
+                        {
+                            <span class="badge bg-success">
+                                <i class="fa-solid fa-shield-halved"></i> Enabled
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">
+                                <i class="fa-solid fa-shield-halved"></i> Disabled
+                            </span>
+                        }
+                    </div>
+                </div>
+
+                <div class="user-detail-item">
+                    <label class="user-detail-label">Account Status</label>
+                    <div class="user-detail-value">
+                        @if (Model.UserModel.User.LockoutEnd.HasValue && Model.UserModel.User.LockoutEnd > DateTimeOffset.UtcNow)
+                        {
+                            <span class="badge bg-danger">
+                                <i class="fa-solid fa-lock"></i> Locked until @Model.UserModel.User.LockoutEnd.Value.LocalDateTime.ToString("g")
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">
+                                <i class="fa-solid fa-check"></i> Active
+                            </span>
+                        }
+                    </div>
+                </div>
+
+                <div class="user-detail-item">
+                    <label class="user-detail-label">Failed Login Attempts</label>
+                    <div class="user-detail-value">@Model.UserModel.User.AccessFailedCount</div>
+                </div>
+
+                <div class="user-detail-item mb-0">
+                    <label class="user-detail-label">User ID</label>
+                    <div class="user-detail-value">
+                        <code class="text-muted">@Model.UserModel.User.Id</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Roles Management -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header account-header text-white">
+                <h4 class="mb-0">
+                    <i class="fa-solid fa-user-tag me-2"></i>Roles & Permissions
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="user-detail-label">Current Roles</label>
+                    <div class="mt-2">
+                        @if (Model.UserModel.Roles.Any())
+                        {
+                            foreach (var role in Model.UserModel.Roles)
+                            {
+                                var badgeClass = role switch
+                                {
+                                    SystemRoles.Admin => "bg-info",
+                                    SystemRoles.CreatePermission => "bg-success",
+                                    SystemRoles.EditPermission => "bg-warning",
+                                    SystemRoles.DeletePermission => "bg-danger",
+                                    _ => "bg-secondary"
+                                };
+                                <div class="d-inline-block me-2 mb-2">
+                                    <span class="badge @badgeClass">@role</span>
+                                    <form method="post" asp-page-handler="RemoveRole" class="d-inline" onsubmit="return confirm('Remove role @role from this user?')">
+                                        <input type="hidden" name="id" value="@Model.UserModel.User.Id" />
+                                        <input type="hidden" name="role" value="@role" />
+                                        <button type="submit" class="btn btn-sm btn-link text-danger p-0 ms-1" title="Remove role">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">No Roles</span>
+                        }
+                    </div>
+                </div>
+
+                <hr>
+
+                <div>
+                    <label class="user-detail-label mb-2">Add Role</label>
+                    <div class="alert alert-info mb-3" role="alert">
+                        <i class="fa-solid fa-info-circle me-2"></i>
+                        <small><strong>Note:</strong> The Admin role automatically grants Create, Edit, and Delete permissions.</small>
+                    </div>
+                    @{
+                        var availableRoles = new[] { SystemRoles.Admin, SystemRoles.CreatePermission, SystemRoles.EditPermission, SystemRoles.DeletePermission }
+                            .Where(r => !Model.UserModel.Roles.Contains(r))
+                            .ToList();
+                    }
+
+                    @if (availableRoles.Any())
+                    {
+                        <div class="d-grid gap-2">
+                            @foreach (var role in availableRoles)
+                            {
+                                var buttonClass = role switch
+                                {
+                                    SystemRoles.Admin => "btn-info",
+                                    SystemRoles.CreatePermission => "btn-success",
+                                    SystemRoles.EditPermission => "btn-warning",
+                                    SystemRoles.DeletePermission => "btn-danger",
+                                    _ => "btn-secondary"
+                                };
+                                <form method="post" asp-page-handler="AddRole">
+                                    <input type="hidden" name="id" value="@Model.UserModel.User.Id" />
+                                    <input type="hidden" name="role" value="@role" />
+                                    <button type="submit" class="btn @buttonClass w-100">
+                                        <i class="fa-solid fa-plus me-2"></i>Add @role
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">All roles have been assigned to this user.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-dark text-white">
+        <h4 class="mb-0">
+            <i class="fa-solid fa-bolt me-2"></i>Quick Actions
+        </h4>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <form method="post" asp-page-handler="ResetPassword" onsubmit="return confirm('Reset password for this user? A new password will be generated.')">
+                    <input type="hidden" name="id" value="@Model.UserModel.User.Id" />
+                    <button type="submit" class="btn btn-warning w-100">
+                        <i class="fa-solid fa-key me-2"></i>Reset Password
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.')">
+                    <input type="hidden" name="id" value="@Model.UserModel.User.Id" />
+                    <button type="submit" class="btn btn-danger w-100">
+                        <i class="fa-solid fa-trash me-2"></i>Delete User
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mb-4">
+    <button type="button" class="btn btn-outline-secondary" onclick="location.assign('/Users/Index')">
+        <i class="fa-solid fa-arrow-left me-2"></i>Back to Users
+    </button>
+</div>

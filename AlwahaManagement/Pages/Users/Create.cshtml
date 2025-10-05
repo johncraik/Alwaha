@@ -1,0 +1,60 @@
+@page
+@model AlwahaManagement.Pages.Users.Create
+
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<div class="mb-4">
+    <h1>@ViewData["Title"]</h1>
+    <p class="text-muted">Create a new user account. A secure password will be generated automatically.</p>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header account-header text-white">
+        <h4 class="mb-0">
+            <i class="fa-solid fa-user-plus me-2"></i>User Information
+        </h4>
+    </div>
+    <div class="card-body p-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none" role="alert"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Username" class="form-control login-input" placeholder="Username" autocomplete="off" />
+                <label asp-for="Input.Username" class="text-muted">
+                    <i class="fa-solid fa-user me-1"></i> Username
+                </label>
+                <span asp-validation-for="Input.Username" class="text-danger small"></span>
+            </div>
+
+            <div class="form-floating mb-4">
+                <input asp-for="Input.Email" class="form-control login-input" placeholder="Email" autocomplete="off" />
+                <label asp-for="Input.Email" class="text-muted">
+                    <i class="fa-solid fa-envelope me-1"></i> Email Address
+                </label>
+                <span asp-validation-for="Input.Email" class="text-danger small"></span>
+            </div>
+
+            <div class="alert alert-info mb-4">
+                <i class="fa-solid fa-info-circle me-2"></i>
+                A secure password will be automatically generated and displayed after user creation.
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-lg login-btn">
+                    <i class="fa-solid fa-plus me-2"></i>
+                    <span class="fw-semibold">Create User</span>
+                </button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.assign('/Users/Index')">
+                    <i class="fa-solid fa-arrow-left me-2"></i>Back to Users
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

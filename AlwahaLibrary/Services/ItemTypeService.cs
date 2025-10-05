@@ -18,9 +18,9 @@ public class ItemTypeService
     }
     
     
-    public async Task<List<ItemType>> GetItemTypesAsync()
+    public async Task<List<ItemType>> GetItemTypesAsync(bool isRestore = false)
         => await _context.ItemTypes
-            .Where(t => !t.IsDeleted)
+            .Where(t => t.IsDeleted == isRestore)
             .OrderBy(t => t.Order)
             .ToListAsync();
 
@@ -77,11 +77,25 @@ public class ItemTypeService
     public async Task<bool> TryDeleteItemTypeAsync(ItemType itemType)
     {
         if(_userInfo.UserId == null) return false;
-        
+
         var authorised = _userInfo.CanDelete();
         if (!authorised) return false;
-        
+
         itemType.FillDeleted(_userInfo.UserId);
+        _context.ItemTypes.Update(itemType);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> TryRestoreItemTypeAsync(ItemType itemType)
+    {
+        if(_userInfo.UserId == null) return false;
+
+        var authorised = _userInfo.CanRestore();
+        if (!authorised) return false;
+
+        itemType.FillRestored(_userInfo.UserId);
+        itemType.Order = await _context.ItemTypes.MaxAsync(it => it.Order) + 1;
         _context.ItemTypes.Update(itemType);
         await _context.SaveChangesAsync();
         return true;

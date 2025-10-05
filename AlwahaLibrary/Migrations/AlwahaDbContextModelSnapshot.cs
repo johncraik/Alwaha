@@ -22,6 +22,34 @@ namespace AlwahaLibrary.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("AlwahaLibrary.Models.AuditEntry", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("AuditAction")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("EntityId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditEntries");
+                });
+
             modelBuilder.Entity("AlwahaLibrary.Models.BundleItem", b =>
                 {
                     b.Property<string>("BundleId")
@@ -52,6 +80,12 @@ namespace AlwahaLibrary.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("RestoredBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("RestoredDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
@@ -99,6 +133,12 @@ namespace AlwahaLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("RestoredBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("RestoredDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
 
@@ -118,12 +158,7 @@ namespace AlwahaLibrary.Migrations
                     b.Property<string>("SetId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("MenuItemItemId")
-                        .HasColumnType("varchar(255)");
-
                     b.HasKey("ItemId", "SetId");
-
-                    b.HasIndex("MenuItemItemId");
 
                     b.HasIndex("SetId");
 
@@ -175,6 +210,12 @@ namespace AlwahaLibrary.Migrations
 
                     b.Property<int>("Order")
                         .HasColumnType("int");
+
+                    b.Property<string>("RestoredBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("RestoredDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
@@ -234,6 +275,12 @@ namespace AlwahaLibrary.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double");
 
+                    b.Property<string>("RestoredBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("RestoredDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
 
@@ -266,12 +313,8 @@ namespace AlwahaLibrary.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AlwahaLibrary.Models.MenuItem", null)
-                        .WithMany("ItemsToSets")
-                        .HasForeignKey("MenuItemItemId");
-
                     b.HasOne("AlwahaLibrary.Models.MenuItem", "MenuSet")
-                        .WithMany()
+                        .WithMany("ItemsToSets")
                         .HasForeignKey("SetId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

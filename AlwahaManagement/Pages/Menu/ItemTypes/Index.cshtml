@@ -1,4 +1,6 @@
 @page
+@using AlwahaLibrary.Services
+@inject UserInfo UserInfo
 @model AlwahaManagement.Pages.Menu.ItemTypes.Index
 
 @{
@@ -8,14 +10,34 @@
 
 <div class="clearfix">
     <h1 class="float-start">@ViewData["Title"]</h1>
-    <button class="btn btn-primary float-end mb-1"
-            onclick="location.assign('/Menu/ItemTypes/Edit')">
-        <span class="fa-solid fa-plus"></span> Create New Item Type
-    </button>
+    @if (!Model.IsRestore && UserInfo.CanCreate())
+    {
+        <button class="btn btn-primary float-end mb-1"
+                onclick="location.assign('/Menu/ItemTypes/Edit')">
+            <span class="fa-solid fa-plus"></span> Create New Item Type
+        </button>
+    }
+    @if (UserInfo.CanRestore())
+    {
+        @if (Model.IsRestore)
+        {
+            <button class="btn btn-secondary float-end mb-1 me-2"
+                    onclick="location.assign('/Menu/ItemTypes/Index')">
+                <span class="fa-solid fa-arrow-left"></span> Back to Item Types
+            </button>
+        }
+        else
+        {
+            <button class="btn btn-warning float-end mb-1 me-2"
+                    onclick="location.assign('/Menu/ItemTypes/Index?isRestore=true')">
+                <span class="fa-solid fa-trash-restore"></span> Restore Types
+            </button>
+        }
+    }
 </div>
 
 <p>Drag and drop the item types below to re-order the menu.</p>
 
 <div class="mt-2" id="item-list">
-    <partial name="Shared/Menu/_ItemTypeList" model="Model.ItemTypes"/>
+    <partial name="Shared/Menu/_ItemTypeList" model="(Model.ItemTypes, Model.IsRestore)"/>
 </div>

@@ -1,0 +1,47 @@
+@page
+@model AlwahaManagement.Pages.Audit.User
+
+@{
+    ViewData["Title"] = "User Audit Tracking";
+}
+
+<div class="mb-4">
+    <h1>@ViewData["Title"]</h1>
+    <p class="text-muted">Select a user to view their complete audit trail</p>
+</div>
+
+<div class="list-group user-list">
+    @foreach (var userModel in Model.Users)
+    {
+        <div class="list-group-item user-list-item">
+            <div class="d-flex w-100 justify-content-between align-items-center">
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center">
+                        <div class="user-avatar">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-1 user-username">@userModel.User.UserName</h5>
+                            <p class="mb-0 text-muted user-email">
+                                <i class="fa-solid fa-envelope me-1"></i>@userModel.User.Email
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-primary"
+                            onclick="location.assign('/Audit/Trail/@userModel.User.Id?isUser=true')">
+                        <i class="fa-solid fa-clock-rotate-left"></i> View Audit Trail
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Users.Any())
+{
+    <div class="alert alert-info mt-4">
+        <i class="fa-solid fa-info-circle me-2"></i>No users found.
+    </div>
+}

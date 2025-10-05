@@ -18,10 +18,11 @@ public class BundleService
 
     public async Task<List<IGrouping<ItemType, BundleItem>>> GetBundleItemsAsync(
         string search = "",
-        bool showUnavailable = false)
+        bool showUnavailable = false,
+        bool isRestore = false)
     {
         var query = _context.BundleItems
-            .Where(b => !b.IsDeleted)
+            .Where(b => b.IsDeleted == isRestore)
             .Include(b => b.MenuItem)
             .ThenInclude(m => m.ItemType)
             .Include(b => b.MenuItem.ItemsToTags)
@@ -119,6 +120,19 @@ public class BundleService
         if (!authorised) return false;
 
         bundleItem.FillDeleted(_userInfo.UserId);
+        _context.BundleItems.Update(bundleItem);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> TryRestoreBundleItemAsync(BundleItem bundleItem)
+    {
+        if (_userInfo.UserId == null) return false;
+
+        var authorised = _userInfo.CanRestore();
+        if (!authorised) return false;
+
+        bundleItem.FillRestored(_userInfo.UserId);
         _context.BundleItems.Update(bundleItem);
         await _context.SaveChangesAsync();
         return true;
