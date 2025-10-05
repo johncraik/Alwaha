@@ -1,0 +1,219 @@
+@page
+@model AlwahaManagement.Pages.AnalyticsModel
+
+@{
+    ViewData["Title"] = "Website Analytics";
+}
+
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1><i class="fa-solid fa-chart-line me-2"></i>@ViewData["Title"]</h1>
+            <p class="text-muted mb-0">AlwahaSite Performance & Visitor Analytics</p>
+        </div>
+        <div>
+            <form method="get" class="d-flex gap-2">
+                <input type="date" name="StartDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" class="form-control" />
+                <input type="date" name="EndDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" class="form-control" />
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-filter me-1"></i>Filter
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-2">
+        <div class="card shadow-sm border-primary">
+            <div class="card-body text-center">
+                <i class="fa-solid fa-eye fa-2x text-primary mb-2"></i>
+                <h3 class="mb-0">@Model.Summary.TotalPageViews.ToString("N0")</h3>
+                <p class="text-muted mb-0">Page Views</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card shadow-sm border-success">
+            <div class="card-body text-center">
+                <i class="fa-solid fa-users fa-2x text-success mb-2"></i>
+                <h3 class="mb-0">@Model.Summary.UniqueVisitors.ToString("N0")</h3>
+                <p class="text-muted mb-0">Unique Visitors</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card shadow-sm border-warning">
+            <div class="card-body text-center">
+                <i class="fa-solid fa-server fa-2x text-warning mb-2"></i>
+                <h3 class="mb-0">@Model.Summary.TotalRequests.ToString("N0")</h3>
+                <p class="text-muted mb-0">Total Requests</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card shadow-sm border-info">
+            <div class="card-body text-center">
+                <i class="fa-solid fa-database fa-2x text-info mb-2"></i>
+                <h3 class="mb-0">@((Model.Summary.BandwidthUsed / (1024.0 * 1024 * 1024)).ToString("F2")) GB</h3>
+                <p class="text-muted mb-0">Bandwidth Used</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card shadow-sm border-danger">
+            <div class="card-body text-center">
+                <i class="fa-solid fa-shield-halved fa-2x text-danger mb-2"></i>
+                <h3 class="mb-0">@Model.Summary.ThreatsBlocked.ToString("N0")</h3>
+                <p class="text-muted mb-0">Threats Blocked</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card shadow-sm border-secondary">
+            <div class="card-body text-center">
+                <i class="fa-solid fa-gauge-high fa-2x text-secondary mb-2"></i>
+                <h3 class="mb-0">@Model.Summary.AverageCacheHitRate.ToString("F1")%</h3>
+                <p class="text-muted mb-0">Cache Hit Rate</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Page Views Chart -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-chart-area me-2"></i>Page Views Over Time</h5>
+            </div>
+            <div class="card-body">
+                <ejs-chart id="pageViewsChart" title="Daily Page Views & Unique Visitors">
+                    <e-chart-primaryxaxis valueType="DateTime" labelFormat="dd MMM" minimum="Model.StartDate" maximum="Model.EndDate"></e-chart-primaryxaxis>
+                    <e-chart-primaryyaxis title="Count"></e-chart-primaryyaxis>
+                    <e-series-collection>
+                        <e-series dataSource="@Model.PageViewsData" xName="Date" yName="Count" type="Line" name="Page Views">
+                            <e-series-marker visible="true"></e-series-marker>
+                        </e-series>
+                        <e-series dataSource="@Model.UniqueViewsData" xName="Date" yName="Count" type="Line" name="Unique Visitors">
+                            <e-series-marker visible="true"></e-series-marker>
+                        </e-series>
+                    </e-series-collection>
+                    <e-chart-tooltipsettings enable="true"></e-chart-tooltipsettings>
+                    <e-chart-legendsettings visible="true"></e-chart-legendsettings>
+                </ejs-chart>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top Pages and Referrers -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-file-lines me-2"></i>Top Pages</h5>
+            </div>
+            <div class="card-body">
+                <ejs-chart id="topPagesChart">
+                    <e-chart-primaryxaxis valueType="Category"></e-chart-primaryxaxis>
+                    <e-chart-primaryyaxis title="Views"></e-chart-primaryyaxis>
+                    <e-series-collection>
+                        <e-series dataSource="@Model.TopPages" xName="Title" yName="Views" type="Column" name="Views">
+                        </e-series>
+                    </e-series-collection>
+                    <e-chart-tooltipsettings enable="true"></e-chart-tooltipsettings>
+                </ejs-chart>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-link me-2"></i>Top Referrers</h5>
+            </div>
+            <div class="card-body">
+                <ejs-chart id="referrersChart">
+                    <e-chart-primaryxaxis valueType="Category"></e-chart-primaryxaxis>
+                    <e-chart-primaryyaxis title="Count"></e-chart-primaryyaxis>
+                    <e-series-collection>
+                        <e-series dataSource="@Model.TopReferrers" xName="Referrer" yName="Count" type="Bar" name="Referrals">
+                        </e-series>
+                    </e-series-collection>
+                    <e-chart-tooltipsettings enable="true"></e-chart-tooltipsettings>
+                </ejs-chart>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Browser and Device Stats -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fa-brands fa-chrome me-2"></i>Browser Distribution</h5>
+            </div>
+            <div class="card-body">
+                <ejs-accumulationchart id="browserChart">
+                    <e-accumulation-series-collection>
+                        <e-accumulation-series dataSource="@Model.BrowserData" xName="Browser" yName="Count" type="Pie" innerRadius="0%">
+                            @* <e-accumulation-datalabel visible="true" name="text" position="Outside"> *@
+                            @*     <e-connector-style length="10px"></e-connector-style> *@
+                            @* </e-accumulation-datalabel> *@
+                        </e-accumulation-series>
+                    </e-accumulation-series-collection>
+                    <e-accumulationchart-legendsettings visible="true"></e-accumulationchart-legendsettings>
+                    <e-accumulationchart-tooltipsettings enable="true"></e-accumulationchart-tooltipsettings>
+                </ejs-accumulationchart>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-mobile-screen me-2"></i>Device Distribution</h5>
+            </div>
+            <div class="card-body">
+                <ejs-accumulationchart id="deviceChart">
+                    <e-accumulation-series-collection>
+                        <e-accumulation-series dataSource="@Model.DeviceData" xName="Device" yName="Count" type="Pie" innerRadius="40%">
+                            @* <e-accumulation-datalabel visible="true" name="text" position="Outside"> *@
+                            @*     <e-connector-style length="10px"></e-connector-style> *@
+                            @* </e-accumulation-datalabel> *@
+                        </e-accumulation-series>
+                    </e-accumulation-series-collection>
+                    <e-accumulationchart-legendsettings visible="true"></e-accumulationchart-legendsettings>
+                    <e-accumulationchart-tooltipsettings enable="true"></e-accumulationchart-tooltipsettings>
+                </ejs-accumulationchart>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Geographic Distribution -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-globe me-2"></i>Geographic Distribution</h5>
+            </div>
+            <div class="card-body">
+                <ejs-chart id="countryChart">
+                    <e-chart-primaryxaxis valueType="Category"></e-chart-primaryxaxis>
+                    <e-chart-primaryyaxis title="Visitors"></e-chart-primaryyaxis>
+                    <e-series-collection>
+                        <e-series dataSource="@Model.CountryData" xName="Country" yName="Count" type="Column" name="Visitors">
+                        </e-series>
+                    </e-series-collection>
+                    <e-chart-tooltipsettings enable="true"></e-chart-tooltipsettings>
+                </ejs-chart>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script>
+}

@@ -11,8 +11,11 @@ public class PrivacyModel : PageModel
     {
         _logger = logger;
     }
+    
+    public string? Privacy { get; set; }
 
-    public void OnGet()
+    public async Task OnGet()
     {
+        Privacy = await System.IO.File.ReadAllTextAsync(Path.Combine(Environment.CurrentDirectory, "privacy.txt"));
     }
 }

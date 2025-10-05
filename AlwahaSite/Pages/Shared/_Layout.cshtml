@@ -48,6 +48,14 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 
+<!-- Alwaha Analytics -->
+<script>
+  window.alwahaAnalyticsConfig = {
+    apiUrl: 'https://management.alwahalondon.co.uk/api/analytics/track'
+  };
+</script>
+<script src="~/js/alwaha-analytics.js" asp-append-version="true"></script>
+
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

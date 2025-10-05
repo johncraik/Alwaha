@@ -1,0 +1,98 @@
+<h1 class="mb-3">Privacy Policy</h1>
+<p><strong>Last updated:</strong> October 2025</p>
+<p>
+We respect your privacy and are committed to protecting your personal data.
+This notice explains what information we collect, why we collect it, and how it is handled in accordance with the UK GDPR.
+</p>
+
+<hr class="my-4" />
+
+<h2>1. Who We Are</h2>
+<p>
+This website is operated by <strong>Alwaha London</strong> (“we”, “us”, “our”).<br>
+If you have any questions about this notice or your data, contact us at
+<a href="mailto:[your@email.com]">[your@email.com]</a>.
+</p>
+
+<hr class="my-4" />
+
+<h2>2. What We Collect and Why</h2>
+<h5 class="mt-3">a. Website Analytics (Legitimate Interest)</h5>
+<p>
+When you visit our site, we automatically collect limited technical information to help us monitor performance,
+improve usability, and maintain security.
+</p>
+
+<ul>
+<li>Pages viewed, clicks, and time on page</li>
+<li>Browser type, screen size, and language</li>
+<li>Referrer (if any)</li>
+<li>Country and city (derived from your IP address)</li>
+<li>A <strong>hashed version of your IP address</strong> (used only to estimate unique visits)</li>
+<li>Session ID and device information (non-identifiable)</li>
+</ul>
+
+<p>
+This data helps us understand site usage and detect errors or abuse.
+No raw IP addresses or personal identifiers are stored.
+</p>
+<p>Analytics data are retained for <strong>up to 6 months</strong>, then automatically deleted.</p>
+
+<h5 class="mt-3">b. Contact Form (Consent)</h5>
+<p>
+If you use our <strong>Contact Us</strong> form, the information you provide is sent directly to us by email.
+It is <strong>not stored</strong> on the website or in any database, and is used only to respond to your enquiry.
+</p>
+
+<hr class="my-4" />
+
+<h2>3. Cookies</h2>
+<p>
+We use only essential cookies necessary for the website to function properly.
+We do <strong>not</strong> use tracking, advertising, or third-party analytics cookies.
+</p>
+
+<hr class="my-4" />
+
+<h2>4. Cloudflare</h2>
+<p>
+Our website is delivered and protected through <strong>Cloudflare</strong>,
+which may process minimal connection data (such as IP addresses and request headers)
+for security and performance purposes.
+</p>
+<p>
+Cloudflare acts as a data processor under its
+<a href="https://www.cloudflare.com/gdpr/" target="_blank" rel="noopener">Data Processing Addendum</a>.
+</p>
+
+<hr class="my-4" />
+
+<h2>5. Your Rights</h2>
+<p>Under the UK GDPR you have the right to:</p>
+<ul>
+<li>Request access to your personal data</li>
+<li>Request correction or deletion</li>
+<li>Object to processing based on legitimate interests</li>
+<li>Lodge a complaint with the Information Commissioner’s Office (ICO)</li>
+</ul>
+<p>
+You can exercise these rights by contacting
+<a href="mailto:[your@email.com]">[your@email.com]</a>.
+</p>
+
+<hr class="my-4" />
+
+<h2>6. Security</h2>
+<p>
+Analytics data are stored securely on our own systems.
+IP addresses are used briefly for geolocation, then immediately
+<strong>hashed with a long random salt</strong>, making them non-reversible and anonymous.
+</p>
+
+<hr class="my-4" />
+
+<h2>7. Updates</h2>
+<p>
+We may update this policy periodically.
+The latest version will always be available on this page.
+</p>

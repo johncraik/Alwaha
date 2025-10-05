@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/AlwahaManagement.styles.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/css/ej2.min.css" />
+    <link rel="stylesheet" href="~/css/ej2.min.css" asp-append-version="true"/>
     <script src="~/js/ej2.min.js"></script>
     <link rel="stylesheet" href="~/css/sweetalert2.css" asp-append-version="true"/>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.min.css" rel="stylesheet">
@@ -30,12 +30,12 @@
                             Menu
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li><a class="dropdown-item" asp-page="/Menu/Index">Menu Items</a></li>
-                            <li><a class="dropdown-item" asp-page="/Menu/Sets/Index">Menu Sets</a></li>
-                            <li><a class="dropdown-item" asp-page="/Menu/Bundles/Index">Menu Bundles</a></li>
+                            <li><a class="dropdown-item" asp-page="/Menu/Index"><i class="fa-solid fa-utensils me-2"></i>Menu Items</a></li>
+                            <li><a class="dropdown-item" asp-page="/Menu/Sets/Index"><i class="fa-solid fa-layer-group me-2"></i>Menu Sets</a></li>
+                            <li><a class="dropdown-item" asp-page="/Menu/Bundles/Index"><i class="fa-solid fa-box me-2"></i>Menu Bundles</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" asp-page="/Menu/ItemTypes/Index">Menu Item Types</a></li>
-                            <li><a class="dropdown-item" asp-page="/Menu/Tags/Index">Menu Item Tags (Allergies)</a></li>
+                            <li><a class="dropdown-item" asp-page="/Menu/ItemTypes/Index"><i class="fa-solid fa-gear me-2"></i>Menu Item Types</a></li>
+                            <li><a class="dropdown-item" asp-page="/Menu/Tags/Index"><i class="fa-solid fa-tags me-2"></i>Menu Item Tags (Allergies)</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -43,10 +43,10 @@
                             Analytics
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li><a class="dropdown-item" asp-page="/Analytics/Index">Website Analytics</a></li>
+                            <li><a class="dropdown-item" asp-page="/Analytics"><i class="fa-solid fa-chart-line me-2"></i>Website Analytics</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" asp-page="/Audit/User">User Audit Trail</a></li>
-                            <li><a class="dropdown-item" asp-page="/Audit/Data">Data Audit Trail</a></li>
+                            <li><a class="dropdown-item" asp-page="/Audit/User"><i class="fa-solid fa-user-clock me-2"></i>User Audit Trail</a></li>
+                            <li><a class="dropdown-item" asp-page="/Audit/Data"><i class="fa-solid fa-clock-rotate-left me-2"></i>Data Audit Trail</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">

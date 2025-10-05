@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AlwahaManagement.Data;
 using AlwahaManagement.Hangfire;
+using AlwahaManagement.Helpers;
 using AlwahaManagement.Models;
 using AlwahaManagement.Services;
 using Hangfire;
@@ -88,10 +89,26 @@ builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<AuditService>();
 builder.Services.AddScoped<SettingsService>();
+builder.Services.AddScoped<AnalyticsService>();
+builder.Services.AddHttpClient<CloudflareAnalyticsService>();
+builder.Services.AddHttpClient<GeoLocationHelper>();
 
 //Hangfire
 builder.Services.AddScoped<RecurringJobs>();
 builder.Services.AddScoped<AuditCleanupJob>();
+builder.Services.AddScoped<CloudflareSyncJob>();
+builder.Services.AddScoped<AnalyticsCleanupJob>();
+
+// CORS for AlwahaSite
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AlwahaSite", policy =>
+    {
+        policy.WithOrigins(builder.Configuration["Analytics:AllowedOrigins"]?.Split(',') ?? new[] { "*" })
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 // Add Syncfusion services
 var syncfusionLicenseKey = builder.Configuration.GetSection("SYNCFUSION-KEY").Value;
@@ -117,10 +134,12 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseCors("AlwahaSite");
+
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseUserInfo();
 app.UseRequire2FA();
-app.UseAuthorization();
 
 app.UseHangfireDashboard(options: new DashboardOptions{Authorization = [new HangfireAuthorisationFilter(SystemRoles.Admin)]});
 
