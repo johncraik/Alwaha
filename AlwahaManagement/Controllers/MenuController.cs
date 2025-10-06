@@ -43,7 +43,7 @@ public class MenuController : Controller
     [HttpGet]
     public async Task<IActionResult> GetBundlesList(bool isRestore = false)
     {
-        var bundles = await _bundleService.GetBundleItemsAsync(showUnavailable: true, isRestore: isRestore);
+        var bundles = await _bundleService.GetBundleItemsAsync(isRestore: isRestore);
         return PartialView("Menu/_BundleItemTable", (bundles, isRestore));
     }
 

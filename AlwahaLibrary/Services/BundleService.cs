@@ -18,43 +18,31 @@ public class BundleService
 
     public async Task<List<IGrouping<ItemType, BundleItem>>> GetBundleItemsAsync(
         string search = "",
-        bool showUnavailable = false,
         bool isRestore = false)
     {
         var query = _context.BundleItems
             .Where(b => b.IsDeleted == isRestore)
-            .Include(b => b.MenuItem)
-            .ThenInclude(m => m.ItemType)
-            .Include(b => b.MenuItem.ItemsToTags)
-            .ThenInclude(itt => itt.ItemTag)
+            .Include(b => b.ItemType)
             .AsQueryable();
-
-        if (!showUnavailable)
-        {
-            query = query.Where(b => b.MenuItem.IsAvailable);
-        }
 
         if(!string.IsNullOrEmpty(search))
         {
-            query = query.Where(b => b.MenuItem.Name.Contains(search)
-                                     || (!string.IsNullOrEmpty(b.MenuItem.Description) && b.MenuItem.Description.Contains(search)));
+            query = query.Where(b => b.ItemType.Name.Contains(search));
         }
 
         var bundles = await query
-            .OrderBy(b => b.MenuItem.ItemType.Order)
-            .ThenBy(b => b.MenuItem.Name)
+            .OrderBy(b => b.ItemType.Order)
             .ToListAsync();
 
         return bundles
-            .GroupBy(b => b.MenuItem.ItemType)
+            .GroupBy(b => b.ItemType)
             .OrderBy(g => g.Key?.Order ?? int.MaxValue)
             .ToList();
     }
 
     public async Task<BundleItem?> GetBundleItemAsync(string id)
         => await _context.BundleItems
-            .Include(b => b.MenuItem)
-            .ThenInclude(m => m.ItemType)
+            .Include(b => b.ItemType)
             .FirstOrDefaultAsync(b => b.BundleId == id);
 
     private async Task ValidateBundleItemAsync(BundleItem bundleItem, ModelStateWrapper modelState)
@@ -69,10 +57,18 @@ public class BundleService
             modelState.AddModelError(nameof(bundleItem.Price), "Price must be greater than 0.");
         }
 
-        var itemExists = await _context.MenuItems.AnyAsync(m => m.ItemId == bundleItem.ItemId && !m.IsDeleted);
-        if (!itemExists)
+        var typeExists = await _context.ItemTypes.AnyAsync(m => m.ItemTypeId == bundleItem.ItemTypeId && !m.IsDeleted);
+        if (!typeExists)
         {
-            modelState.AddModelError(nameof(bundleItem.ItemId), "Invalid menu item.");
+            modelState.AddModelError(nameof(bundleItem.ItemTypeId), "Invalid item type.");
+        }
+        
+        var sameBundle = await _context.BundleItems.AnyAsync(b => b.BundleId != bundleItem.BundleId 
+                                                                  && b.ItemTypeId == bundleItem.ItemTypeId 
+                                                                  && b.Quantity == bundleItem.Quantity);
+        if (sameBundle)
+        {
+            modelState.AddModelError(nameof(bundleItem.ItemTypeId), "This item is already in this bundle.");
         }
     }
 

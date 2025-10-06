@@ -1,7 +1,22 @@
+using AlwahaLibrary.Data;
+using AlwahaLibrary.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
+                       throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<AlwahaDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
 builder.Services.AddRazorPages();
+
+builder.Services.AddScoped<UserInfo>();
+builder.Services.AddScoped<MenuService>();
+builder.Services.AddScoped<ItemTypeService>();
+builder.Services.AddScoped<ItemTagService>();
+builder.Services.AddScoped<BundleService>();
 
 var app = builder.Build();
 

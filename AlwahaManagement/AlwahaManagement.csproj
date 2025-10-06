@@ -16,15 +16,16 @@
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.9" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.9" />
         <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+        <PackageReference Include="QRCoder" Version="1.6.0" />
         <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="30.2.5" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\AlwahaLibrary\AlwahaLibrary.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -33,5 +34,15 @@
       <Folder Include="Pages\Menu\Audit\" />
       <Folder Include="Pages\Menu\Bundles\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="AlwahaLibrary">
+        <HintPath>..\AlwahaLibrary.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+<!--    <ItemGroup>-->
+<!--      <ProjectReference Include="..\AlwahaLibrary\AlwahaLibrary.csproj" />-->
+<!--    </ItemGroup>-->
 
 </Project>

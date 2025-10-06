@@ -1,57 +1,85 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - AlwahaSite</title>
+    <title>@ViewData["Title"] - Alwaha London</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/AlwahaSite.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/ej2.min.css" asp-append-version="true"/>
+    <script src="~/js/ej2.min.js"></script>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-lg navbar-dark py-3 shadow-sm border-bottom border-primary border-3 purple-gradient">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">AlwahaSite</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            @* <a class="navbar-brand fw-bold fs-4 brand-hover" asp-area="" asp-page="/Index"> *@
+            @*     <i class="fa-solid fa-utensils me-2 text-danger"></i>Alwaha London *@
+            @* </a> *@
+            <img src="~/img/logo_v3.png" alt="Alwaha Logo" class="brand-hover" height="100px" style="cursor: pointer;" onclick="location.assign('/Index')"/>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
+            <div class="navbar-collapse collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        <a class="nav-link nav-link-custom px-3" asp-area="" asp-page="/Menu">
+                            <i class="fa-solid fa-utensils me-2"></i>Menu
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                        <a class="nav-link nav-link-custom px-3" asp-area="" asp-page="/Events">
+                            <i class="fa-solid fa-calendar me-2"></i>Events & Catering
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom px-3" asp-area="" asp-page="/Contact">
+                            <i class="fa-solid fa-envelope me-2"></i>Contact Us
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
-<div class="container">
-    <main role="main" class="pb-3">
+<main role="main" class="flex-grow-1">
+    <div class="container pb-3">
         @RenderBody()
-    </main>
-</div>
+    </div>
+</main>
 
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2025 - AlwahaSite - <a asp-area="" asp-page="/Privacy">Privacy</a>
+<footer class="footer-custom purple-gradient border-top border-primary border-3 mt-5">
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                <p class="mb-0">&copy; 2025 Alwaha London. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <a asp-area="" asp-page="/Privacy" class="footer-link me-3">
+                    <i class="fa-solid fa-shield-halved me-1"></i>Privacy Policy
+                </a>
+                <a asp-area="" asp-page="/Contact" class="footer-link">
+                    <i class="fa-solid fa-envelope me-1"></i>Contact
+                </a>
+            </div>
+        </div>
     </div>
 </footer>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="https://kit.fontawesome.com/29bf1169ee.js" crossorigin="anonymous"></script>
 
 <!-- Alwaha Analytics -->
 <script>
   window.alwahaAnalyticsConfig = {
-    apiUrl: 'https://management.alwahalondon.co.uk/api/analytics/track'
+    //apiUrl: 'https://management.alwahalondon.co.uk/api/analytics/track'
+    apiUrl: 'https://localhost:5165/api/analytics/track'
   };
 </script>
 <script src="~/js/alwaha-analytics.js" asp-append-version="true"></script>

@@ -57,9 +57,9 @@ public class AuditService
         if (tableName == "BundleItems")
         {
             var bundleItem = await _context.BundleItems
-                .Include(bi => bi.MenuItem)
+                .Include(bi => bi.ItemType)
                 .FirstOrDefaultAsync(bi => bi.BundleId == entityId);
-            return bundleItem?.MenuItem?.Name;
+            return bundleItem?.ItemType?.Name;
         }
 
         var entity = await GetEntityByTableNameAndIdAsync(tableName, entityId);

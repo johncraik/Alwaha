@@ -1,0 +1,94 @@
+@page
+@model AlwahaSite.Pages.Menu
+
+@{
+    ViewData["Title"] = "Menu";
+}
+
+<div class="menu-page">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Our Menu</h1>
+        <p class="text-muted">Discover our delicious selection</p>
+    </div>
+
+    @foreach (var section in Model.FullMenu)
+    {
+        <div class="menu-section mb-5">
+            <!-- Item Type Header -->
+            <div class="text-center mb-4">
+                <h2 class="menu-type-header" style="border-bottom: 4px solid @(section.Type.Colour ?? "var(--bs-primary)");">
+                    @(section.Type.Name)
+                </h2>
+            </div>
+
+            <!-- Menu Items -->
+            @if (section.Items.Any())
+            {
+                <div class="row g-4 mb-4">
+                    @foreach (var item in section.Items)
+                    {
+                        <div class="col-12 col-md-4 col-lg-2">
+                            <div class="menu-item-card">
+                                <h5 class="menu-item-name">@item.Name</h5>
+                                @if (!string.IsNullOrEmpty(item.Description))
+                                {
+                                    <p class="menu-item-description">@item.Description</p>
+                                }
+                                <p class="menu-item-price">£@item.Price.ToString("F2")</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Menu Sets -->
+            @if (section.Sets.Any())
+            {
+                <div class="row g-4 mb-4">
+                    @foreach (var set in section.Sets)
+                    {
+                        <div class="col-12 col-md-4 col-lg-2">
+                            <div class="menu-item-card menu-set-card">
+                                <h5 class="menu-item-name">
+                                    @set.Name
+                                    <span class="badge bg-secondary ms-2">Set</span>
+                                </h5>
+                                @if (set.ItemsToSets != null && set.ItemsToSets.Any())
+                                {
+                                    <div class="menu-set-items">
+                                        <small class="text-muted d-block mb-1">Includes:</small>
+                                        @foreach (var itemToSet in set.ItemsToSets)
+                                        {
+                                            <small class="d-block">• @itemToSet.MenuItem.Name</small>
+                                        }
+                                    </div>
+                                }
+                                <p class="menu-item-price">£@set.Price.ToString("F2")</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Bundles -->
+            @if (section.Bundles.Any())
+            {
+                <div class="row g-4 mb-4">
+                    @foreach (var bundle in section.Bundles)
+                    {
+                        <div class="col-12 col-md-4 col-lg-2">
+                            <div class="menu-item-card menu-bundle-card">
+                                <h5 class="menu-item-name">
+                                    Any @bundle.Quantity @bundle.ItemType.Name
+                                    <span class="badge bg-primary ms-2">Bundle</span>
+                                </h5>
+                                <p class="menu-item-price">£@bundle.Price.ToString("F2")</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+

@@ -15,6 +15,6 @@ public class ItemType : AuditModel
     [Required]
     public int Order { get; set; }
     
-    [NotMapped]
     public IEnumerable<MenuItem> MenuItems { get; set; }
+    public ICollection<BundleItem> BundleItems { get; set; }
 }

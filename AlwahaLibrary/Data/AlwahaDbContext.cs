@@ -135,15 +135,15 @@ public class AlwahaDbContext : DbContext
 
         // Configure relationship for BundleItem
         modelBuilder.Entity<BundleItem>()
-            .HasOne(b => b.MenuItem)
+            .HasOne(b => b.ItemType)
             .WithMany(m => m.BundleItems)
-            .HasForeignKey(b => b.ItemId)
+            .HasForeignKey(b => b.ItemTypeId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // Configure relationship for MenuItem and ItemType
         modelBuilder.Entity<MenuItem>()
             .HasOne(m => m.ItemType)
-            .WithMany()
+            .WithMany(t => t.MenuItems)
             .HasForeignKey(m => m.ItemTypeId)
             .OnDelete(DeleteBehavior.Restrict);
     }

@@ -23,6 +23,6 @@ public class Index : PageModel
     {
         Search = search;
         IsRestore = isRestore && _userInfo.CanRestore();
-        BundleItems = await _bundleService.GetBundleItemsAsync(search: search, showUnavailable: true, isRestore: isRestore);
+        BundleItems = await _bundleService.GetBundleItemsAsync(search: search, isRestore: isRestore);
     }
 }

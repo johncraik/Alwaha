@@ -23,20 +23,16 @@ public class Require2FAMiddleware
 
             if (user != null && !user.TwoFactorEnabled)
             {
-                var path = context.Request.Path.Value?.ToLower() ?? "";
+                var path = context.Request.Path.Value ?? "";
+                Console.WriteLine($"====URL: {path} ====");
 
                 // Allow access to 2FA setup pages and account pages
-                var allowedPaths = new[]
-                {
-                    "/identity/account/manage/enableauthenticator",
-                    "/identity/account/manage/twofactorauthentication",
-                    "/identity/account/manage/showrecoverycodes",
-                    "/identity/account/logout",
-                    "/identity/account/accessdenied"
-                };
-
-                if (!allowedPaths.Any(p => path.Contains(p, StringComparison.OrdinalIgnoreCase))
-                    && !IsStaticFile(path))
+                if (!path.Contains("enableauthenticator", StringComparison.OrdinalIgnoreCase) &&
+                    !path.Contains("twofactorauthentication", StringComparison.OrdinalIgnoreCase) &&
+                    !path.Contains("showrecoverycodes", StringComparison.OrdinalIgnoreCase) &&
+                    !path.Contains("logout", StringComparison.OrdinalIgnoreCase) &&
+                    !path.Contains("accessdenied", StringComparison.OrdinalIgnoreCase) &&
+                    !IsStaticFile(path))
                 {
                     context.Response.Redirect("/Identity/Account/Manage/TwoFactorAuthentication");
                     return;

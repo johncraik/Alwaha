@@ -15,21 +15,21 @@ namespace AlwahaManagement.Pages.Menu.Bundles;
 public class Edit : PageModel
 {
     private readonly BundleService _bundleService;
-    private readonly MenuService _menuService;
+    private readonly ItemTypeService _typeService;
 
     public bool Adding { get; set; }
 
-    public Edit(BundleService bundleService, MenuService menuService)
+    public Edit(BundleService bundleService, ItemTypeService typeService)
     {
         _bundleService = bundleService;
-        _menuService = menuService;
+        _typeService = typeService;
     }
 
     public class BundleItemInputModel
     {
         [Required]
         [DisplayName("Menu Item")]
-        public string ItemId { get; set; }
+        public string TypeId { get; set; }
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
@@ -45,14 +45,14 @@ public class Edit : PageModel
 
         public BundleItemInputModel(BundleItem bundle)
         {
-            ItemId = bundle.ItemId;
+            TypeId = bundle.ItemTypeId;
             Quantity = bundle.Quantity;
             Price = bundle.Price;
         }
 
         public void Fill(BundleItem bundle)
         {
-            bundle.ItemId = ItemId;
+            bundle.ItemTypeId = TypeId;
             bundle.Quantity = Quantity;
             bundle.Price = Price;
         }
@@ -60,7 +60,7 @@ public class Edit : PageModel
 
     [BindProperty]
     public BundleItemInputModel Input { get; set; }
-    public List<SelectListItem> MenuItems { get; set; }
+    public List<SelectListItem> ItemTypes { get; set; }
 
     public void SetupAdding(string? id)
     {
@@ -69,13 +69,12 @@ public class Edit : PageModel
 
     public async Task SetupPage()
     {
-        var menuItemGroups = await _menuService.GetMenuItemsAsync();
-        MenuItems = menuItemGroups
-            .SelectMany(g => g.Select(item => new SelectListItem
+        var itemTypes = await _typeService.GetItemTypesAsync();
+        ItemTypes = itemTypes.Select(t => new SelectListItem
             {
-                Text = $"{g.Key.Name} - {item.Name} - {item.Price:C}",
-                Value = item.ItemId
-            }))
+                Text = t.Name,
+                Value = t.ItemTypeId
+            })
             .ToList();
     }
 

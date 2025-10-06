@@ -49,13 +49,12 @@ public class DashboardService
     public async Task<MenuStat> GetMenuBundleStats()
     {
         var bundles = await _context.BundleItems
-            .Include(bundleItem => bundleItem.MenuItem)
+            .Include(bundleItem => bundleItem.ItemType)
             .Where(b => !b.IsDeleted)
             .ToListAsync();
         return new MenuStat
         {
-            Available = (uint)bundles.Count(b => b.MenuItem.IsAvailable),
-            Unavailable = (uint)bundles.Count(b => !b.MenuItem.IsAvailable)
+            Available = (uint)bundles.Count
         };
     }
 

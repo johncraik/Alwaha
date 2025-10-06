@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>f508c81d-d394-446f-922b-177fe021746b</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -725,7 +726,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AlwahaLibrary\AlwahaLibrary.csproj" />
     </ItemGroup>
 
 </Project>

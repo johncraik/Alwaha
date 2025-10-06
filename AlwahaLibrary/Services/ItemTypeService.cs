@@ -48,10 +48,14 @@ public class ItemTypeService
         
         await ValidateItemType(itemType, modelState);
         if (!modelState.IsValid) return false;
-        
-        itemType.Order = await _context.ItemTypes.MaxAsync(it => it.Order) + 1;
+
+        var order = 1;
+        var existingTypes = await _context.ItemTypes.ToListAsync();
+        if(existingTypes.Count > 0) order = existingTypes.Max(it => it.Order) + 1;
+            
+        itemType.Order = order;
         itemType.FillCreated(_userInfo.UserId ?? "System");
-        _context.ItemTypes.Add(itemType);
+        await _context.ItemTypes.AddAsync(itemType);
         await _context.SaveChangesAsync();
         return true;
     }

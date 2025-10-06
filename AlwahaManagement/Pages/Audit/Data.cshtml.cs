@@ -56,8 +56,8 @@ public class Data : PageModel
         DeletedSets = await _menuService.GetMenuItemsAsync(showUnavailable: true, getSets: true, isRestore: true);
 
         // Load Bundles
-        ActiveBundles = await _bundleService.GetBundleItemsAsync(showUnavailable: true, isRestore: false);
-        DeletedBundles = await _bundleService.GetBundleItemsAsync(showUnavailable: true, isRestore: true);
+        ActiveBundles = await _bundleService.GetBundleItemsAsync(isRestore: false);
+        DeletedBundles = await _bundleService.GetBundleItemsAsync(isRestore: true);
 
         // Load ItemTypes
         ActiveItemTypes = await _itemTypeService.GetItemTypesAsync(isRestore: false);

@@ -1,7 +1,6 @@
 using AlwahaLibrary.Data;
 using AlwahaLibrary.Helpers;
 using AlwahaLibrary.Models;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlwahaLibrary.Services;
@@ -9,15 +8,12 @@ namespace AlwahaLibrary.Services;
 public class MenuService
 {
     private readonly AlwahaDbContext _context;
-    private readonly ItemTagService _itemTagService;
     private readonly UserInfo _userInfo;
 
     public MenuService(AlwahaDbContext context,
-        ItemTagService itemTagService,
         UserInfo userInfo)
     {
         _context = context;
-        _itemTagService = itemTagService;
         _userInfo = userInfo;
     }
 
@@ -58,64 +54,11 @@ public class MenuService
         var items = await query.OrderBy(i => i.ItemType.Order).ThenBy(i => i.Name).ToListAsync();
         return items.GroupBy(i => i.ItemType).OrderBy(g => g.Key?.Order ?? int.MaxValue).ToList();
     }
-    
-
-    // public async Task<List<IGrouping<ItemType, MenuItem>>> GetSetsAsync(
-    //     string search = "",
-    //     bool showUnavailable = false)
-    // {
-    //     //Get the menu sets:
-    //     var query = _context.MenuItems
-    //         .Where(i => i.IsSet && !i.IsDeleted)
-    //         .Include(i => i.ItemType)
-    //         .Include(i => i.ItemsToSets)
-    //         .ThenInclude(its => its.MenuItem)
-    //         .Include(i => i.ItemsToTags)
-    //         .ThenInclude(itt => itt.ItemTag)
-    //         .AsQueryable();
-    //     if (!showUnavailable) query = query.Where(i => i.IsAvailable);
-    //
-    //     //Search the menu sets:
-    //     if (!string.IsNullOrEmpty(search))
-    //     {
-    //         query = query.Where(i => i.Name.Contains(search)
-    //                                  || (!string.IsNullOrEmpty(i.Description) && i.Description.Contains(search)));
-    //     }
-    //     
-    //     //Convert to list:
-    //     var sets = await query.OrderBy(s => s.ItemType.Order).ToListAsync();
-    //
-    //     
-    //     //Grab the menu items in the menu set:
-    //     var setItems = _context.ItemToSets
-    //         .Include(its => its.MenuItem)
-    //         .Where(its => !its.MenuItem.IsDeleted 
-    //                       && menuSets.Select(s => s.ItemId).Contains(its.SetId))
-    //         .AsQueryable();
-    //     if (!showUnavailable) setItems = setItems.Where(its => its.MenuItem.IsAvailable);
-    //     
-    //     //Search the menu items:
-    //     if (!string.IsNullOrEmpty(search))
-    //     {
-    //         setItems = setItems.Where(its => its.MenuItem.Name.Contains(search) 
-    //                                         || (!string.IsNullOrEmpty(its.MenuItem.Description) && its.MenuItem.Description.Contains(search)));
-    //     }
-    //     
-    //     
-    //     //Convert sets and items into one list:
-    //     return (from set in menuSets
-    //         let setItemsList = setItems
-    //             .Where(its => its.SetId == set.ItemId)
-    //             .Select(its => its.MenuItem)
-    //             .ToList()
-    //         select (set, setItemsList)).ToList();
-    // }
 
 
     public async Task<MenuItem?> GetMenuItemAsync(string id)
         => await _context.MenuItems
             .Include(i => i.ItemType)
-            .Include(i => i.BundleItems)
             .Include(i => i.ItemsToSets)
             .FirstOrDefaultAsync(i => i.ItemId == id);
 

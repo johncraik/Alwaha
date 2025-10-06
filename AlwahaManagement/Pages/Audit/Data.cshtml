@@ -236,10 +236,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var bundle in group.OrderBy(b => b.MenuItem.Name))
+                                    @foreach (var bundle in group.OrderBy(b => b.ItemType.Order).ThenBy(b => b.ItemType.Name))
                                     {
                                         <tr>
-                                            <td>@bundle.MenuItem.Name</td>
+                                            <td>@bundle.ItemType.Name</td>
                                             <td>@bundle.Quantity</td>
                                             <td>@bundle.Price.ToString("C")</td>
                                             <td>
@@ -276,10 +276,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var bundle in group.OrderBy(b => b.MenuItem.Name))
+                                    @foreach (var bundle in group.OrderBy(b => b.ItemType.Order).ThenBy(b => b.ItemType.Name))
                                     {
                                         <tr class="table-danger">
-                                            <td>@bundle.MenuItem.Name</td>
+                                            <td>@bundle.ItemType.Name</td>
                                             <td>@bundle.Quantity</td>
                                             <td>@bundle.Price.ToString("C")</td>
                                             <td>

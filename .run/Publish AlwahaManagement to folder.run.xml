@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Publish AlwahaManagement to folder" type="DotNetFolderPublish" factoryName="Publish to folder">
+    <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/../Published/Management/v1.0" target_framework="net9.0" uuid_high="578305758378675080" uuid_low="-8652918572759465131" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -10,6 +10,10 @@
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="9.0.9" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.9" />
       <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.9" />
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
@@ -17,13 +21,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Data\Migrations\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Reference Include="Microsoft.Extensions.Identity.Stores">
         <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\9.0.9\Microsoft.Extensions.Identity.Stores.dll</HintPath>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Data\Migrations\" />
     </ItemGroup>
 
 </Project>
