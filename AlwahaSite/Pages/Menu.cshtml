@@ -3,10 +3,11 @@
 
 @{
     ViewData["Title"] = "Menu";
+    ViewData["Description"] = "Alwaha London's full delicious menu. Explore our entire menu to help you decide what to order when you come to dine with us.";
 }
 
 <div class="menu-page">
-    <div class="text-center mb-5">
+    <div class="text-center my-5 fade-in-scroll">
         <h1 class="display-4 fw-bold">Our Menu</h1>
         <p class="text-muted">Discover our delicious selection</p>
     </div>
@@ -15,7 +16,7 @@
     {
         <div class="menu-section mb-5">
             <!-- Item Type Header -->
-            <div class="text-center mb-4">
+            <div class="text-center mb-4 fade-in-scroll">
                 <h2 class="menu-type-header" style="border-bottom: 4px solid @(section.Type.Colour ?? "var(--bs-primary)");">
                     @(section.Type.Name)
                 </h2>
@@ -24,17 +25,23 @@
             <!-- Menu Items -->
             @if (section.Items.Any())
             {
-                <div class="row g-4 mb-4">
+                <div class="row g-4 mb-4 justify-content-center fade-in-scroll">
                     @foreach (var item in section.Items)
                     {
                         <div class="col-12 col-md-4 col-lg-2">
                             <div class="menu-item-card">
-                                <h5 class="menu-item-name">@item.Name</h5>
+                                <h5 class="menu-item-name" style="border-bottom-color: @(item.Colour ?? "var(--bs-secondary)");">@item.Name</h5>
                                 @if (!string.IsNullOrEmpty(item.Description))
                                 {
                                     <p class="menu-item-description">@item.Description</p>
                                 }
                                 <p class="menu-item-price">£@item.Price.ToString("F2")</p>
+                                <div class="mt-2">
+                                    @foreach (var tag in item.ItemsToTags.Select(itt => itt.ItemTag))
+                                    {
+                                        <partial name="_ItemTagBadge" model="tag"/>
+                                    }
+                                </div>
                             </div>
                         </div>
                     }
@@ -44,16 +51,19 @@
             <!-- Menu Sets -->
             @if (section.Sets.Any())
             {
-                <div class="row g-4 mb-4">
+                <hr/>
+                <div class="text-center fade-in-scroll">
+                    <h6 class="menu-subtitle" style="border-bottom: 2px solid var(--bs-primary)">@(section.Type.Name) Item Sets</h6>
+                </div>
+                <div class="row g-4 mb-4 justify-content-center fade-in-scroll">
                     @foreach (var set in section.Sets)
                     {
                         <div class="col-12 col-md-4 col-lg-2">
                             <div class="menu-item-card menu-set-card">
-                                <h5 class="menu-item-name">
+                                <h5 class="menu-item-name" style="border-bottom-color: @(set.Colour ?? "var(--bs-secondary)") !important;">
                                     @set.Name
-                                    <span class="badge bg-secondary ms-2">Set</span>
                                 </h5>
-                                @if (set.ItemsToSets != null && set.ItemsToSets.Any())
+                                @if (set.ItemsToSets.Any())
                                 {
                                     <div class="menu-set-items">
                                         <small class="text-muted d-block mb-1">Includes:</small>
@@ -64,6 +74,12 @@
                                     </div>
                                 }
                                 <p class="menu-item-price">£@set.Price.ToString("F2")</p>
+                                <div class="mt-2">
+                                    @foreach (var tag in set.ItemsToTags.Select(itt => itt.ItemTag))
+                                    {
+                                        <partial name="_ItemTagBadge" model="tag"/>
+                                    }
+                                </div>
                             </div>
                         </div>
                     }
@@ -73,16 +89,19 @@
             <!-- Bundles -->
             @if (section.Bundles.Any())
             {
-                <div class="row g-4 mb-4">
+                <hr/>
+                <div class="text-center fade-in-scroll">
+                    <h6 class="menu-subtitle" style="border-bottom: 2px solid var(--bs-primary)">@(section.Type.Name) Bundles</h6>
+                </div>
+                <div class="row g-4 mb-4 justify-content-center fade-in-scroll">
                     @foreach (var bundle in section.Bundles)
                     {
                         <div class="col-12 col-md-4 col-lg-2">
                             <div class="menu-item-card menu-bundle-card">
                                 <h5 class="menu-item-name">
-                                    Any @bundle.Quantity @bundle.ItemType.Name
-                                    <span class="badge bg-primary ms-2">Bundle</span>
+                                    Any @bundle.Quantity @bundle.ItemType.Name<br/>items
                                 </h5>
-                                <p class="menu-item-price">£@bundle.Price.ToString("F2")</p>
+                                <h6>for £@bundle.Price.ToString("F2")</h6>
                             </div>
                         </div>
                     }
@@ -90,5 +109,20 @@
             }
         </div>
     }
+
+    <!-- Allergen Information -->
+    <hr class="my-5"/>
+    <div class="text-center fade-in-scroll">
+        <h6 class="menu-subtitle" style="border-bottom: 2px solid var(--bs-primary)">Allergen Information</h6>
+    </div>
+    <div class="d-flex flex-wrap justify-content-center gap-3 px-3 fade-in-scroll">
+        @foreach (var tag in Model.ItemTags)
+        {
+            <div class="allergen-item">
+                <partial name="_ItemTagBadge" model="tag"/>
+                <span class="ms-2">@tag.Name</span>
+            </div>
+        }
+    </div>
 </div>
 

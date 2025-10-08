@@ -128,6 +128,9 @@ header {
   height: 100%;
   transition: all 0.3s ease;
   position: relative;
+  background: rgba(255, 255, 255, 0.01);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .menu-item-card::before {
@@ -155,7 +158,8 @@ header {
 }
 
 .menu-item-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
 .menu-item-card:hover::before,
@@ -176,12 +180,8 @@ header {
 }
 
 .menu-item-card:hover .menu-item-name {
-  border-bottom-color: var(--bs-primary);
+  border-bottom-color: var(--bs-primary) !important;
   letter-spacing: 1px;
-}
-
-.menu-set-card .menu-item-name {
-  border-bottom-color: var(--bs-primary);
 }
 
 .menu-item-description {
@@ -207,4 +207,30 @@ header {
   color: var(--bs-secondary);
   margin-top: 1rem;
   margin-bottom: 0;
+}
+
+.menu-subtitle {
+  display: inline-block;
+  font-size: 1rem;
+  color: var(--bs-secondary-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.allergen-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+
+/* Fade-in on scroll animation */
+.fade-in-scroll {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+.fade-in-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 1s ease-out, transform 1s ease-out;
 }

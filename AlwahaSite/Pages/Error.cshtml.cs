@@ -6,6 +6,7 @@ namespace AlwahaSite.Pages;
 
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 [IgnoreAntiforgeryToken]
+[SitemapIgnore]
 public class ErrorModel : PageModel
 {
     public string? RequestId { get; set; }

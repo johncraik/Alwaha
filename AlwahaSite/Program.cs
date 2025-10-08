@@ -1,5 +1,6 @@
 using AlwahaLibrary.Data;
 using AlwahaLibrary.Services;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,12 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AlwahaDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    // Map the same page to both endpoints
+    options.Conventions.AddPageRoute("/sitemap", "sitemap.xml");
+    options.Conventions.AddPageRoute("/robots", "robots.txt");
+});
 
 builder.Services.AddScoped<UserInfo>();
 builder.Services.AddScoped<MenuService>();
@@ -26,6 +32,10 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
+    });
 }
 
 app.UseHttpsRedirection();

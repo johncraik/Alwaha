@@ -1,25 +1,40 @@
+@using Microsoft.AspNetCore.Http.Extensions
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="@ViewData["Description"]"/>
+    <meta name="keywords" content="@(ViewData["Keywords"] ?? "alwaha, al waha, lebanese, restaurant, food, london, bayswater, hyde park, quality food, starters, mains, salad, dinner, lunch, lebanese restaurant, grill, mezze")"/>
+    <meta name="author" content="Alwaha London"/>
+    <meta name="robots" content="index, menu, events, contact, privacy"/>
+    <link rel="canonical" href="@Context.Request.GetDisplayUrl()" />
+    <meta property="og:description" content="@ViewData["Description"]">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="@Context.Request.GetDisplayUrl()">
+    <meta property="og:image" content="https://www.alwahalondon.co.uk/img/logo.jpg">
+    <meta name="twitter:title" content="@ViewData["Title"]">
+    <meta name="twitter:description" content="@ViewData["Description"]">
+    <meta name="twitter:image" content="https://www.alwahalondon.co.uk/img/logo.jpg">
+    <link rel="sitemap" type="application/xml" href="./sitemap.xml">
+    
     <title>@ViewData["Title"] - Alwaha London</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/AlwahaSite.styles.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/ej2.min.css" asp-append-version="true"/>
     <script src="~/js/ej2.min.js"></script>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark py-3 shadow-sm border-bottom border-primary border-3 purple-gradient">
+    <nav class="navbar navbar-expand-lg navbar-dark py-1 shadow-sm border-bottom border-primary border-3 purple-gradient">
         <div class="container">
             @* <a class="navbar-brand fw-bold fs-4 brand-hover" asp-area="" asp-page="/Index"> *@
             @*     <i class="fa-solid fa-utensils me-2 text-danger"></i>Alwaha London *@
             @* </a> *@
-            <img src="~/img/logo_v3.png" alt="Alwaha Logo" class="brand-hover" height="100px" style="cursor: pointer;" onclick="location.assign('/Index')"/>
+            <img src="~/img/logo.png" alt="Alwaha Logo" class="brand-hover" width="80%" style="cursor: pointer; max-width: 250px" onclick="location.assign('/Index')"/>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
                     aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -55,10 +70,32 @@
 <footer class="footer-custom purple-gradient border-top border-primary border-3 mt-5">
     <div class="container py-4">
         <div class="row">
-            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+            <div class="col-md-8 text-center text-md-start mb-3 mb-md-0">
+                <div class="row">
+                    <div class="col-sm-8 mb-3">
+                        <img src="./img/map.png" alt="Map location of Alwaha London Restaurant" class="img-fluid" width="100%"/>
+                    </div>
+                    <div class="col-sm-4">
+                        <h6><b>Address</b></h6>
+                        <p>
+                            75 Westbourne Grove<br/>
+                            London<br/>
+                            W2 4UL
+                        </p>
+                        <div class="my-2">
+                            <button class="btn btn-sm btn-primary mb-2 me-2">
+                                Get Directions (iOS)
+                            </button>
+                            <button class="btn btn-sm btn-primary mb-2 me-2">
+                                Get Directions (Android)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
                 <p class="mb-0">&copy; 2025 Alwaha London. All rights reserved.</p>
             </div>
-            <div class="col-md-6 text-center text-md-end">
+            <div class="col-md-4 text-center text-md-end">
                 <a asp-area="" asp-page="/Privacy" class="footer-link me-3">
                     <i class="fa-solid fa-shield-halved me-1"></i>Privacy Policy
                 </a>
@@ -74,6 +111,24 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="https://kit.fontawesome.com/29bf1169ee.js" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "Restaurant",
+  "name": "Alwaha London",
+  "image": "https://www.alwahalondon.co.uk/img/logo.jpg",
+  "address": {
+    "@@type": "PostalAddress",
+    "streetAddress": "75 Westbourne Grove",
+    "addressLocality": "London",
+    "postalCode": "W2 4UL",
+    "addressCountry": "GB"
+  },
+  "telephone": "+44 020 7229 0806",
+  "servesCuisine": ["Lebanese"],
+  "url": "https://mydomain.com"
+}
+</script>
 
 <!-- Alwaha Analytics -->
 <script>

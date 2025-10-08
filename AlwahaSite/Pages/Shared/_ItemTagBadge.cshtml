@@ -1,0 +1,19 @@
+@using AlwahaLibrary.Helpers
+@model AlwahaLibrary.Models.ItemTag
+
+@{
+    var fontColour = ColourHelper.FontColour(Model.Colour);
+}
+
+<style>
+    .tag-badge-@Model.TagId {
+        background-color: @Model.Colour !important;
+        color: @(fontColour);
+        border: none;
+    }
+</style>
+
+<span class="badge rounded-pill tag-badge-@Model.TagId"
+      title="@Model.Name" style="font-size: 10px;">
+    @Model.Icon
+</span>
