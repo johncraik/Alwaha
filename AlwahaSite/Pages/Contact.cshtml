@@ -1,0 +1,103 @@
+@page
+@model ContactModel
+@{
+    ViewData["Title"] = "Contact Us";
+    ViewData["Description"] = "Get in touch with Alwaha London. We'd love to hear from you about reservations, events, or any questions you may have.";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-8">
+        <div class="text-center mb-4">
+            <h1 class="display-5 fw-bold text-primary">Get in Touch</h1>
+            <p class="lead text-muted">We'd love to hear from you. Fill out the form below and we'll get back to you as soon as possible.</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fa-solid fa-check-circle me-2"></i>@Model.SuccessMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fa-solid fa-exclamation-circle me-2"></i>@Model.ErrorMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold">
+                            <i class="fa-solid fa-envelope me-2 text-primary"></i>Email Address
+                        </label>
+                        <input type="email" class="form-control" id="email" name="email"
+                               asp-for="Email" required placeholder="your@email.com">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="subject" class="form-label fw-semibold">
+                            <i class="fa-solid fa-tag me-2 text-primary"></i>Subject
+                        </label>
+                        <input type="text" class="form-control" id="subject" name="subject"
+                               asp-for="Subject" required placeholder="What is this regarding?">
+                        <span asp-validation-for="Subject" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="message" class="form-label fw-semibold">
+                            <i class="fa-solid fa-message me-2 text-primary"></i>Message
+                        </label>
+                        <textarea class="form-control" id="message" name="message"
+                                  asp-for="Message" rows="6" required
+                                  placeholder="Tell us more about your inquiry..."></textarea>
+                        <span asp-validation-for="Message" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa-solid fa-paper-plane me-2"></i>Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row mt-5 g-4">
+            <div class="col-md-4 text-center">
+                <div class="mb-2">
+                    <i class="fa-solid fa-location-dot fa-2x text-primary"></i>
+                </div>
+                <h5 class="fw-semibold">Visit Us</h5>
+                <p class="text-muted mb-0">75 Westbourne Grove<br/>London, W2 4UL</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="mb-2">
+                    <i class="fa-solid fa-phone fa-2x text-primary"></i>
+                </div>
+                <h5 class="fw-semibold">Call Us</h5>
+                <p class="text-muted mb-0">
+                    <a href="tel:+442071234567" class="text-decoration-none text-muted">+44 20 7123 4567</a>
+                </p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="mb-2">
+                    <i class="fa-solid fa-envelope fa-2x text-primary"></i>
+                </div>
+                <h5 class="fw-semibold">Email Us</h5>
+                <p class="text-muted mb-0">
+                    <a href="mailto:info@alwahalondon.co.uk" class="text-decoration-none text-muted">info@alwahalondon.co.uk</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
