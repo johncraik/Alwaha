@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Qomariah Arabic';
+  src: url('../font/qomariah-arabic.regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+h1 {
+  font-family: 'Qomariah Arabic', serif;
+  font-weight: 700;
+  font-size: 4.5rem !important;
+  font-style: italic;
+}
+
 html {
   font-size: 14px;
   scroll-behavior: smooth;
