@@ -1,9 +1,14 @@
+using System.Text;
+using System.Text.Encodings.Web;
 using AlwahaLibrary.Authentication;
 using AlwahaLibrary.Services;
 using AlwahaManagement.Data;
 using AlwahaManagement.Helpers;
 using AlwahaManagement.Models;
+using Azure.Core;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlwahaManagement.Services;
@@ -14,16 +19,22 @@ public class AdminService
     private readonly UserManager<IdentityUser> _userManager;
     private readonly UserInfo _userInfo;
     private readonly SettingsService _settingsService;
+    private readonly IEmailSender _emailSender;
+    private readonly IConfiguration _configuration;
 
     public AdminService(ApplicationDbContext context,
         UserManager<IdentityUser> userManager,
         UserInfo userInfo,
-        SettingsService settingsService)
+        SettingsService settingsService,
+        IEmailSender emailSender,
+        IConfiguration configuration)
     {
         _context = context;
         _userManager = userManager;
         _userInfo = userInfo;
         _settingsService = settingsService;
+        _emailSender = emailSender;
+        _configuration = configuration;
     }
 
     private bool Authorised()
@@ -104,7 +115,15 @@ public class AdminService
 
         var password = PasswordHelper.GenerateStrongPassword(generatedPasswordLength);
         result = await _userManager.AddPasswordAsync(user, password);
-        return !result.Succeeded ? (false, string.Empty, string.Empty) : (true, user.Id , password);
+        if (!result.Succeeded) return (false, string.Empty, string.Empty);
+
+        // Send confirmation email if email is not auto-confirmed
+        if (!autoConfirmEmail)
+        {
+            await SendConfirmEmailAsync(user);
+        }
+
+        return (true, user.Id, password);
     }
 
     public async Task<bool> TryAddRole(string userId, string roleName)
@@ -164,5 +183,21 @@ public class AdminService
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
         return true;
+    }
+
+    private async Task SendConfirmEmailAsync(IdentityUser user)
+    {
+        var userId = await _userManager.GetUserIdAsync(user);
+        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+        // Get base URL from configuration
+        var baseUrl = _configuration["BaseUrl"] ?? "https://management.alwahalondon.co.uk";
+        var callbackUrl = $"{baseUrl.TrimEnd('/')}/Identity/Account/ConfirmEmail?userId={userId}&code={code}";
+
+        await _emailSender.SendEmailAsync(
+            user.Email ?? string.Empty,
+            "Confirm your email",
+            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
     }
 }

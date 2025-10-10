@@ -1,0 +1,9 @@
+@{
+    Layout = "_Layout";
+}
+
+<div class="container">
+    @RenderBody()
+</div>
+
+@await RenderSectionAsync("Scripts", required: false)

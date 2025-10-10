@@ -2,15 +2,22 @@
 @model AlwahaSite.Pages.Menu
 
 @{
+    Layout = "_Layout";
     ViewData["Title"] = "Menu";
     ViewData["Description"] = "Alwaha London's full delicious menu. Explore our entire menu to help you decide what to order when you come to dine with us.";
 }
 
-<div class="menu-page">
-    <div class="text-center my-4 fade-in-scroll">
-        <h1>Our Menu</h1>
-        <p class="text-muted">Discover our delicious selection</p>
+<!-- Hero Banner -->
+<section class="hero-section hero-banner hero-menu border-bottom border-2 border-secondary">
+    <div class="container">
+        <div class="hero-content-card fade-in-scroll">
+            <h1 class="hero-title">Our Menu</h1>
+            <p class="hero-subtitle">Authentic Lebanese flavours crafted with passion and tradition</p>
+        </div>
     </div>
+</section>
+
+<div class="menu-page container my-4">
 
     @foreach (var section in Model.FullMenu)
     {

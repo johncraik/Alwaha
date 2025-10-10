@@ -10,9 +10,12 @@ using AlwahaManagement.Helpers;
 using AlwahaManagement.Models;
 using AlwahaManagement.Services;
 using Hangfire;
-using Hangfire.SqlServer;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
@@ -79,7 +82,6 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AllowAnonymousToPage("/Account/ResetPasswordConfirmation");
 });
 
-
 builder.Services.AddScoped<UserInfo>();
 builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<ItemTypeService>();
@@ -106,7 +108,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(builder.Configuration["Analytics:AllowedOrigins"]?.Split(',') ?? new[] { "*" })
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .WithExposedHeaders("X-API-Key");
     });
 });
 

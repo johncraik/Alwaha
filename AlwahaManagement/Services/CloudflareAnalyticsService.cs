@@ -37,7 +37,8 @@ public class CloudflareAnalyticsService
                 limit: 1000,
                 filter: {{
                   date_geq: ""{startDate:yyyy-MM-dd}"",
-                  date_leq: ""{endDate:yyyy-MM-dd}""
+                  date_leq: ""{endDate:yyyy-MM-dd}"",
+                  clientRequestHTTPHost: ""www.alwahalondon.co.uk""
                 }}
               ) {{
                 sum {{

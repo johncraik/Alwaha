@@ -1,11 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace AlwahaSite.Pages;
 
 public class ContactModel : PageModel
 {
+    private readonly IEmailSender _emailSender;
+
+    public ContactModel(IEmailSender emailSender)
+    {
+        _emailSender = emailSender;
+    }
+    
     [BindProperty]
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Please enter a valid email address")]
@@ -31,7 +39,7 @@ public class ContactModel : PageModel
     {
     }
 
-    public IActionResult OnPost()
+    public async Task<IActionResult> OnPost()
     {
         if (!ModelState.IsValid)
         {
@@ -42,8 +50,7 @@ public class ContactModel : PageModel
         // For now, just simulate success
         try
         {
-            // Example: Send email, save to database, etc.
-            // await _emailService.SendContactEmail(Email, Subject, Message);
+            await _emailSender.SendEmailAsync("jcraik23@gmail.com", Subject, Message);
 
             SuccessMessage = "Thank you for contacting us! We'll get back to you soon.";
             return RedirectToPage();

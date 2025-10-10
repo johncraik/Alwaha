@@ -1,7 +1,9 @@
 using AlwahaLibrary.Data;
 using AlwahaLibrary.Services;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AddPageRoute("/robots", "robots.txt");
 });
 
+builder.Services.TryAddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<UserInfo>();
 builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<ItemTypeService>();

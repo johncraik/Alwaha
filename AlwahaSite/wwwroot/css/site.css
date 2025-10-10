@@ -12,6 +12,13 @@ h1 {
   font-style: italic;
 }
 
+.title-font {
+  font-family: 'Qomariah Arabic', serif;
+  font-weight: 700;
+  font-size: 4.5rem !important;
+  font-style: italic;
+}
+
 html {
   font-size: 14px;
   scroll-behavior: smooth;
@@ -247,4 +254,124 @@ header {
   opacity: 1;
   transform: translateY(0);
   transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+/* Hero Section - Base Styles */
+.hero-section {
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+/* Home Page Hero - Full Height */
+.hero-section.hero-home {
+  height: 90vh;
+  background-image: url('../img/hero-2.jpg');
+}
+
+/* Page Banner Hero - Shorter */
+.hero-section.hero-banner {
+  min-height: 400px;
+  max-height: 500px;
+  padding: 3rem 0;
+}
+
+.hero-section.hero-menu {
+  background-image: url('../img/menu-hero.jpg');
+}
+
+.hero-content-card {
+  background-color: rgba(33, 33, 33, 0.92);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Smaller card for banners */
+.hero-banner .hero-content-card {
+  padding: 2rem 1.5rem;
+  max-width: 600px;
+}
+
+.hero-logo {
+  max-width: 450px;
+  width: 100%;
+  height: auto;
+}
+
+.hero-description {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: var(--bs-body-color);
+}
+
+.hero-cta-buttons .btn {
+  min-width: 200px;
+}
+
+/* Hero title/subtitle for banner pages */
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--bs-body-color);
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--bs-secondary-color);
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    background-attachment: scroll;
+    padding: 3rem 0;
+  }
+
+  .hero-section.hero-home {
+    min-height: auto;
+  }
+
+  .hero-section.hero-banner {
+    min-height: 350px;
+    padding: 2rem 0;
+  }
+
+  .hero-content-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .hero-banner .hero-content-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .hero-logo {
+    max-width: 300px;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .hero-cta-buttons .btn {
+    min-width: 160px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
 }

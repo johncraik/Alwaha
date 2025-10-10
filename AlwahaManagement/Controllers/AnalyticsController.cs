@@ -1,6 +1,7 @@
 using AlwahaLibrary.Data;
 using AlwahaLibrary.Helpers;
 using AlwahaLibrary.Models;
+using AlwahaManagement.Attributes;
 using AlwahaManagement.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ public class AnalyticsController : ControllerBase
     }
 
     [AllowAnonymous]
+    [ApiKeyAuth]
     [HttpPost("track")]
     public async Task<IActionResult> Track([FromBody] AnalyticsEventDto eventDto)
     {

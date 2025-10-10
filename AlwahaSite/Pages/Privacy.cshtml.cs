@@ -18,5 +18,6 @@ public class PrivacyModel : PageModel
     public async Task OnGet()
     {
         Privacy = await System.IO.File.ReadAllTextAsync(Path.Combine(Environment.CurrentDirectory, "privacy.txt"));
+        Privacy = Privacy.Replace("[your@email.com]", "privacy@alwahalondon.co.uk");
     }
 }

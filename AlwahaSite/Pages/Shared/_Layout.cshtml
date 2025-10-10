@@ -1,4 +1,5 @@
 @using Microsoft.AspNetCore.Http.Extensions
+@inject IConfiguration Configuration
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +30,7 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark py-1 shadow-sm border-bottom border-primary border-3 purple-gradient">
+    <nav class="navbar navbar-expand-lg navbar-dark py-1 shadow-sm border-bottom border-primary border-3 purple-gradient" style="max-height: 10vh;">
         <div class="container">
             @* <a class="navbar-brand fw-bold fs-4 brand-hover" asp-area="" asp-page="/Index"> *@
             @*     <i class="fa-solid fa-utensils me-2 text-danger"></i>Alwaha London *@
@@ -62,7 +63,7 @@
     </nav>
 </header>
 <main role="main" class="flex-grow-1">
-    <div class="container pb-3">
+    <div class="pb-3">
         @RenderBody()
     </div>
 </main>
@@ -101,16 +102,16 @@
                 </p>
 
                 <div class="mt-3">
-                    <button onclick="location.assign('https://maps.apple.com/?address=75+Westbourne+Grove,+London,+W2+4UL')"
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=75+Westbourne+Grove,+London,+W2+4UL"
                        target="_blank"
-                       class="btn btn-sm btn-primary mb-2 me-2">
-                        <i class="fa-solid fa-map-location-dot me-1"></i>Get Directions (iOS)
-                    </button>
-                    <button onclick="location.assign('https://www.google.com/maps/dir/?api=1&destination=75+Westbourne+Grove,+London,+W2+4UL')"
+                       class="btn btn-sm btn-primary mb-2" style="color: #fff !important;">
+                        <i class="fa-solid fa-map-location-dot me-1"></i>Get Directions (Google)
+                    </a>
+                    <a href="https://maps.apple.com/?address=75+Westbourne+Grove,+London,+W2+4UL"
                        target="_blank"
-                       class="btn btn-sm btn-primary mb-2">
-                        <i class="fa-solid fa-map-location-dot me-1"></i>Get Directions (Android)
-                    </button>
+                       class="btn btn-sm btn-primary mb-2 me-2" style="color: #fff !important;">
+                        <i class="fa-solid fa-map-location-dot me-1"></i>Get Directions (Apple)
+                    </a>
                 </div>
             </div>
 
@@ -166,8 +167,8 @@
 <!-- Alwaha Analytics -->
 <script>
   window.alwahaAnalyticsConfig = {
-    //apiUrl: 'https://management.alwahalondon.co.uk/api/analytics/track'
-    apiUrl: 'https://localhost:5165/api/analytics/track'
+    apiUrl: '@Configuration["Analytics:ApiUrl"]',
+    apiKey: '@Configuration["Analytics:ApiKey"]'
   };
 </script>
 <script src="~/js/alwaha-analytics.js" asp-append-version="true"></script>

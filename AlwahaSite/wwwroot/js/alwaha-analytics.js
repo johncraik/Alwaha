@@ -8,6 +8,7 @@
 
     const config = {
         apiUrl: window.alwahaAnalyticsConfig?.apiUrl || 'https://management.alwahalondon.co.uk/api/analytics/track',
+        apiKey: window.alwahaAnalyticsConfig?.apiKey || '',
         sessionDuration: 30 * 60 * 1000, // 30 minutes
     };
 
@@ -36,11 +37,18 @@
         };
 
         // Send via fetch
+        const headers = {
+            'Content-Type': 'application/json',
+        };
+
+        // Add API key if configured
+        if (config.apiKey) {
+            headers['X-API-Key'] = config.apiKey;
+        }
+
         fetch(config.apiUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: headers,
             body: JSON.stringify(data),
             mode: 'cors'
         }).catch(err => {
@@ -55,7 +63,7 @@
     // Track on page load
     track({ eventType: 'PageView' });
 
-    // Update with duration before leaving (using sendBeacon for reliability)
+    // Update with duration before leaving (using fetch with keepalive for reliability)
     window.addEventListener('beforeunload', function() {
         if (tracked) return;
         tracked = true;
@@ -68,10 +76,24 @@
             duration: duration
         };
 
-        // Use sendBeacon for reliability during page unload
-        if (navigator.sendBeacon) {
-            navigator.sendBeacon(config.apiUrl, JSON.stringify(data));
+        const headers = {
+            'Content-Type': 'application/json',
+        };
+
+        // Add API key if configured
+        if (config.apiKey) {
+            headers['X-API-Key'] = config.apiKey;
         }
+
+        // Use fetch with keepalive for reliability during page unload
+        fetch(config.apiUrl, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(data),
+            keepalive: true
+        }).catch(() => {
+            // Silently fail on unload
+        });
     });
 
     // Track clicks on specific elements (optional)

@@ -1,7 +1,81 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    Layout = "_Layout";
+    ViewData["Title"] = "Home";
     ViewData["Description"] = "Welcome to Alwaha London; London's finest Lebanese restaurant. We are a family run restaurant in the heart of Bayswater London, just a short walk from Hyde Park.";
 }
 
+<!-- Hero Section with Full-Width Background -->
+<section class="hero-section hero-home border-bottom border-2 border-secondary">
+    <div class="container">
+        <div class="hero-content-card fade-in-scroll">
+            <img src="~/img/logo.png" alt="Alwaha London Logo" class="hero-logo mb-4"/>
+            <p class="hero-description text-center mb-4">
+                Welcome to Alwaha London, where authentic Lebanese flavours meet warm hospitality.
+                Located in the heart of Bayswater, just steps from Hyde Park, we bring you the finest
+                Lebanese cuisine crafted with passion and tradition.
+            </p>
+            <div class="hero-cta-buttons d-flex justify-content-center gap-3 flex-wrap">
+                <a asp-page="/Menu" class="btn btn-primary btn-lg">
+                    <i class="fa-solid fa-utensils me-2"></i>View Menu
+                </a>
+                <a asp-page="/Events" class="btn btn-primary btn-lg">
+                    <i class="fa-solid fa-calendar me-2"></i>Events & Catering
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Discover Our Menu Section -->
+<section class="container my-5 py-4">
+    <div class="row align-items-center g-4 fade-in-scroll">
+        <div class="col-lg-6">
+            <img src="~/img/menu-hero.jpg" alt="Alwaha Menu Preview" class="img-fluid rounded"/>
+        </div>
+        <div class="col-lg-6 text-center text-lg-start">
+            <h2 class="mb-4 title-font">Discover Our Menu</h2>
+            <p class="mb-3">
+                At Alwaha London, we pride ourselves on serving authentic Lebanese cuisine crafted with
+                the finest ingredients and traditional recipes passed down through generations. Each dish
+                tells a story of Lebanon's rich culinary heritage, from our freshly prepared mezze to our
+                expertly grilled meats.
+            </p>
+            <p class="mb-4">
+                Our chefs bring decades of experience, ensuring every plate delivers the genuine flavours
+                of the Levant. Whether you're craving classic tabbouleh, succulent shawarma, or our signature
+                mixed grill, our menu offers an unforgettable journey through Lebanese gastronomy.
+            </p>
+            <a asp-page="/Menu" class="btn btn-primary btn-lg">
+                <i class="fa-solid fa-utensils me-2"></i>View Full Menu
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Events & Catering Section -->
+<section class="container my-5 py-4">
+    <div class="row align-items-center g-4 fade-in-scroll">
+        <div class="col-lg-6 order-lg-2">
+            <img src="~/img/hero-1.jpg" alt="Alwaha Events & Catering" class="img-fluid rounded"/>
+        </div>
+        <div class="col-lg-6 order-lg-1 text-center text-lg-start">
+            <h2 class="mb-4 title-font">Events & Catering</h2>
+            <p class="mb-3">
+                Make your special occasions truly memorable with Alwaha's bespoke events and catering services.
+                From intimate family gatherings to corporate functions and grand celebrations, we bring the authentic
+                taste of Lebanon to your event with our exceptional catering packages.
+            </p>
+            <p class="mb-4">
+                Our experienced team can accommodate events of all sizes, offering flexible menus tailored to your
+                preferences and dietary requirements. Whether you're planning a business lunch, birthday party, wedding
+                reception, or any special celebration, we'll ensure your guests experience the very best of Lebanese
+                hospitality and cuisine.
+            </p>
+            <a asp-page="/Events" class="btn btn-primary btn-lg">
+                <i class="fa-solid fa-calendar me-2"></i>Explore Events & Catering
+            </a>
+        </div>
+    </div>
+</section>

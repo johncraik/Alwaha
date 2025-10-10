@@ -28,7 +28,7 @@ improve usability, and maintain security.
 <li>Browser type, screen size, and language</li>
 <li>Referrer (if any)</li>
 <li>Country and city (derived from your IP address)</li>
-<li>A <strong>hashed version of your IP address</strong> (used only to estimate unique visits)</li>
+<li>A <strong>hashed version of your IP address</strong> (stored to detect unique visits)</li>
 <li>Session ID and device information (non-identifiable)</li>
 </ul>
 
