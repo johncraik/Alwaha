@@ -63,6 +63,21 @@ header {
 
 .navbar {
   transition: all 0.3s ease;
+  min-height: 10vh;
+}
+
+.navbar > .container {
+  min-height: 10vh;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.navbar-brand img,
+.brand-hover {
+  max-height: 100px;
+  width: auto !important;
+  object-fit: contain;
 }
 
 .purple-gradient {
@@ -286,6 +301,12 @@ header {
   background-image: url('../img/menu-hero.jpg');
 }
 
+.hero-section.hero-event {
+  background-image: url('../img/event-hero.jpg');
+  background-size: cover;
+  background-position: bottom;
+}
+
 .hero-content-card {
   background-color: rgba(33, 33, 33, 0.92);
   border-radius: 16px;
@@ -374,4 +395,39 @@ header {
   .hero-subtitle {
     font-size: 1rem;
   }
+
+  /* Mobile navbar fixes */
+  .navbar-brand img,
+  .brand-hover {
+    max-width: 200px !important;
+    max-height: 60px;
+  }
+
+  .navbar-collapse {
+    background-color: inherit;
+    margin-left: -12px;
+    margin-right: -12px;
+    padding: 1rem 12px;
+  }
+}
+
+/* Validation Summary Styling */
+.validation-summary-errors {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.validation-summary-errors li {
+  position: relative;
+  padding-left: 1.75rem;
+}
+
+.validation-summary-errors li::before {
+  content: '\f06a';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  left: 0;
+  top: 0;
 }

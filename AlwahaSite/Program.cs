@@ -1,5 +1,6 @@
 using AlwahaLibrary.Data;
 using AlwahaLibrary.Services;
+using AlwahaSite.Services;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<AlwahaDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+builder.Services.AddControllers();
 
 builder.Services.AddRazorPages(options =>
 {
@@ -26,6 +29,9 @@ builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<ItemTypeService>();
 builder.Services.AddScoped<ItemTagService>();
 builder.Services.AddScoped<BundleService>();
+builder.Services.AddScoped<SettingsService>();
+builder.Services.AddScoped<EmailSanitiseService>();
+builder.Services.AddScoped<EmailBuilderService>();
 
 var app = builder.Build();
 
@@ -48,6 +54,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+app.MapControllers();
 app.MapRazorPages()
     .WithStaticAssets();
 

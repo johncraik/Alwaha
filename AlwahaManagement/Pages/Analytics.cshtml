@@ -9,7 +9,8 @@
     <div class="d-flex justify-content-between align-items-center">
         <div>
             <h1><i class="fa-solid fa-chart-line me-2"></i>@ViewData["Title"]</h1>
-            <p class="text-muted mb-0">AlwahaSite Performance & Visitor Analytics</p>
+            <p class="text-muted mb-0">AlwahaSite Performance & Real User Analytics</p>
+            <p class="text-muted small mb-0"><i class="fa-solid fa-info-circle me-1"></i>Showing real user visits only (excludes bots and crawlers)</p>
         </div>
         <div>
             <form method="get" class="d-flex gap-2">
@@ -81,27 +82,34 @@
     </div>
 </div>
 
-<!-- Page Views Chart -->
+<!-- Real User Page Views Chart -->
 <div class="row mb-4">
     <div class="col-12">
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="fa-solid fa-chart-area me-2"></i>Page Views Over Time</h5>
+                <h5 class="mb-0"><i class="fa-solid fa-chart-area me-2"></i>Real User Activity Over Time</h5>
             </div>
             <div class="card-body">
-                <ejs-chart id="pageViewsChart" title="Daily Page Views & Unique Visitors">
-                    <e-chart-primaryxaxis valueType="DateTime" labelFormat="dd MMM" minimum="Model.StartDate" maximum="Model.EndDate"></e-chart-primaryxaxis>
-                    <e-chart-primaryyaxis title="Count"></e-chart-primaryyaxis>
+                <ejs-chart id="pageViewsChart" title="Daily Page Views & Unique Visitors (Real Users Only)"
+                           theme="Bootstrap5" background="transparent">
+                    <e-chart-primaryxaxis valueType="DateTime" labelFormat="dd MMM" minimum="Model.StartDate" maximum="Model.EndDate">
+                        <e-majorgridlines width="0"></e-majorgridlines>
+                    </e-chart-primaryxaxis>
+                    <e-chart-primaryyaxis title="Count">
+                        <e-majorgridlines width="1" dashArray="5,5"></e-majorgridlines>
+                        <e-linestyle width="0"></e-linestyle>
+                    </e-chart-primaryyaxis>
                     <e-series-collection>
-                        <e-series dataSource="@Model.PageViewsData" xName="Date" yName="Count" type="Line" name="Page Views">
-                            <e-series-marker visible="true"></e-series-marker>
+                        <e-series dataSource="@Model.PageViewsData" xName="Date" yName="Count" type="SplineArea" name="Page Views" opacity="0.5" width="3">
+                            <e-series-marker visible="true" width="10" height="10"></e-series-marker>
                         </e-series>
-                        <e-series dataSource="@Model.UniqueViewsData" xName="Date" yName="Count" type="Line" name="Unique Visitors">
-                            <e-series-marker visible="true"></e-series-marker>
+                        <e-series dataSource="@Model.UniqueViewsData" xName="Date" yName="Count" type="SplineArea" name="Unique Visitors" opacity="0.5" width="3">
+                            <e-series-marker visible="true" width="10" height="10"></e-series-marker>
                         </e-series>
                     </e-series-collection>
-                    <e-chart-tooltipsettings enable="true"></e-chart-tooltipsettings>
-                    <e-chart-legendsettings visible="true"></e-chart-legendsettings>
+                    <e-chart-tooltipsettings enable="true" shared="true" format="${point.x} : <b>${point.y}</b>"></e-chart-tooltipsettings>
+                    <e-chart-legendsettings visible="true" position="Top"></e-chart-legendsettings>
+                    <e-chart-zoomsettings enableSelectionZooming="true" enableScrollbar="true" enablePan="true"></e-chart-zoomsettings>
                 </ejs-chart>
             </div>
         </div>
@@ -116,14 +124,18 @@
                 <h5 class="mb-0"><i class="fa-solid fa-file-lines me-2"></i>Top Pages</h5>
             </div>
             <div class="card-body">
-                <ejs-chart id="topPagesChart">
-                    <e-chart-primaryxaxis valueType="Category"></e-chart-primaryxaxis>
-                    <e-chart-primaryyaxis title="Views"></e-chart-primaryyaxis>
+                <ejs-chart id="topPagesChart" theme="Bootstrap5" background="transparent">
+                    <e-chart-primaryxaxis valueType="Category">
+                        <e-majorgridlines width="0"></e-majorgridlines>
+                    </e-chart-primaryxaxis>
+                    <e-chart-primaryyaxis title="Views">
+                        <e-majorgridlines width="1" dashArray="5,5"></e-majorgridlines>
+                    </e-chart-primaryyaxis>
                     <e-series-collection>
-                        <e-series dataSource="@Model.TopPages" xName="Title" yName="Views" type="Column" name="Views">
+                        <e-series dataSource="@Model.TopPages" xName="Title" yName="Views" type="Column" name="Views" columnSpacing="0.2">
                         </e-series>
                     </e-series-collection>
-                    <e-chart-tooltipsettings enable="true"></e-chart-tooltipsettings>
+                    <e-chart-tooltipsettings enable="true" format="${point.x} : <b>${point.y} views</b>"></e-chart-tooltipsettings>
                 </ejs-chart>
             </div>
         </div>
@@ -134,14 +146,18 @@
                 <h5 class="mb-0"><i class="fa-solid fa-link me-2"></i>Top Referrers</h5>
             </div>
             <div class="card-body">
-                <ejs-chart id="referrersChart">
-                    <e-chart-primaryxaxis valueType="Category"></e-chart-primaryxaxis>
-                    <e-chart-primaryyaxis title="Count"></e-chart-primaryyaxis>
+                <ejs-chart id="referrersChart" theme="Bootstrap5" background="transparent">
+                    <e-chart-primaryxaxis valueType="Category">
+                        <e-majorgridlines width="0"></e-majorgridlines>
+                    </e-chart-primaryxaxis>
+                    <e-chart-primaryyaxis title="Count">
+                        <e-majorgridlines width="1" dashArray="5,5"></e-majorgridlines>
+                    </e-chart-primaryyaxis>
                     <e-series-collection>
-                        <e-series dataSource="@Model.TopReferrers" xName="Referrer" yName="Count" type="Bar" name="Referrals">
+                        <e-series dataSource="@Model.TopReferrers" xName="Referrer" yName="Count" type="Bar" name="Referrals" columnSpacing="0.2">
                         </e-series>
                     </e-series-collection>
-                    <e-chart-tooltipsettings enable="true"></e-chart-tooltipsettings>
+                    <e-chart-tooltipsettings enable="true" format="${point.x} : <b>${point.y} referrals</b>"></e-chart-tooltipsettings>
                 </ejs-chart>
             </div>
         </div>
@@ -156,16 +172,14 @@
                 <h5 class="mb-0"><i class="fa-brands fa-chrome me-2"></i>Browser Distribution</h5>
             </div>
             <div class="card-body">
-                <ejs-accumulationchart id="browserChart">
+                <ejs-accumulationchart id="browserChart" theme="Bootstrap5" background="transparent">
                     <e-accumulation-series-collection>
-                        <e-accumulation-series dataSource="@Model.BrowserData" xName="Browser" yName="Count" type="Pie" innerRadius="0%">
-                            @* <e-accumulation-datalabel visible="true" name="text" position="Outside"> *@
-                            @*     <e-connector-style length="10px"></e-connector-style> *@
-                            @* </e-accumulation-datalabel> *@
+                        <e-accumulation-series dataSource="@Model.BrowserData" xName="Browser" yName="Count" type="Pie" innerRadius="0%" radius="90%">
+                            <e-accumulationseries-datalabel visible="true" name="text" position="Outside"></e-accumulationseries-datalabel>
                         </e-accumulation-series>
                     </e-accumulation-series-collection>
-                    <e-accumulationchart-legendsettings visible="true"></e-accumulationchart-legendsettings>
-                    <e-accumulationchart-tooltipsettings enable="true"></e-accumulationchart-tooltipsettings>
+                    <e-accumulationchart-legendsettings visible="true" position="Bottom"></e-accumulationchart-legendsettings>
+                    <e-accumulationchart-tooltipsettings enable="true" format="${point.x} : <b>${point.y} (${point.percentage}%)</b>"></e-accumulationchart-tooltipsettings>
                 </ejs-accumulationchart>
             </div>
         </div>
@@ -176,16 +190,14 @@
                 <h5 class="mb-0"><i class="fa-solid fa-mobile-screen me-2"></i>Device Distribution</h5>
             </div>
             <div class="card-body">
-                <ejs-accumulationchart id="deviceChart">
+                <ejs-accumulationchart id="deviceChart" theme="Bootstrap5" background="transparent">
                     <e-accumulation-series-collection>
-                        <e-accumulation-series dataSource="@Model.DeviceData" xName="Device" yName="Count" type="Pie" innerRadius="40%">
-                            @* <e-accumulation-datalabel visible="true" name="text" position="Outside"> *@
-                            @*     <e-connector-style length="10px"></e-connector-style> *@
-                            @* </e-accumulation-datalabel> *@
+                        <e-accumulation-series dataSource="@Model.DeviceData" xName="Device" yName="Count" type="Pie" innerRadius="60%" radius="90%">
+                            <e-accumulationseries-datalabel visible="true" name="text" position="Outside"></e-accumulationseries-datalabel>
                         </e-accumulation-series>
                     </e-accumulation-series-collection>
-                    <e-accumulationchart-legendsettings visible="true"></e-accumulationchart-legendsettings>
-                    <e-accumulationchart-tooltipsettings enable="true"></e-accumulationchart-tooltipsettings>
+                    <e-accumulationchart-legendsettings visible="true" position="Bottom"></e-accumulationchart-legendsettings>
+                    <e-accumulationchart-tooltipsettings enable="true" format="${point.x} : <b>${point.y} (${point.percentage}%)</b>"></e-accumulationchart-tooltipsettings>
                 </ejs-accumulationchart>
             </div>
         </div>
@@ -200,14 +212,132 @@
                 <h5 class="mb-0"><i class="fa-solid fa-globe me-2"></i>Geographic Distribution</h5>
             </div>
             <div class="card-body">
-                <ejs-chart id="countryChart">
-                    <e-chart-primaryxaxis valueType="Category"></e-chart-primaryxaxis>
-                    <e-chart-primaryyaxis title="Visitors"></e-chart-primaryyaxis>
+                <ejs-chart id="countryChart" theme="Bootstrap5" background="transparent">
+                    <e-chart-primaryxaxis valueType="Category">
+                        <e-majorgridlines width="0"></e-majorgridlines>
+                    </e-chart-primaryxaxis>
+                    <e-chart-primaryyaxis title="Visitors">
+                        <e-majorgridlines width="1" dashArray="5,5"></e-majorgridlines>
+                    </e-chart-primaryyaxis>
                     <e-series-collection>
-                        <e-series dataSource="@Model.CountryData" xName="Country" yName="Count" type="Column" name="Visitors">
+                        <e-series dataSource="@Model.CountryData" xName="Country" yName="Count" type="Column" name="Visitors" columnSpacing="0.2">
                         </e-series>
                     </e-series-collection>
-                    <e-chart-tooltipsettings enable="true"></e-chart-tooltipsettings>
+                    <e-chart-tooltipsettings enable="true" format="${point.x} : <b>${point.y} visitors</b>"></e-chart-tooltipsettings>
+                </ejs-chart>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Engagement Stats -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-clock me-2"></i>Average Time on Page</h5>
+            </div>
+            <div class="card-body text-center">
+                <h1 class="display-4 mb-3">@((int)Model.AverageTimeOnPage)s</h1>
+                <p class="text-muted mb-0">Average time users spend on each page</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-hourglass-half me-2"></i>Pages by Engagement Time</h5>
+            </div>
+            <div class="card-body">
+                <ejs-chart id="pageTimeChart" theme="Bootstrap5" background="transparent">
+                    <e-chart-primaryxaxis valueType="Category">
+                        <e-majorgridlines width="0"></e-majorgridlines>
+                    </e-chart-primaryxaxis>
+                    <e-chart-primaryyaxis title="Avg Time (seconds)">
+                        <e-majorgridlines width="1" dashArray="5,5"></e-majorgridlines>
+                    </e-chart-primaryyaxis>
+                    <e-series-collection>
+                        <e-series dataSource="@Model.TopPagesByTime" xName="Title" yName="AverageTime" type="Bar" name="Avg Time (s)" columnSpacing="0.2">
+                        </e-series>
+                    </e-series-collection>
+                    <e-chart-tooltipsettings enable="true" format="${point.x} : <b>${point.y}s</b>"></e-chart-tooltipsettings>
+                </ejs-chart>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cloudflare Stats (Includes Bots) -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <i class="fa-brands fa-cloudflare me-2"></i><strong>Cloudflare Analytics</strong> - The data below includes all requests including bots, crawlers, and automated traffic
+        </div>
+    </div>
+</div>
+
+<!-- Cloudflare Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-secondary">
+            <div class="card-body text-center">
+                <i class="fa-brands fa-cloudflare fa-2x text-secondary mb-2"></i>
+                <h3 class="mb-0">@Model.Summary.CloudflarePageViews.ToString("N0")</h3>
+                <p class="text-muted mb-0">CF Page Views</p>
+                <small class="text-muted">(Includes Bots)</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-secondary">
+            <div class="card-body text-center">
+                <i class="fa-brands fa-cloudflare fa-2x text-secondary mb-2"></i>
+                <h3 class="mb-0">@Model.Summary.CloudflareUniqueVisitors.ToString("N0")</h3>
+                <p class="text-muted mb-0">CF Unique Visitors</p>
+                <small class="text-muted">(Includes Bots)</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-secondary">
+            <div class="card-body text-center">
+                <i class="fa-solid fa-robot fa-2x text-warning mb-2"></i>
+                <h3 class="mb-0">@((Model.Summary.CloudflarePageViews - Model.Summary.TotalPageViews).ToString("N0"))</h3>
+                <p class="text-muted mb-0">Est. Bot Traffic</p>
+                <small class="text-muted">(CF - Real Users)</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cloudflare Traffic Chart -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="fa-brands fa-cloudflare me-2"></i>Cloudflare Traffic Over Time (Includes Bots)</h5>
+            </div>
+            <div class="card-body">
+                <ejs-chart id="cloudflareChart" title="Daily Cloudflare Page Views & Unique Visitors"
+                           theme="Bootstrap5" background="transparent">
+                    <e-chart-primaryxaxis valueType="DateTime" labelFormat="dd MMM" minimum="Model.StartDate" maximum="Model.EndDate">
+                        <e-majorgridlines width="0"></e-majorgridlines>
+                    </e-chart-primaryxaxis>
+                    <e-chart-primaryyaxis title="Count">
+                        <e-majorgridlines width="1" dashArray="5,5"></e-majorgridlines>
+                        <e-linestyle width="0"></e-linestyle>
+                    </e-chart-primaryyaxis>
+                    <e-series-collection>
+                        <e-series dataSource="@Model.CloudflarePageViewsData" xName="Date" yName="Count" type="SplineArea" name="CF Page Views" opacity="0.4" width="2" dashArray="5,5">
+                            <e-series-marker visible="true" width="8" height="8"></e-series-marker>
+                        </e-series>
+                        <e-series dataSource="@Model.CloudflareUniqueViewsData" xName="Date" yName="Count" type="SplineArea" name="CF Unique Visitors" opacity="0.4" width="2" dashArray="5,5">
+                            <e-series-marker visible="true" width="8" height="8"></e-series-marker>
+                        </e-series>
+                    </e-series-collection>
+                    <e-chart-tooltipsettings enable="true" shared="true" format="${point.x} : <b>${point.y}</b>"></e-chart-tooltipsettings>
+                    <e-chart-legendsettings visible="true" position="Top"></e-chart-legendsettings>
+                    <e-chart-zoomsettings enableSelectionZooming="true" enableScrollbar="true" enablePan="true"></e-chart-zoomsettings>
                 </ejs-chart>
             </div>
         </div>
@@ -215,5 +345,5 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script>
+    <!-- Syncfusion scripts are already loaded in _Layout.cshtml -->
 }

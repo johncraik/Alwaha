@@ -22,7 +22,7 @@ public class EmailSender : IEmailSender
         try
         {
             var msg = new MimeMessage();
-            msg.From.Add(new MailboxAddress(_config["Email:FromName"], _config["Email:FromAddress"]));
+            msg.From.Add(MailboxAddress.Parse(_config["Email:FromAddress"]));
             msg.To.Add(MailboxAddress.Parse(email));
             msg.Subject = string.IsNullOrEmpty(subject) ? "(No Subject)" : subject;
 
@@ -36,6 +36,7 @@ public class EmailSender : IEmailSender
             msg.Body = bodyBuilder.ToMessageBody();
 
             using var client = new MailKit.Net.Smtp.SmtpClient();
+            client.AuthenticationMechanisms.Remove("XOAUTH2");
             await client.ConnectAsync(_config["Email:Host"], int.Parse(_config["Email:Port"]!), MailKit.Security.SecureSocketOptions.StartTls);
             
             if(!string.IsNullOrEmpty(_config["Email:Username"]) && !string.IsNullOrEmpty(_config["Email:Password"]))

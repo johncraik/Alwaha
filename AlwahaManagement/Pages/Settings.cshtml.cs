@@ -1,4 +1,5 @@
 using AlwahaLibrary.Authentication;
+using AlwahaLibrary.Services;
 using AlwahaManagement.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,13 @@ namespace AlwahaManagement.Pages;
 public class SettingsModel : PageModel
 {
     private readonly SettingsService _settingsService;
+    private readonly IConfiguration _config;
 
-    public SettingsModel(SettingsService settingsService)
+    public SettingsModel(SettingsService settingsService,
+        IConfiguration config)
     {
         _settingsService = settingsService;
+        _config = config;
     }
 
     [BindProperty]
@@ -28,6 +32,15 @@ public class SettingsModel : PageModel
     [BindProperty]
     public int GeneratedPasswordLength { get; set; }
 
+    [BindProperty]
+    public string InfoMailbox { get; set; } = string.Empty;
+
+    [BindProperty]
+    public string EventsMailbox { get; set; } = string.Empty;
+
+    [BindProperty]
+    public string PrivacyMailbox { get; set; } = string.Empty;
+
     [TempData]
     public string? SuccessMessage { get; set; }
 
@@ -39,6 +52,9 @@ public class SettingsModel : PageModel
         AutoConfirmEmail = bool.Parse(settings.GetValueOrDefault("AutoConfirmEmail", "false"));
         MinPasswordLength = int.Parse(settings.GetValueOrDefault("MinPasswordLength", "8"));
         GeneratedPasswordLength = int.Parse(settings.GetValueOrDefault("GeneratedPasswordLength", "16"));
+        InfoMailbox = settings.GetValueOrDefault("InfoMailbox", "info@alwahalondon.co.uk");
+        EventsMailbox = settings.GetValueOrDefault("EventsMailbox", "events@alwahalondon.co.uk");
+        PrivacyMailbox = settings.GetValueOrDefault("PrivacyMailbox", "privacy@alwahalondon.co.uk");
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -67,11 +83,38 @@ public class SettingsModel : PageModel
             return Page();
         }
 
+        // Validate email addresses are not empty
+        if (string.IsNullOrWhiteSpace(InfoMailbox))
+        {
+            ModelState.AddModelError(nameof(InfoMailbox), "Info mailbox cannot be empty.");
+            return Page();
+        }
+
+        if (string.IsNullOrWhiteSpace(EventsMailbox))
+        {
+            ModelState.AddModelError(nameof(EventsMailbox), "Events mailbox cannot be empty.");
+            return Page();
+        }
+
+        if (string.IsNullOrWhiteSpace(PrivacyMailbox))
+        {
+            ModelState.AddModelError(nameof(PrivacyMailbox), "Privacy mailbox cannot be empty.");
+            return Page();
+        }
+
+        // Auto-append domain if not provided
+        if (!InfoMailbox.Contains('@')) InfoMailbox = $"{InfoMailbox}@{_config["Domain"]}";
+        if (!EventsMailbox.Contains('@')) EventsMailbox = $"{EventsMailbox}@{_config["Domain"]}";
+        if (!PrivacyMailbox.Contains('@')) PrivacyMailbox = $"{PrivacyMailbox}@{_config["Domain"]}";
+
         // Update settings
         await _settingsService.UpdateSettingAsync("AuditLifetimeMonths", AuditLifetimeMonths);
         await _settingsService.UpdateSettingAsync("AutoConfirmEmail", AutoConfirmEmail);
         await _settingsService.UpdateSettingAsync("MinPasswordLength", MinPasswordLength);
         await _settingsService.UpdateSettingAsync("GeneratedPasswordLength", GeneratedPasswordLength);
+        await _settingsService.UpdateSettingAsync("InfoMailbox", InfoMailbox);
+        await _settingsService.UpdateSettingAsync("EventsMailbox", EventsMailbox);
+        await _settingsService.UpdateSettingAsync("PrivacyMailbox", PrivacyMailbox);
 
         SuccessMessage = "Settings updated successfully!";
         return RedirectToPage();

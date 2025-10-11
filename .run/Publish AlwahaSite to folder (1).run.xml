@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Publish AlwahaSite to folder (1)" type="DotNetFolderPublish" factoryName="Publish to folder">
+    <riderPublish configuration="Release" delete_existing_files="true" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/../Published/Site" target_framework="net9.0" uuid_high="6798329373065757435" uuid_low="-6290419951687477866" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -22,51 +22,27 @@ public class AnalyticsService
             .Where(c => c.Date >= startDate.Date && c.Date <= endDate.Date)
             .ToListAsync();
 
-        // Use Cloudflare data if available, otherwise fall back to manual tracking
-        var hasCloudflareData = cfData.Any();
-        var totalPageViews = hasCloudflareData
-            ? cfData.Sum(c => c.PageViews)
-            : events.Count(e => e.EventType == "PageView");
-        var uniqueVisitors = hasCloudflareData
-            ? cfData.Sum(c => c.UniqueVisitors)
-            : events.Where(e => e.EventType == "PageView").Select(e => e.SessionId).Distinct().Count();
+        // Always use real user tracking data (from analytics script)
+        var totalPageViews = events.Count(e => e.EventType == "PageView");
+        var uniqueVisitors = events.Where(e => e.EventType == "PageView").Select(e => e.SessionId).Distinct().Count();
 
         return new AnalyticsSummary
         {
             TotalPageViews = totalPageViews,
-            UniqueVisitors = (int)uniqueVisitors,
+            UniqueVisitors = uniqueVisitors,
             TotalRequests = cfData.Sum(c => c.Requests),
             BandwidthUsed = cfData.Sum(c => c.BandwidthTotal),
             ThreatsBlocked = cfData.Sum(c => c.ThreatsBlocked),
-            AverageCacheHitRate = cfData.Any() ? cfData.Average(c => c.CacheHitRate) : 0
+            AverageCacheHitRate = cfData.Any() ? cfData.Average(c => c.CacheHitRate) : 0,
+            // Cloudflare stats for comparison
+            CloudflarePageViews = cfData.Sum(c => c.PageViews),
+            CloudflareUniqueVisitors = (int)cfData.Sum(c => c.UniqueVisitors)
         };
     }
 
     public async Task<List<PageViewData>> GetPageViewsOverTimeAsync(DateTime startDate, DateTime endDate, string interval = "day")
     {
-        // Try Cloudflare data first for daily views
-        var cfData = await _context.CloudflareAnalytics
-            .Where(c => c.Date >= startDate.Date && c.Date <= endDate.Date)
-            .OrderBy(c => c.Date)
-            .ToListAsync();
-
-        if (cfData.Any() && interval == "day")
-        {
-            // Fill in missing dates with 0 values
-            var result = new List<PageViewData>();
-            for (var date = startDate.Date; date <= endDate.Date; date = date.AddDays(1))
-            {
-                var cfEntry = cfData.FirstOrDefault(c => c.Date.Date == date);
-                result.Add(new PageViewData
-                {
-                    Date = date,
-                    Count = cfEntry != null ? (int)cfEntry.PageViews : 0
-                });
-            }
-            return result;
-        }
-
-        // Fall back to manual tracking
+        // Always use real user tracking (analytics script)
         var events = await _context.AnalyticsEvents
             .Where(e => e.EventType == "PageView" && e.Timestamp >= startDate && e.Timestamp <= endDate)
             .ToListAsync();
@@ -104,29 +80,7 @@ public class AnalyticsService
 
     public async Task<List<PageViewData>> GetUniqueVisitorsOverTimeAsync(DateTime startDate, DateTime endDate, string interval = "day")
     {
-        // Try Cloudflare data first for daily unique visitors
-        var cfData = await _context.CloudflareAnalytics
-            .Where(c => c.Date >= startDate.Date && c.Date <= endDate.Date)
-            .OrderBy(c => c.Date)
-            .ToListAsync();
-
-        if (cfData.Any() && interval == "day")
-        {
-            // Fill in missing dates with 0 values
-            var result = new List<PageViewData>();
-            for (var date = startDate.Date; date <= endDate.Date; date = date.AddDays(1))
-            {
-                var cfEntry = cfData.FirstOrDefault(c => c.Date.Date == date);
-                result.Add(new PageViewData
-                {
-                    Date = date,
-                    Count = cfEntry != null ? (int)cfEntry.UniqueVisitors : 0
-                });
-            }
-            return result;
-        }
-
-        // Fall back to manual tracking - count unique sessions per day
+        // Always use real user tracking - count unique sessions per day
         var events = await _context.AnalyticsEvents
             .Where(e => e.EventType == "PageView" && e.Timestamp >= startDate && e.Timestamp <= endDate)
             .ToListAsync();
@@ -149,6 +103,46 @@ public class AnalyticsService
         }
 
         return finalResult;
+    }
+
+    public async Task<List<PageViewData>> GetCloudflarePageViewsAsync(DateTime startDate, DateTime endDate)
+    {
+        var cfData = await _context.CloudflareAnalytics
+            .Where(c => c.Date >= startDate.Date && c.Date <= endDate.Date)
+            .OrderBy(c => c.Date)
+            .ToListAsync();
+
+        var result = new List<PageViewData>();
+        for (var date = startDate.Date; date <= endDate.Date; date = date.AddDays(1))
+        {
+            var cfEntry = cfData.FirstOrDefault(c => c.Date.Date == date);
+            result.Add(new PageViewData
+            {
+                Date = date,
+                Count = cfEntry != null ? (int)cfEntry.PageViews : 0
+            });
+        }
+        return result;
+    }
+
+    public async Task<List<PageViewData>> GetCloudflareUniqueVisitorsAsync(DateTime startDate, DateTime endDate)
+    {
+        var cfData = await _context.CloudflareAnalytics
+            .Where(c => c.Date >= startDate.Date && c.Date <= endDate.Date)
+            .OrderBy(c => c.Date)
+            .ToListAsync();
+
+        var result = new List<PageViewData>();
+        for (var date = startDate.Date; date <= endDate.Date; date = date.AddDays(1))
+        {
+            var cfEntry = cfData.FirstOrDefault(c => c.Date.Date == date);
+            result.Add(new PageViewData
+            {
+                Date = date,
+                Count = cfEntry != null ? (int)cfEntry.UniqueVisitors : 0
+            });
+        }
+        return result;
     }
 
     public async Task<List<TopPageData>> GetTopPagesAsync(DateTime startDate, DateTime endDate, int limit = 10)
@@ -249,15 +243,57 @@ public class AnalyticsService
         return devices;
     }
 
+    public async Task<double> GetAverageTimeOnPageAsync(DateTime startDate, DateTime endDate)
+    {
+        var timeEvents = await _context.AnalyticsEvents
+            .Where(e => e.EventType == "TimeOnPage"
+                && e.Duration.HasValue
+                && e.Duration > 0
+                && e.Timestamp >= startDate
+                && e.Timestamp <= endDate)
+            .ToListAsync();
+
+        if (!timeEvents.Any()) return 0;
+
+        return timeEvents.Average(e => e.Duration!.Value);
+    }
+
+    public async Task<List<PageTimeData>> GetTopPagesByTimeAsync(DateTime startDate, DateTime endDate, int limit = 10)
+    {
+        var timeEvents = await _context.AnalyticsEvents
+            .Where(e => e.EventType == "TimeOnPage"
+                && e.Duration.HasValue
+                && e.Duration > 0
+                && e.Timestamp >= startDate
+                && e.Timestamp <= endDate)
+            .ToListAsync();
+
+        var pageTime = timeEvents
+            .GroupBy(e => new { e.Url, e.PageTitle })
+            .Select(g => new PageTimeData
+            {
+                Url = g.Key.Url,
+                Title = g.Key.PageTitle ?? g.Key.Url,
+                AverageTime = (int)g.Average(e => e.Duration!.Value),
+                TotalVisits = g.Count()
+            })
+            .OrderByDescending(p => p.AverageTime)
+            .Take(limit)
+            .ToList();
+
+        return pageTime;
+    }
+
     private string ExtractBrowser(string? userAgent)
     {
         if (string.IsNullOrEmpty(userAgent)) return "Unknown";
 
-        if (userAgent.Contains("Edg")) return "Edge";
-        if (userAgent.Contains("Chrome")) return "Chrome";
-        if (userAgent.Contains("Safari") && !userAgent.Contains("Chrome")) return "Safari";
-        if (userAgent.Contains("Firefox")) return "Firefox";
-        if (userAgent.Contains("Opera") || userAgent.Contains("OPR")) return "Opera";
+        // Check most specific browsers first (before checking Chrome, since many are Chromium-based)
+        if (userAgent.Contains("Edg/") || userAgent.Contains("Edge/")) return "Edge";
+        if (userAgent.Contains("OPR/") || userAgent.Contains("Opera/")) return "Opera";
+        if (userAgent.Contains("Firefox/")) return "Firefox";
+        if (userAgent.Contains("Chrome/")) return "Chrome";
+        if (userAgent.Contains("Safari/") && !userAgent.Contains("Chrome")) return "Safari";
 
         return "Other";
     }
@@ -288,6 +324,10 @@ public class AnalyticsSummary
     public long BandwidthUsed { get; set; }
     public long ThreatsBlocked { get; set; }
     public double AverageCacheHitRate { get; set; }
+
+    // Cloudflare stats (includes bots)
+    public long CloudflarePageViews { get; set; }
+    public int CloudflareUniqueVisitors { get; set; }
 }
 
 public class PageViewData
@@ -326,4 +366,12 @@ public class DeviceData
 {
     public string Device { get; set; } = string.Empty;
     public int Count { get; set; }
+}
+
+public class PageTimeData
+{
+    public string Url { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public int AverageTime { get; set; } // seconds
+    public int TotalVisits { get; set; }
 }

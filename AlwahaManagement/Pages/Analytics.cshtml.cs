@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AlwahaManagement.Pages;
 
-[Authorize(Roles = SystemRoles.Admin)]
 public class AnalyticsModel : PageModel
 {
     private readonly AnalyticsService _analyticsService;
@@ -19,11 +18,15 @@ public class AnalyticsModel : PageModel
     public AnalyticsSummary Summary { get; set; } = new();
     public List<PageViewData> PageViewsData { get; set; } = new();
     public List<PageViewData> UniqueViewsData { get; set; } = new();
+    public List<PageViewData> CloudflarePageViewsData { get; set; } = new();
+    public List<PageViewData> CloudflareUniqueViewsData { get; set; } = new();
     public List<TopPageData> TopPages { get; set; } = new();
     public List<ReferrerData> TopReferrers { get; set; } = new();
     public List<CountryData> CountryData { get; set; } = new();
     public List<BrowserData> BrowserData { get; set; } = new();
     public List<DeviceData> DeviceData { get; set; } = new();
+    public List<PageTimeData> TopPagesByTime { get; set; } = new();
+    public double AverageTimeOnPage { get; set; }
 
     [BindProperty(SupportsGet = true)]
     public DateTime? StartDate { get; set; }
@@ -47,10 +50,14 @@ public class AnalyticsModel : PageModel
         Summary = await _analyticsService.GetSummaryAsync(startDate, endDate);
         PageViewsData = await _analyticsService.GetPageViewsOverTimeAsync(startDate, endDate);
         UniqueViewsData = await _analyticsService.GetUniqueVisitorsOverTimeAsync(startDate, endDate);
+        CloudflarePageViewsData = await _analyticsService.GetCloudflarePageViewsAsync(startDate, endDate);
+        CloudflareUniqueViewsData = await _analyticsService.GetCloudflareUniqueVisitorsAsync(startDate, endDate);
         TopPages = await _analyticsService.GetTopPagesAsync(startDate, endDate);
         TopReferrers = await _analyticsService.GetTopReferrersAsync(startDate, endDate);
         CountryData = await _analyticsService.GetVisitorsByCountryAsync(startDate, endDate);
         BrowserData = await _analyticsService.GetBrowserStatsAsync(startDate, endDate);
         DeviceData = await _analyticsService.GetDeviceStatsAsync(startDate, endDate);
+        TopPagesByTime = await _analyticsService.GetTopPagesByTimeAsync(startDate, endDate);
+        AverageTimeOnPage = await _analyticsService.GetAverageTimeOnPageAsync(startDate, endDate);
     }
 }

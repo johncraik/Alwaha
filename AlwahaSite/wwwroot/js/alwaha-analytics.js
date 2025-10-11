@@ -7,8 +7,7 @@
     'use strict';
 
     const config = {
-        apiUrl: window.alwahaAnalyticsConfig?.apiUrl || 'https://management.alwahalondon.co.uk/api/analytics/track',
-        apiKey: window.alwahaAnalyticsConfig?.apiKey || '',
+        apiUrl: '/api/analytics/track', // Local controller endpoint
         sessionDuration: 30 * 60 * 1000, // 30 minutes
     };
 
@@ -36,23 +35,16 @@
             ...eventData
         };
 
-        // Send via fetch
-        const headers = {
-            'Content-Type': 'application/json',
-        };
-
-        // Add API key if configured
-        if (config.apiKey) {
-            headers['X-API-Key'] = config.apiKey;
-        }
-
+        // Send via fetch to local controller
         fetch(config.apiUrl, {
             method: 'POST',
-            headers: headers,
-            body: JSON.stringify(data),
-            mode: 'cors'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
         }).catch(err => {
-            console.error('Analytics tracking failed:', err);
+            // Silently fail - don't break the site if analytics fails
+            console.debug('Analytics tracking failed:', err);
         });
     }
 
@@ -76,19 +68,12 @@
             duration: duration
         };
 
-        const headers = {
-            'Content-Type': 'application/json',
-        };
-
-        // Add API key if configured
-        if (config.apiKey) {
-            headers['X-API-Key'] = config.apiKey;
-        }
-
         // Use fetch with keepalive for reliability during page unload
         fetch(config.apiUrl, {
             method: 'POST',
-            headers: headers,
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify(data),
             keepalive: true
         }).catch(() => {

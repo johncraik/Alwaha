@@ -31,19 +31,18 @@
 
     <ItemGroup>
       <Folder Include="Data\Migrations\" />
-      <Folder Include="Pages\Analytics\" />
       <Folder Include="Pages\Menu\Audit\" />
       <Folder Include="Pages\Menu\Bundles\" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="AlwahaLibrary">
-        <HintPath>..\AlwahaLibrary.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
 <!--    <ItemGroup>-->
-<!--      <ProjectReference Include="..\AlwahaLibrary\AlwahaLibrary.csproj" />-->
+<!--      <Reference Include="AlwahaLibrary">-->
+<!--        <HintPath>..\AlwahaLibrary.dll</HintPath>-->
+<!--      </Reference>-->
 <!--    </ItemGroup>-->
+
+    <ItemGroup>
+      <ProjectReference Include="..\AlwahaLibrary\AlwahaLibrary.csproj" />
+    </ItemGroup>
 
 </Project>

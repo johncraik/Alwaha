@@ -6,20 +6,20 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace AlwahaSite.Pages;
 
-public class ContactModel : PageModel
+public class EventsModel : PageModel
 {
     private readonly IEmailSender _emailSender;
     private readonly EmailBuilderService _builderService;
 
-    public ContactModel(IEmailSender emailSender,
+    public EventsModel(IEmailSender emailSender,
         EmailBuilderService builderService)
     {
         _emailSender = emailSender;
         _builderService = builderService;
     }
 
-    [BindProperty] 
-    public ContactForm ContactForm { get; set; } = new();
+    [BindProperty]
+    public EventForm EventForm { get; set; } = new();
 
     [TempData]
     public string? SuccessMessage { get; set; }
@@ -32,28 +32,28 @@ public class ContactModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            ModelState.AddModelError(string.Empty, "Sorry, there was an error sending your message. Please try again later.");
+            ModelState.AddModelError(string.Empty, "Sorry, there was an error submitting your event inquiry. Please check the form and try again.");
             return Page();
         }
 
 
         try
         {
-            var response = await _builderService.Build(ContactForm);
+            var response = await _builderService.Build(EventForm, isEvent: true);
             if (!response.IsSuccess)
             {
-                ModelState.AddModelError(string.Empty, "Sorry, there was an error sending your message. Please try again later.");
+                ModelState.AddModelError(string.Empty, "Sorry, there was an error submitting your event inquiry. Please try again later.");
                 return Page();
             }
 
             await _emailSender.SendEmailAsync(response.SendTo!, response.Subject!, response.Body!);
 
-            SuccessMessage = "Thank you for contacting us! We'll get back to you soon.";
+            SuccessMessage = "Thank you for your event inquiry! We'll get back to you soon to discuss the details.";
             return RedirectToPage();
         }
         catch (Exception)
         {
-            ModelState.AddModelError(string.Empty, "Sorry, there was an error sending your message. Please try again later.");
+            ModelState.AddModelError(string.Empty, "Sorry, there was an error submitting your event inquiry. Please try again later.");
             return Page();
         }
     }

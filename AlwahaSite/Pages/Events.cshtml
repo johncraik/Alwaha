@@ -1,0 +1,120 @@
+@page
+@model EventsModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Events & Catering";
+    ViewData["Description"] = "Host your special events at Alwaha London. From intimate gatherings to grand celebrations, we offer bespoke catering services for all occasions.";
+}
+
+<!-- Hero Banner -->
+<section class="hero-section hero-banner hero-event border-bottom border-2 border-secondary">
+    <div class="container">
+        <div class="hero-content-card fade-in-scroll">
+            <h1 class="hero-title">Events & Catering</h1>
+            <p class="hero-subtitle">Authentic Lebanese cuisine for your special occasions</p>
+        </div>
+    </div>
+</section>
+
+<!-- Events Description Section -->
+<section class="container my-5 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 text-center fade-in-scroll">
+            <h2 class="mb-4 title-font">Make Your Celebration Unforgettable</h2>
+            <p class="mb-3">
+                Make your special occasions truly memorable with Alwaha's bespoke events and catering services.
+                From intimate family gatherings to corporate functions and grand celebrations, we bring the authentic
+                taste of Lebanon to your event with our exceptional catering packages.
+            </p>
+            <p class="mb-4">
+                Our experienced team can accommodate events of all sizes, offering flexible menus tailored to your
+                preferences and dietary requirements. Whether you're planning a business lunch, birthday party, wedding
+                reception, or any special celebration, we'll ensure your guests experience the very best of Lebanese
+                hospitality and cuisine.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Event Inquiry Form -->
+<section class="container my-4 py-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center my-4 fade-in-scroll">
+                <h2 class="title-font">Plan Your Event</h2>
+                <p class="lead text-muted">Fill out the form below and we'll get back to you to discuss your event details.</p>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fa-solid fa-check-circle me-2"></i>@Model.SuccessMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <div class="card shadow-sm border-0 fade-in-scroll">
+                <div class="card-body p-4">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold">
+                                <i class="fa-solid fa-envelope me-2 text-primary"></i>Email Address
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   asp-for="EventForm.Email" required placeholder="your@email.com">
+                            <span asp-validation-for="EventForm.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="partySize" class="form-label fw-semibold">
+                                    <i class="fa-solid fa-users me-2 text-primary"></i>Party Size
+                                </label>
+                                <input type="number" class="form-control" id="partySize" name="partySize"
+                                       asp-for="EventForm.PartySize" required min="1" max="200" placeholder="Number of guests">
+                                <span asp-validation-for="EventForm.PartySize" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="date" class="form-label fw-semibold">
+                                    <i class="fa-solid fa-calendar me-2 text-primary"></i>Preferred Date
+                                </label>
+                                <input type="date" class="form-control" id="date" name="date" min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                       asp-for="EventForm.Date" required>
+                                <span asp-validation-for="EventForm.Date" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="message" class="form-label fw-semibold">
+                                <i class="fa-solid fa-message me-2 text-primary"></i>Event Details
+                            </label>
+                            <textarea class="form-control" id="message" name="message"
+                                      asp-for="EventForm.Message" rows="6" required
+                                      placeholder="Tell us about your event - type of occasion, venue preferences, dietary requirements, etc."></textarea>
+                            <span asp-validation-for="EventForm.Message" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fa-solid fa-paper-plane me-2"></i>Submit Inquiry
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

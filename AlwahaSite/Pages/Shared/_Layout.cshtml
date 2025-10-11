@@ -30,12 +30,12 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark py-1 shadow-sm border-bottom border-primary border-3 purple-gradient" style="max-height: 10vh;">
+    <nav class="navbar navbar-expand-lg navbar-dark py-1 shadow-sm border-bottom border-primary border-3 purple-gradient">
         <div class="container">
             @* <a class="navbar-brand fw-bold fs-4 brand-hover" asp-area="" asp-page="/Index"> *@
             @*     <i class="fa-solid fa-utensils me-2 text-danger"></i>Alwaha London *@
             @* </a> *@
-            <img src="~/img/logo.png" alt="Alwaha Logo" class="brand-hover" width="80%" style="cursor: pointer; max-width: 250px" onclick="location.assign('/Index')"/>
+            <img src="~/img/logo.png" alt="Alwaha Logo" class="brand-hover" style="cursor: pointer;" onclick="location.assign('/')"/>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
                     aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -165,12 +165,6 @@
 </script>
 
 <!-- Alwaha Analytics -->
-<script>
-  window.alwahaAnalyticsConfig = {
-    apiUrl: '@Configuration["Analytics:ApiUrl"]',
-    apiKey: '@Configuration["Analytics:ApiKey"]'
-  };
-</script>
 <script src="~/js/alwaha-analytics.js" asp-append-version="true"></script>
 
 @await RenderSectionAsync("Scripts", required: false)

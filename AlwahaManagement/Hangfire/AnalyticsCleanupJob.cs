@@ -1,4 +1,5 @@
 using AlwahaLibrary.Data;
+using AlwahaLibrary.Services;
 using AlwahaManagement.Services;
 using Microsoft.EntityFrameworkCore;
 

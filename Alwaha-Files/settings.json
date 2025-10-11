@@ -1,0 +1,9 @@
+{
+  "AuditLifetimeMonths": "6",
+  "AutoConfirmEmail": "False",
+  "MinPasswordLength": "8",
+  "GeneratedPasswordLength": "16",
+  "InfoMailbox": "info@alwahalondon.co.uk",
+  "EventsMailbox": "events@alwahalondon.co.uk",
+  "PrivacyMailbox": "privacy@alwahalondon.co.uk"
+}

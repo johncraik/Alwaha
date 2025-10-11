@@ -1,16 +1,24 @@
 
 
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
-namespace AlwahaManagement.Services;
+namespace AlwahaLibrary.Services;
 
 public class SettingsService
 {
     private const string FilePath = "settings.json";
+    private readonly string _fullPath;
+
+    public SettingsService(IConfiguration config)
+    {
+        var basePath = config["BasePath"] ?? throw new Exception("BasePath not found in config");
+        _fullPath = Path.Combine(basePath, FilePath);
+    }
 
     public async Task<Dictionary<string, string>> GetAllSettingsAsync()
     {
-        var json = await File.ReadAllTextAsync(FilePath);
+        var json = await File.ReadAllTextAsync(_fullPath);
         return JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
     }
 
@@ -26,10 +34,10 @@ public class SettingsService
 
     public async Task UpdateSettingAsync<T>(string key, T value)
     {
-        var json = await File.ReadAllTextAsync(FilePath);
+        var json = await File.ReadAllTextAsync(_fullPath);
         var settings = JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
         settings[key] = value?.ToString() ?? "";
-        await File.WriteAllTextAsync(FilePath, JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true }));
+        await File.WriteAllTextAsync(_fullPath, JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true }));
     }
 
 }
