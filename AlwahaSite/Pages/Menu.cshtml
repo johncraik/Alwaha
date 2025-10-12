@@ -32,10 +32,10 @@
             <!-- Menu Items -->
             @if (section.Items.Any())
             {
-                <div class="row g-4 mb-4 justify-content-center fade-in-scroll">
+                <div class="row g-4 mb-4 justify-content-center">
                     @foreach (var item in section.Items)
                     {
-                        <div class="col-12 col-md-4 col-lg-2">
+                        <div class="col-12 col-md-4 col-lg-2 fade-in-scroll">
                             <div class="menu-item-card">
                                 <h5 class="menu-item-name" style="border-bottom-color: @(item.Colour ?? "var(--bs-secondary)");">@item.Name</h5>
                                 @if (!string.IsNullOrEmpty(item.Description))
@@ -62,10 +62,10 @@
                 <div class="text-center fade-in-scroll">
                     <h6 class="menu-subtitle" style="border-bottom: 2px solid var(--bs-primary)">@(section.Type.Name) Item Sets</h6>
                 </div>
-                <div class="row g-4 mb-4 justify-content-center fade-in-scroll">
+                <div class="row g-4 mb-4 justify-content-center">
                     @foreach (var set in section.Sets)
                     {
-                        <div class="col-12 col-md-4 col-lg-2">
+                        <div class="col-12 col-md-4 col-lg-2 fade-in-scroll">
                             <div class="menu-item-card menu-set-card">
                                 <h5 class="menu-item-name" style="border-bottom-color: @(set.Colour ?? "var(--bs-secondary)") !important;">
                                     @set.Name
@@ -100,10 +100,10 @@
                 <div class="text-center fade-in-scroll">
                     <h6 class="menu-subtitle" style="border-bottom: 2px solid var(--bs-primary)">@(section.Type.Name) Bundles</h6>
                 </div>
-                <div class="row g-4 mb-4 justify-content-center fade-in-scroll">
+                <div class="row g-4 mb-4 justify-content-center">
                     @foreach (var bundle in section.Bundles)
                     {
-                        <div class="col-12 col-md-4 col-lg-2">
+                        <div class="col-12 col-md-4 col-lg-2 fade-in-scroll">
                             <div class="menu-item-card menu-bundle-card">
                                 <h5 class="menu-item-name">
                                     Any @bundle.Quantity @bundle.ItemType.Name<br/>items
@@ -132,4 +132,6 @@
         }
     </div>
 </div>
+
+<partial name="_BookingCta"/>
 
