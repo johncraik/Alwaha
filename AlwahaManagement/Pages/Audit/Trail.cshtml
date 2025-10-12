@@ -72,7 +72,7 @@
                             <tr>
                                 <td>
                                     <i class="fa-solid fa-clock me-1 text-muted"></i>
-                                    @entry.Date.ToString("yyyy-MM-dd HH:mm:ss")
+                                    @entry.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
                                 </td>
                                 <td>
                                     <span class="badge @actionBadge">

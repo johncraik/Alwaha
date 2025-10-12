@@ -12,7 +12,7 @@ public class EventForm : ContactForm
     
     [Required]
     [DataType(DataType.Date)]
-    public DateTime Date { get; set; } = DateTime.Now;
+    public DateTime Date { get; set; } = DateTime.UtcNow;
 
     public EventForm()
     {

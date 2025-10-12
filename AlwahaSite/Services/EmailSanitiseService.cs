@@ -67,9 +67,9 @@ public class EmailSanitiseService
         text = Regex.Replace(text, @"\r\n{3,}", "\r\n\r\n"); // collapse large gaps
 
         text = text.Replace("<br>", "\r\n"); // replace <br> with \r\n (if not already present)
-        text = text.Replace("Date", "\r\nDate:\r\n\r\n");
-        text = text.Replace("Party Size", "\r\nParty Size:\r\n\r\n");
-        text = text.Replace("Message", "\r\nMessage:\r\n\r\n");
+        text = text.Replace("Date", "\r\nDate:\r\n");
+        text = text.Replace("Party Size", "\r\nParty Size:\r\n");
+        text = text.Replace("Message", "\r\nMessage:\r\n");
         
         //Trim
         text = text.Trim();

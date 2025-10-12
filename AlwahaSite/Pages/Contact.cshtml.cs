@@ -10,13 +10,21 @@ public class ContactModel : PageModel
 {
     private readonly IEmailSender _emailSender;
     private readonly EmailBuilderService _builderService;
+    private readonly ReCaptchaService _reCaptchaService;
+    private readonly IConfiguration _configuration;
 
     public ContactModel(IEmailSender emailSender,
-        EmailBuilderService builderService)
+        EmailBuilderService builderService,
+        ReCaptchaService reCaptchaService,
+        IConfiguration configuration)
     {
         _emailSender = emailSender;
         _builderService = builderService;
+        _reCaptchaService = reCaptchaService;
+        _configuration = configuration;
     }
+
+    public string ReCaptchaSiteKey => _configuration["ReCaptcha:SiteKey"] ?? "";
 
     [BindProperty] 
     public ContactForm ContactForm { get; set; } = new();
@@ -28,7 +36,7 @@ public class ContactModel : PageModel
     {
     }
 
-    public async Task<IActionResult> OnPost()
+    public async Task<IActionResult> OnPost(string recaptchaToken)
     {
         if (!ModelState.IsValid)
         {
@@ -36,6 +44,13 @@ public class ContactModel : PageModel
             return Page();
         }
 
+        // Verify reCAPTCHA
+        var isValidCaptcha = await _reCaptchaService.VerifyTokenAsync(recaptchaToken);
+        if (!isValidCaptcha)
+        {
+            ModelState.AddModelError(string.Empty, "reCAPTCHA verification failed. Please try again.");
+            return Page();
+        }
 
         try
         {

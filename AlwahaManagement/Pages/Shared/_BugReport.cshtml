@@ -1,0 +1,30 @@
+@using System.Text
+@{
+    var infoBuilder = new StringBuilder();
+    infoBuilder.AppendLine($"Request: {Context.Request.Method} {Context.Request.Host}{Context.Request.Path.ToString()}{Context.Request.QueryString.ToString()}");
+    infoBuilder.AppendLine("Claims");
+    infoBuilder.AppendJoin(Environment.NewLine, User.Claims);
+    var info = infoBuilder.ToString();
+}
+<!-- Floating Bug Icon -->
+<div id="bug-icon" class="d-print-none" title="Report a bug">🐞</div>
+
+<!-- Floating Bug Reporter Box -->
+<div id="bug-box" class="card border-danger d-print-none">
+    <div class="card-body p-2">
+        <h5 class="card-title text-danger">Report an Issue</h5>
+        <div class="mb-2">
+            <label for="report-type" class="form-label">Type</label>
+            <select id="report-type" class="form-select form-select-sm">
+                <option value="bug">Bug</option>
+                <option value="suggestion">Suggestion</option>
+            </select>
+        </div>
+        <div class="mb-2">
+            <label for="report-desc" class="form-label">Description</label>
+            <textarea id="report-desc" class="form-control form-control-sm" rows="5" placeholder="Describe the issue..."></textarea>
+            <input type="hidden" id="report-info" value="@info"/>
+        </div>
+        <button id="submit-btn" class="btn btn-primary btn-sm w-100">Submit</button>
+    </div>
+</div>

@@ -1,9 +1,11 @@
 using AlwahaLibrary.Models;
 using AlwahaLibrary.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace AlwahaSite.Pages;
 
+[OutputCache(PolicyName = "Menu")]
 public class Menu : PageModel
 {
     private readonly MenuService _menuService;

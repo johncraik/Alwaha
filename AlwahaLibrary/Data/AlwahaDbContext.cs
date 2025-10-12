@@ -94,6 +94,7 @@ public class AlwahaDbContext : DbContext
     public DbSet<AuditEntry> AuditEntries { get; set; }
     public DbSet<AnalyticsEvent> AnalyticsEvents { get; set; }
     public DbSet<CloudflareAnalytics> CloudflareAnalytics { get; set; }
+    public DbSet<ReportedIssue> ReportedIssues { get; set; }
  
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

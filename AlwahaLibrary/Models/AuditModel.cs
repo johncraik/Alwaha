@@ -16,31 +16,31 @@ public class AuditModel
     
     public void FillCreated(string userId)
     {
-        CreatedDate = DateTime.Now;
+        CreatedDate = DateTime.UtcNow;
         CreatedBy = userId;
     }
 
     public void FillUpdated(string userId)
     {
-        UpdatedDate = DateTime.Now;
+        UpdatedDate = DateTime.UtcNow;
         UpdatedBy = userId;
     }
 
     public void FillDeleted(string userId)
     {
-        DeletedDate = DateTime.Now;
+        DeletedDate = DateTime.UtcNow;
         DeletedBy = userId;
         IsDeleted = true;
-        
+
         RestoredDate = null;
         RestoredBy = null;
     }
-    
+
     public void FillRestored(string userId)
     {
-        RestoredDate = DateTime.Now;
+        RestoredDate = DateTime.UtcNow;
         RestoredBy = userId;
-        
+
         IsDeleted = false;
         DeletedDate = null;
         DeletedBy = null;

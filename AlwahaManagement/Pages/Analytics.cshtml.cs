@@ -3,9 +3,11 @@ using AlwahaManagement.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace AlwahaManagement.Pages;
 
+[OutputCache(PolicyName = "Analytics")]
 public class AnalyticsModel : PageModel
 {
     private readonly AnalyticsService _analyticsService;

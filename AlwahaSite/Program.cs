@@ -16,6 +16,12 @@ builder.Services.AddDbContext<AlwahaDbContext>(options =>
 
 builder.Services.AddControllers();
 
+builder.Services.AddOutputCache(options =>
+{
+    options.AddBasePolicy(builder => builder.NoCache()); // Default: no cache
+    options.AddPolicy("Menu", builder => builder.Expire(TimeSpan.FromMinutes(2)));
+});
+
 builder.Services.AddRazorPages(options =>
 {
     // Map the same page to both endpoints
@@ -32,6 +38,7 @@ builder.Services.AddScoped<BundleService>();
 builder.Services.AddScoped<SettingsService>();
 builder.Services.AddScoped<EmailSanitiseService>();
 builder.Services.AddScoped<EmailBuilderService>();
+builder.Services.AddHttpClient<ReCaptchaService>();
 
 var app = builder.Build();
 
@@ -50,6 +57,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseOutputCache();
 
 app.UseAuthorization();
 

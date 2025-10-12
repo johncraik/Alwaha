@@ -59,6 +59,8 @@
                         <span asp-validation-for="ContactForm.Message" class="text-danger"></span>
                     </div>
 
+                    <input type="hidden" id="recaptchaToken" name="recaptchaToken" />
+
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary btn-lg">
                             <i class="fa-solid fa-paper-plane me-2"></i>Send Message
@@ -100,4 +102,16 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://www.google.com/recaptcha/api.js?render=@Model.ReCaptchaSiteKey"></script>
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            grecaptcha.ready(function() {
+                grecaptcha.execute('@Model.ReCaptchaSiteKey', {action: 'contact'}).then(function(token) {
+                    document.getElementById('recaptchaToken').value = token;
+                    e.target.submit();
+                });
+            });
+        });
+    </script>
 }

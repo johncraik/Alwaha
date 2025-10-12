@@ -6,11 +6,13 @@ public class GeoLocationHelper
 {
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<GeoLocationHelper> _logger;
 
-    public GeoLocationHelper(HttpClient httpClient, IConfiguration configuration)
+    public GeoLocationHelper(HttpClient httpClient, IConfiguration configuration, ILogger<GeoLocationHelper> logger)
     {
         _httpClient = httpClient;
         _configuration = configuration;
+        _logger = logger;
     }
 
     /// <summary>
@@ -43,8 +45,9 @@ public class GeoLocationHelper
 
             return (null, null);
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.LogWarning(ex, "Failed to get geolocation for IP: {IpAddress}", ipAddress);
             return (null, null);
         }
     }

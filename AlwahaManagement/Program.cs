@@ -69,6 +69,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
+builder.Services.AddOutputCache(options =>
+{
+    options.AddBasePolicy(builder => builder.NoCache()); // Default: no cache
+    options.AddPolicy("Analytics", builder => builder.Expire(TimeSpan.FromMinutes(5)));
+});
+
 builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AuthorizeFolder("/");
@@ -100,6 +106,10 @@ builder.Services.AddScoped<RecurringJobs>();
 builder.Services.AddScoped<AuditCleanupJob>();
 builder.Services.AddScoped<CloudflareSyncJob>();
 builder.Services.AddScoped<AnalyticsCleanupJob>();
+
+builder.Services.AddScoped<BugReportService>();
+builder.Services.AddSingleton(x =>
+    new GiteaHelper(builder.Configuration["Github:Url"], builder.Configuration["Github:ApiKey"]));
 
 // CORS for AlwahaSite
 builder.Services.AddCors(options =>
@@ -136,6 +146,8 @@ else
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseOutputCache();
 
 app.UseCors("AlwahaSite");
 

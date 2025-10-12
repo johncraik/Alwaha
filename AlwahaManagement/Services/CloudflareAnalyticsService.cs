@@ -11,12 +11,14 @@ public class CloudflareAnalyticsService
     private readonly HttpClient _httpClient;
     private readonly AlwahaDbContext _context;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<CloudflareAnalyticsService> _logger;
 
-    public CloudflareAnalyticsService(HttpClient httpClient, AlwahaDbContext context, IConfiguration configuration)
+    public CloudflareAnalyticsService(HttpClient httpClient, AlwahaDbContext context, IConfiguration configuration, ILogger<CloudflareAnalyticsService> logger)
     {
         _httpClient = httpClient;
         _context = context;
         _configuration = configuration;
+        _logger = logger;
     }
 
     public async Task<bool> SyncCloudflareDataAsync(DateTime startDate, DateTime endDate)
@@ -26,6 +28,7 @@ public class CloudflareAnalyticsService
 
         if (string.IsNullOrEmpty(apiToken) || string.IsNullOrEmpty(zoneId))
         {
+            _logger.LogWarning("Cloudflare API token or Zone ID not configured");
             return false;
         }
 
@@ -37,8 +40,7 @@ public class CloudflareAnalyticsService
                 limit: 1000,
                 filter: {{
                   date_geq: ""{startDate:yyyy-MM-dd}"",
-                  date_leq: ""{endDate:yyyy-MM-dd}"",
-                  clientRequestHTTPHost: ""www.alwahalondon.co.uk""
+                  date_leq: ""{endDate:yyyy-MM-dd}""
                 }}
               ) {{
                 sum {{
@@ -83,6 +85,7 @@ public class CloudflareAnalyticsService
 
             if (data?.Data?.Viewer?.Zones == null || !data.Data.Viewer.Zones.Any())
             {
+                _logger.LogWarning("Cloudflare API returned no zone data");
                 return false;
             }
 
@@ -118,8 +121,9 @@ public class CloudflareAnalyticsService
             await _context.SaveChangesAsync();
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.LogError(ex, "Failed to sync Cloudflare analytics from {StartDate:yyyy-MM-dd} to {EndDate:yyyy-MM-dd}", startDate, endDate);
             return false;
         }
     }

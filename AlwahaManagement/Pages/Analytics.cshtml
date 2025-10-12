@@ -39,8 +39,12 @@
         <div class="card shadow-sm border-success">
             <div class="card-body text-center">
                 <i class="fa-solid fa-users fa-2x text-success mb-2"></i>
-                <h3 class="mb-0">@Model.Summary.UniqueVisitors.ToString("N0")</h3>
-                <p class="text-muted mb-0">Unique Visitors</p>
+                @{
+                    var dayCount = (Model.EndDate.Value - Model.StartDate.Value).Days + 1;
+                    var avgDailyVisitors = dayCount > 0 ? (double)Model.Summary.UniqueVisitors / dayCount : 0;
+                }
+                <h3 class="mb-0">@avgDailyVisitors.ToString("F1")</h3>
+                <p class="text-muted mb-0">Avg Daily Visitors</p>
             </div>
         </div>
     </div>
@@ -271,7 +275,7 @@
 <div class="row mb-4">
     <div class="col-12">
         <div class="alert alert-info">
-            <i class="fa-brands fa-cloudflare me-2"></i><strong>Cloudflare Analytics</strong> - The data below includes all requests including bots, crawlers, and automated traffic
+            <i class="fa-brands fa-cloudflare me-2"></i><strong>Cloudflare Analytics</strong> - The data below includes all requests including bots, crawlers, and automated traffic. Note: This data includes traffic from both the public website and the management portal.
         </div>
     </div>
 </div>

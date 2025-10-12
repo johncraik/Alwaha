@@ -175,4 +175,45 @@ function toggleSetAvailability(setId, isAvailable){
 }
 
 
+const bugIcon = document.getElementById('bug-icon');
+const bugBox = document.getElementById('bug-box');
+
+bugIcon.addEventListener('click', () => {
+    const isVisible = bugBox.style.display === 'block';
+    bugBox.style.display = isVisible ? 'none' : 'block';
+});
+
+document.getElementById('submit-btn').addEventListener('click', async () => {
+    const type = document.getElementById('report-type').value;
+    const desc = document.getElementById('report-desc').value;
+    const info = document.getElementById('report-info').value;
+
+    const payload = {
+        type,
+        description: desc + "\r\n\r\n" + info
+    };
+
+    fetch('/Bug/ReportBug', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to submit');
+        })
+        .then(data => {
+            alert('Thank you for your feedback!');
+            document.getElementById('bug-box').style.display = 'none';
+            document.getElementById('report-desc').value = '';
+        })
+        .catch(error => {
+            console.error('Error submitting bug report:', error);
+            alert('There was a problem submitting your report.');
+        });
+    bugBox.style.display = 'none';
+    document.getElementById('report-desc').value = '';
+});
+
 
