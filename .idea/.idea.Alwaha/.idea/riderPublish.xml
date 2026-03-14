@@ -4,6 +4,7 @@
     <option name="locations">
       <list>
         <option value="$PROJECT_DIR$/../Published/Site" />
+        <option value="$PROJECT_DIR$/AlwahaManagement/bin/Release/Publish" />
       </list>
     </option>
   </component>
