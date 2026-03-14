@@ -1,7 +1,9 @@
 using System.Net.Mail;
+using MailKit.Security;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 using MimeKit;
 
 namespace AlwahaLibrary.Services;
@@ -10,11 +12,19 @@ public class EmailSender : IEmailSender
 {
     private readonly IConfiguration _config;
     private readonly ILogger<EmailSender> _logger;
+    
+    private readonly IConfidentialClientApplication _msalClient;
 
     public EmailSender(IConfiguration config, ILogger<EmailSender> logger)
     {
         _config = config;
         _logger = logger;
+        
+        _msalClient = ConfidentialClientApplicationBuilder
+            .Create(_config["Email:ClientId"])
+            .WithClientSecret(_config["Email:ClientSecret"])
+            .WithTenantId(_config["Email:TenantId"])
+            .Build();
     }
     
     public async Task SendEmailAsync(string email, string subject, string htmlMessage)
@@ -27,8 +37,10 @@ public class EmailSender : IEmailSender
 
         try
         {
+            var from = _config["Email:FromAddress"];
+            
             var msg = new MimeMessage();
-            msg.From.Add(MailboxAddress.Parse(_config["Email:FromAddress"]));
+            msg.From.Add(MailboxAddress.Parse(from));
             msg.To.Add(MailboxAddress.Parse(email));
             msg.Subject = string.IsNullOrEmpty(subject) ? "(No Subject)" : subject;
 
@@ -42,11 +54,18 @@ public class EmailSender : IEmailSender
             msg.Body = bodyBuilder.ToMessageBody();
 
             using var client = new MailKit.Net.Smtp.SmtpClient();
-            client.AuthenticationMechanisms.Remove("XOAUTH2");
-            await client.ConnectAsync(_config["Email:Host"], int.Parse(_config["Email:Port"]!), MailKit.Security.SecureSocketOptions.StartTls);
+            client.Timeout = 30_000;
+            
+            await client.ConnectAsync(_config["Email:Host"], int.Parse(_config["Email:Port"]!),
+                SecureSocketOptions.StartTls);
+            
+            var tokenResult = await _msalClient
+                .AcquireTokenForClient(["https://outlook.office365.com/.default"])
+                .ExecuteAsync();
 
-            if(!string.IsNullOrEmpty(_config["Email:Username"]) && !string.IsNullOrEmpty(_config["Email:Password"]))
-                await client.AuthenticateAsync(_config["Email:Username"], _config["Email:Password"]);
+            var oauth2 = new SaslMechanismOAuth2(from, tokenResult.AccessToken);
+            
+            await client.AuthenticateAsync(oauth2);
 
             await client.SendAsync(msg);
             await client.DisconnectAsync(true);

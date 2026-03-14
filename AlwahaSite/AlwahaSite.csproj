@@ -573,6 +573,7 @@
       <Content Include="node_modules\to-regex-range\LICENSE" />
       <Content Include="node_modules\to-regex-range\package.json" />
       <Content Include="node_modules\to-regex-range\README.md" />
+      <Content Remove="wwwroot\img\scoped_dir25616_2123957996\MediaCreationTool.exe" />
     </ItemGroup>
 
     <ItemGroup>
@@ -742,6 +743,7 @@
 
     <ItemGroup>
       <Folder Include="wwwroot\font\" />
+      <Folder Include="wwwroot\img\scoped_dir25616_2123957996\" />
     </ItemGroup>
 
 </Project>

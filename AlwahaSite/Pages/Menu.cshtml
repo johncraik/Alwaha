@@ -120,7 +120,7 @@
     <!-- Allergen Information -->
     <hr class="my-5"/>
     <div class="text-center fade-in-scroll">
-        <h6 class="menu-subtitle" style="border-bottom: 2px solid var(--bs-primary)">Allergen Information</h6>
+        <h6 class="menu-subtitle" style="border-bottom: 2px solid var(--bs-primary)">Allergen & Dietary Information</h6>
     </div>
     <div class="d-flex flex-wrap justify-content-center gap-3 px-3 fade-in-scroll">
         @foreach (var tag in Model.ItemTags)
@@ -130,6 +130,7 @@
                 <span class="ms-2">@tag.Name</span>
             </div>
         }
+        <p>Please inform your server of any allergies or dietary requirements. Our dishes are prepared in a kitchen that handles all 14 major allergens and we cannot guarantee they are allergen-free. Full allergen information is available on request.</p>
     </div>
 </div>
 
